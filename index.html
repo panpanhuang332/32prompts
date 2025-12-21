@@ -3,105 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Lab Pro - V5.1 Repair Engine</title>
+    <title>ICS Repair Pro - Font Matcher</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        .nav-active { @apply text-indigo-600 dark:text-indigo-400 font-black; }
+        .nav-active { @apply text-indigo-600 font-black; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .app-card { border-radius: 32px; }
-        .gradient-header { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
-        canvas { max-width: 100%; height: auto; cursor: crosshair; touch-action: none; }
+        canvas { max-width: 100%; height: auto; cursor: crosshair; touch-action: none; background: #eee; }
+        .tool-label { @apply text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 block; }
     </style>
 </head>
-<body class="p-4 bg-slate-100 dark:bg-slate-900 min-h-screen font-sans pb-28">
+<body class="p-4 bg-slate-100 dark:bg-slate-900 min-h-screen pb-28">
 
-    <div class="w-full max-w-md mx-auto bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700">
-        
-        <div id="genTab" class="tab-content active p-6 space-y-6">
-            <div class="gradient-header -mx-6 -mt-6 p-8 text-white mb-6">
-                <h1 class="text-2xl font-black italic">ICS PRO GEN</h1>
-            </div>
-            <p class="text-center text-gray-400 py-10 text-xs">（此處整合了原本 32 種風格生成功能）</p>
-        </div>
-
-        <div id="repairTab" class="tab-content">
-            <div class="p-8 bg-slate-800 text-white">
-                <h1 class="text-2xl font-black italic text-indigo-400">REPAIR MASTER A</h1>
-                <p class="text-[10px] tracking-widest opacity-60 uppercase mt-1">手動精準補字模式</p>
+    <div class="w-full max-w-md mx-auto bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden">
+        <div id="repairTab" class="tab-content active">
+            <div class="p-6 bg-slate-800 text-white flex justify-between items-center">
+                <div>
+                    <h1 class="text-xl font-black italic text-indigo-400">FONT MATCHER</h1>
+                    <p class="text-[9px] opacity-50 tracking-tighter">V5.2 精準字體匹配模式</p>
+                </div>
+                <button onclick="location.reload()" class="text-xs bg-white/10 p-2 rounded-lg">重置</button>
             </div>
             
-            <div class="p-6 space-y-6">
-                <div id="uploadArea" class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-3xl p-8 text-center" onclick="document.getElementById('fileInput').click()">
-                    <i class="fas fa-file-image text-3xl text-indigo-500 mb-2"></i>
-                    <p class="text-xs font-bold text-gray-500">上傳損壞的 NotebookLM 圖檔</p>
-                    <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="loadImage(this)">
-                </div>
-
-                <div id="editorArea" class="hidden space-y-4">
-                    <div class="bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded-xl flex items-center gap-3">
-                        <i class="fas fa-mouse-pointer text-indigo-500 text-xs"></i>
-                        <p class="text-[10px] text-indigo-700 dark:text-indigo-300 font-bold">點擊圖中「字黏在一起」的地方進行修復</p>
-                    </div>
-
-                    <div class="rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-700 bg-slate-50 shadow-inner">
+            <div class="p-5 space-y-4">
+                <div id="editorArea" class="hidden space-y-4 animate-in fade-in">
+                    <div class="rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-700 shadow-inner">
                         <canvas id="mainCanvas"></canvas>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="bg-gray-50 dark:bg-slate-900 p-2 rounded-xl border border-gray-100 dark:border-slate-700 flex flex-col">
-                            <span class="text-[9px] font-bold text-gray-400 uppercase ml-1">字體大小</span>
-                            <input type="range" id="fontSize" min="10" max="80" value="28" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    <div class="grid grid-cols-2 gap-3 p-4 bg-gray-50 dark:bg-slate-900 rounded-2xl">
+                        <div>
+                            <label class="tool-label">字體選擇</label>
+                            <select id="fontFamily" class="w-full text-xs p-2 rounded-lg bg-white border border-gray-200 outline-none">
+                                <option value="sans-serif">標準黑體 (推薦)</option>
+                                <option value="serif">經典宋體</option>
+                                <option value="'Microsoft JhengHei', sans-serif">微軟正黑</option>
+                                <option value="cursive">手寫風格</option>
+                            </select>
                         </div>
-                        <button onclick="downloadImage()" class="bg-green-600 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2">
-                            <i class="fas fa-download"></i> 下載修復圖
-                        </button>
+                        <div>
+                            <label class="tool-label">文字顏色</label>
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="textColor" value="#333333" class="w-full h-8 rounded cursor-pointer">
+                            </div>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="tool-label">字體大小: <span id="sizeVal">28</span>px</label>
+                            <input type="range" id="fontSize" min="10" max="100" value="28" oninput="document.getElementById('sizeVal').innerText=this.value" class="w-full h-2 bg-gray-200 rounded-lg appearance-none">
+                        </div>
                     </div>
+                    
+                    <button onclick="downloadImage()" class="w-full bg-green-600 text-white py-4 rounded-2xl font-black shadow-lg flex items-center justify-center gap-2">
+                        <i class="fas fa-check-circle"></i> 完成並下載修復圖
+                    </button>
+                </div>
+
+                <div id="uploadArea" class="border-2 border-dashed border-slate-200 rounded-3xl p-12 text-center" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-magic text-4xl text-indigo-500 mb-4"></i>
+                    <p class="text-sm font-bold text-gray-500">上傳 NotebookLM 圖片</p>
+                    <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="loadImage(this)">
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="textOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-6">
-        <div class="bg-white dark:bg-slate-800 w-full max-w-xs rounded-3xl p-6 space-y-4 shadow-2xl">
-            <h3 class="font-black text-gray-800 dark:text-white text-sm">輸入正確文字</h3>
-            <input type="text" id="correctText" class="w-full p-4 bg-gray-100 dark:bg-slate-900 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700 dark:text-white" placeholder="例如：續">
+    <div id="textOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] hidden items-center justify-center p-6">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-xs space-y-4">
+            <h3 class="font-black text-gray-800">請輸入正確的字</h3>
+            <input type="text" id="correctText" class="w-full p-4 bg-gray-100 rounded-xl text-xl text-center font-bold outline-none" placeholder="輸入文字" autofocus>
             <div class="flex gap-2">
-                <button onclick="applyText()" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold">確定覆蓋</button>
-                <button onclick="closeOverlay()" class="flex-1 bg-gray-200 dark:bg-slate-700 text-gray-500 dark:text-gray-300 py-3 rounded-xl font-bold">取消</button>
+                <button onclick="applyText()" class="flex-1 bg-indigo-600 text-white py-4 rounded-xl font-bold">立即修復</button>
+                <button onclick="closeOverlay()" class="flex-1 bg-gray-200 text-gray-500 py-4 rounded-xl font-bold">取消</button>
             </div>
         </div>
     </div>
-
-    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-2 flex justify-around items-center z-50">
-        <button onclick="switchTab('genTab', this)" class="nav-btn nav-active flex flex-col items-center p-2">
-            <i class="fas fa-magic text-lg"></i>
-            <span class="text-[10px] mt-1 font-bold">指令生成</span>
-        </button>
-        <button onclick="switchTab('repairTab', this)" class="nav-btn text-gray-400 flex flex-col items-center p-2">
-            <i class="fas fa-tools text-lg"></i>
-            <span class="text-[10px] mt-1 font-bold">圖像修復</span>
-        </button>
-    </nav>
 
     <script>
         const canvas = document.getElementById('mainCanvas');
         const ctx = canvas.getContext('2d');
         let currentX, currentY, bgImg;
-
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(b => {
-                b.classList.remove('nav-active');
-                b.classList.add('text-gray-400');
-            });
-            btn.classList.add('nav-active');
-            btn.classList.remove('text-gray-400');
-        }
 
         function loadImage(input) {
             if (input.files && input.files[0]) {
@@ -121,40 +104,54 @@
             }
         }
 
-        // 點擊畫布記錄座標
         canvas.addEventListener('mousedown', (e) => {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
             currentX = (e.clientX - rect.left) * scaleX;
             currentY = (e.clientY - rect.top) * scaleY;
+
+            // 自動採樣文字顏色（這能讓新字顏色更準確）
+            const pixel = ctx.getImageData(currentX, currentY, 1, 1).data;
+            // 如果點擊的地方太亮，就不更新顏色，避免吸到背景色
+            if (pixel[0] < 200) {
+                document.getElementById('textColor').value = rgbToHex(pixel[0], pixel[1], pixel[2]);
+            }
+
             document.getElementById('textOverlay').classList.remove('hidden');
             document.getElementById('textOverlay').classList.add('flex');
+            document.getElementById('correctText').focus();
         });
 
         function applyText() {
             const text = document.getElementById('correctText').value;
             const fontSize = document.getElementById('fontSize').value;
+            const fontFamily = document.getElementById('fontFamily').value;
+            const textColor = document.getElementById('textColor').value;
             if (!text) return;
 
-            // 1. 自動採樣背景顏色 (關鍵！)
-            const pixel = ctx.getImageData(currentX, currentY, 1, 1).data;
-            const bgColor = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+            // 1. 採樣背景顏色（往旁邊偏移一點點去採樣背景）
+            const bgPixel = ctx.getImageData(currentX - fontSize, currentY, 1, 1).data;
+            const bgColor = `rgb(${bgPixel[0]}, ${bgPixel[1]}, ${bgPixel[2]})`;
 
-            // 2. 畫一個色塊蓋掉損壞的字 (覆蓋範圍根據字級調整)
-            const boxSize = fontSize * 1.5;
+            // 2. 塗掉損壞區域
+            const boxSize = fontSize * 1.6;
             ctx.fillStyle = bgColor;
             ctx.fillRect(currentX - boxSize/2, currentY - boxSize/2, boxSize, boxSize);
 
-            // 3. 重新印上乾淨的字
-            ctx.fillStyle = "#333333"; // 預設 NotebookLM 常用深灰色
-            ctx.font = `bold ${fontSize}px sans-serif`;
+            // 3. 繪製新文字
+            ctx.fillStyle = textColor;
+            ctx.font = `bold ${fontSize}px ${fontFamily}`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText(text, currentX, currentY);
 
             closeOverlay();
             document.getElementById('correctText').value = '';
+        }
+
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         }
 
         function closeOverlay() {
@@ -164,8 +161,8 @@
 
         function downloadImage() {
             const link = document.createElement('a');
-            link.download = 'repaired_image.png';
-            link.href = canvas.toDataURL();
+            link.download = 'repaired_notebooklm.png';
+            link.href = canvas.toDataURL('image/png');
             link.click();
         }
     </script>
