@@ -3,37 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Prompt Lab Pro</title>
+    <title>ICS Prompt Lab Pro - Full Edition</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
-        // 設定 Tailwind 支援深色模式
-        tailwind.config = {
-            darkMode: 'media', 
-        }
+        tailwind.config = { darkMode: 'media' }
     </script>
 
     <style>
         body { -webkit-tap-highlight-color: transparent; transition: background-color 0.3s ease; }
         .app-card { border-radius: 32px; transition: all 0.3s ease; }
-        /* 玻璃擬態效果 */
         .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
         @media (prefers-color-scheme: dark) {
             body { background-color: #0f172a; }
             .glass-panel { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); }
         }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1rem center; background-repeat: no-repeat; background-size: 1.5em; }
     </style>
 </head>
-<body class="p-4 bg-slate-50 dark:bg-slate-900 flex justify-center items-start min-h-screen">
+<body class="p-4 bg-slate-50 dark:bg-slate-900 flex justify-center items-start min-h-screen font-sans">
 
     <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700">
         <div class="p-8 bg-gradient-to-br from-indigo-600 to-purple-700 text-white relative">
             <h1 class="text-3xl font-black flex items-center gap-3">
                 <i class="fas fa-wand-magic-sparkles text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-xs mt-2 font-medium tracking-widest opacity-80 uppercase">V2.0 UX Optimized</p>
+            <p class="text-indigo-100 text-xs mt-2 font-medium tracking-widest opacity-80 uppercase">V2.1 Full Edition</p>
         </div>
 
         <div class="p-6 space-y-8">
@@ -42,6 +39,8 @@
                 <div class="grid grid-cols-2 gap-3">
                     <button onclick="vibrate(); setType('infographic', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 p-3 rounded-2xl text-indigo-700 dark:text-indigo-300 text-sm font-bold transition-all">資訊圖表</button>
                     <button onclick="vibrate(); setType('diagram', this)" class="type-btn border border-gray-200 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-sm font-medium transition-all">功能圖解</button>
+                    <button onclick="vibrate(); setType('flowchart', this)" class="type-btn border border-gray-200 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-sm font-medium transition-all">流程圖</button>
+                    <button onclick="vibrate(); setType('timeline', this)" class="type-btn border border-gray-200 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-sm font-medium transition-all">時間軸</button>
                 </div>
             </section>
 
@@ -53,21 +52,57 @@
 
             <section>
                 <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 03. 風格預覽</label>
-                <select id="style" onchange="updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-4 outline-none appearance-none">
-                    <option value="" disabled selected>請選擇視覺風格...</option>
+                <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-4 outline-none">
+                    <option value="" disabled selected>請選擇視覺風格 (32種)...</option>
                     <optgroup label="💼 專業商務">
                         <option value="McKinsey">顧問風 McKinsey</option>
+                        <option value="Corporate">企業風 Corporate</option>
                         <option value="Minimalist">極簡風 Minimalist</option>
+                        <option value="Professional">簡報風 Professional</option>
+                        <option value="Framework">圖表風 Framework</option>
                     </optgroup>
                     <optgroup label="🎨 插畫藝術">
+                        <option value="Watercolor">水彩風 Watercolor</option>
                         <option value="Isometric 3D">等距風 Isometric 3D</option>
-                        <option value="Claymation">黏土風 Claymation</option>
+                        <option value="Flat Vector">扁平風 Flat Vector</option>
+                        <option value="Kawaii">可愛風 Kawaii</option>
+                        <option value="Hand-drawn Sketch">手繪風 Hand-drawn</option>
+                        <option value="Paper Cutout">剪紙風 Paper Cutout</option>
                     </optgroup>
-                    </select>
+                    <optgroup label="🎮 趣味創意">
+                        <option value="Anime">動漫風 Anime</option>
+                        <option value="Comic Book">漫畫風 Comic Book</option>
+                        <option value="Pixel Art">像素風 Pixel Art</option>
+                        <option value="Claymation">黏土風 Claymation</option>
+                        <option value="Origami">摺紙風 Origami</option>
+                        <option value="Graffiti">塗鴉風 Graffiti</option>
+                    </optgroup>
+                    <optgroup label="📜 復古經典">
+                        <option value="Vintage Poster">海報風 Vintage</option>
+                        <option value="Chalkboard">黑板風 Chalkboard</option>
+                        <option value="Analog Film">底片風 Analog Film</option>
+                        <option value="Pop Art">普普風 Pop Art</option>
+                        <option value="Da Vinci">達文西 Da Vinci</option>
+                    </optgroup>
+                    <optgroup label="🔬 技術圖解">
+                        <option value="Blueprint">藍圖風 Blueprint</option>
+                        <option value="Cross-section">剖面圖 Cross-section</option>
+                        <option value="Wireframe">線框圖 Wireframe</option>
+                        <option value="Subway Map">地鐵圖 Subway Map</option>
+                    </optgroup>
+                    <optgroup label="✨ 特殊風格">
+                        <option value="Cyberpunk">賽博龐克 Cyberpunk</option>
+                        <option value="Steampunk">蒸氣龐克 Steampunk</option>
+                        <option value="Quilling">紙雕風 Quilling</option>
+                        <option value="Flat Lay">攝影風 Flat Lay</option>
+                        <option value="Glassmorphism">玻璃風 Glassmorphism</option>
+                        <option value="Diorama">小屋風 Diorama</option>
+                    </optgroup>
+                </select>
 
-                <div id="previewCard" class="hidden p-4 rounded-2xl glass-panel border border-indigo-100 dark:border-indigo-900/50">
+                <div id="previewCard" class="hidden p-4 rounded-2xl glass-panel animate-in fade-in slide-in-from-top-2 duration-300">
                     <div class="flex items-start gap-3">
-                        <div class="bg-indigo-500 text-white p-2 rounded-lg text-xs"><i class="fas fa-info-circle"></i></div>
+                        <div class="bg-indigo-500 text-white p-2 rounded-lg text-xs shadow-md shadow-indigo-200"><i class="fas fa-info-circle"></i></div>
                         <div>
                             <h4 id="previewTitle" class="text-sm font-bold text-gray-800 dark:text-slate-100"></h4>
                             <p id="previewText" class="text-xs text-gray-500 dark:text-slate-400 mt-1 leading-relaxed"></p>
@@ -76,15 +111,19 @@
                 </div>
             </section>
 
-            <button onclick="vibrate(); generate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-indigo-200 dark:shadow-none transition-all active:scale-[0.95] flex justify-center items-center gap-2 text-lg">
+            <button onclick="vibrate(); generate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-xl shadow-indigo-200 dark:shadow-none transition-all active:scale-[0.95] flex justify-center items-center gap-2 text-lg">
                 生成懶人指令 <i class="fas fa-magic"></i>
             </button>
 
-            <div id="resultBox" class="hidden">
-                <div class="bg-slate-900 rounded-3xl p-6 border border-slate-700">
-                    <p id="finalPrompt" class="text-indigo-300 text-xs font-mono whitespace-pre-line leading-relaxed mb-4"></p>
-                    <button onclick="vibrate(); copyText(this)" class="w-full bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold py-3 rounded-xl border border-slate-700 transition-all">
-                        <i class="far fa-copy mr-1"></i> 複製指令
+            <div id="resultBox" class="hidden pb-10">
+                <div class="bg-slate-900 rounded-3xl p-6 border border-slate-700 shadow-2xl">
+                    <div class="text-indigo-400 text-[10px] font-bold mb-4 flex items-center justify-between uppercase tracking-widest">
+                        <span>Generated Prompt</span>
+                        <i class="fas fa-check-circle opacity-0" id="copyCheck"></i>
+                    </div>
+                    <p id="finalPrompt" class="text-indigo-300 text-xs font-mono whitespace-pre-line leading-relaxed mb-6 bg-slate-950 p-4 rounded-xl border border-white/5"></p>
+                    <button onclick="vibrate(); copyText(this)" class="w-full bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                        <i class="far fa-copy"></i> 複製提示詞
                     </button>
                 </div>
             </div>
@@ -93,16 +132,46 @@
 
     <script>
         let selectedType = 'infographic';
+        
+        // 完整的 32 種規格描述與中文說明
         const styleSpecs = {
-            "McKinsey": "專業商務框架，企業藍配色，乾淨的數據視覺化，結構化佈局。",
-            "Minimalist": "大量留白，簡單幾何圖形，高對比單色調，極致純淨感。",
-            "Isometric 3D": "30度等距視角，堆疊的幾何方塊，清晰的立體陰影層次。",
-            "Claymation": "3D 黏土質感，表面可見指紋痕跡，柔和的定格動畫燈光。"
+            "McKinsey": { spec: "Professional business framework, corporate blue, structured layout.", desc: "顧問專業風格：經典商務藍，強調數據邏輯。" },
+            "Corporate": { spec: "Modern office aesthetic, polished branding.", desc: "企業質感風：適合科技產品介紹或現代品牌。" },
+            "Minimalist": { spec: "Clean white space, high contrast.", desc: "極簡美學：大量留白，視覺焦點集中。" },
+            "Professional": { spec: "Clean slide design, balanced typography.", desc: "專業簡報：排版規整，適合工作報告。" },
+            "Framework": { spec: "Logical flow, systematic arrangement.", desc: "邏輯框架：清晰的模組化排版。" },
+            "Watercolor": { spec: "Soft watercolor wash, artistic edges.", desc: "手繪水彩：浪漫且具藝術感的筆觸。" },
+            "Isometric 3D": { spec: "30-degree isometric, cubic shapes.", desc: "等距視角：30度角立體堆疊，科技感強。" },
+            "Flat Vector": { spec: "2D flat design, bold modern colors.", desc: "扁平插畫：簡潔明亮，適合網頁設計。" },
+            "Kawaii": { spec: "Cute characters, pastel colors.", desc: "可愛插畫：粉色調、圓潤，具親和力。" },
+            "Hand-drawn Sketch": { spec: "Pencil line texture, rough edges.", desc: "草圖手寫：親切自然，具溫度感。" },
+            "Paper Cutout": { spec: "Layered paper, subtle drop shadows.", desc: "層次剪紙：透過陰影創造手工立體感。" },
+            "Anime": { spec: "High-quality anime art, cel-shaded.", desc: "精美動漫：高飽和色彩，充滿活力。" },
+            "Comic Book": { spec: "Bold ink lines, halftone dots.", desc: "美式漫畫：粗線條、網點，張力十足。" },
+            "Pixel Art": { spec: "16-bit retro style, pixel grid.", desc: "像素藝術：懷舊遊戲感，數位復古美感。" },
+            "Claymation": { spec: "3D clay texture, visible fingerprints.", desc: "黏土定格：溫潤質感，可見手工痕跡。" },
+            "Origami": { spec: "Folded paper, sharp creases.", desc: "細膩摺紙：幾何對稱，純淨紙質美感。" },
+            "Graffiti": { spec: "Street art, spray paint texture.", desc: "街頭塗鴉：鮮豔奔放，具備都市酷感。" },
+            "Vintage Poster": { spec: "Retro aesthetic, weathered paper.", desc: "復古海報：懷舊配色，充滿歲月質感。" },
+            "Chalkboard": { spec: "Chalk texture on black background.", desc: "教室黑板：具備教育氛圍，手寫親切感。" },
+            "Analog Film": { spec: "Film grain, light leaks, vintage color.", desc: "膠捲底片：復古顆粒感與溫暖的光影。" },
+            "Pop Art": { spec: "High contrast, vibrant primary colors.", desc: "普普藝術：強烈對比色彩，時尚前衛。" },
+            "Da Vinci": { spec: "Sepia ink, aged parchment sketch.", desc: "達文西手稿：古老紙質與精細結構圖。" },
+            "Blueprint": { spec: "Technical white lines on cyan grid.", desc: "工程藍圖：精確、嚴謹的技術美學。" },
+            "Cross-section": { spec: "Cutaway view, structural analysis.", desc: "科學剖面：洞悉事物內部構造。" },
+            "Wireframe": { spec: "3D mesh, digital prototyping.", desc: "數位線框：極致的科技與未來感。" },
+            "Subway Map": { spec: "Simplification, colorful lines.", desc: "地圖路網：適合梳理複雜的關聯性。" },
+            "Cyberpunk": { spec: "Neon lights, high-tech grit.", desc: "賽博龐克：霓虹藍紫色調，未來廢土感。" },
+            "Steampunk": { spec: "Victorian machinery, brass gears.", desc: "蒸氣龐克：黃銅、齒輪，機械美學。" },
+            "Quilling": { spec: "Intricate rolled paper art.", desc: "細緻紙雕：複雜的捲紙工藝立體感。" },
+            "Flat Lay": { spec: "Top-down view, arranged objects.", desc: "俯拍擺拍：整齊、療癒的俯視視角。" },
+            "Glassmorphism": { spec: "Frosted glass, blurred background.", desc: "玻璃擬態：磨砂半透明層次，現代時尚。" },
+            "Diorama": { spec: "Miniature scene, tilt-shift effect.", desc: "微縮景觀：像玩具一樣的小小世界感。" }
         };
 
         function vibrate() {
             if (window.navigator && window.navigator.vibrate) {
-                window.navigator.vibrate(10); // 短震動 10 毫秒
+                window.navigator.vibrate(12);
             }
         }
 
@@ -118,18 +187,20 @@
             const style = document.getElementById('style').value;
             const card = document.getElementById('previewCard');
             if(styleSpecs[style]) {
-                document.getElementById('previewTitle').innerText = style + " 風格特點";
-                document.getElementById('previewText').innerText = styleSpecs[style];
+                document.getElementById('previewTitle').innerText = style + " 風格";
+                document.getElementById('previewText').innerText = styleSpecs[style].desc;
                 card.classList.remove('hidden');
             }
         }
 
         function generate() {
-            const content = document.getElementById('content').value || "Home Organization Tips";
+            const content = document.getElementById('content').value.trim() || "AI Technology";
             const style = document.getElementById('style').value;
-            if(!style) return alert('請先選擇風格');
+            if(!style) return alert('請先選擇風格！');
             
-            const prompt = `Create a ${style} style ${selectedType} about '${content}'. \nAspect ratio: 9:16 vertical`;
+            const fullSpec = styleSpecs[style].spec;
+            const prompt = `/imagine prompt: A ${style} style ${selectedType} about '${content}'. \n\nSpecifications: \n- ${fullSpec} \n- Aspect ratio: 9:16 vertical --ar 9:16 --v 6.0`;
+            
             document.getElementById('finalPrompt').innerText = prompt;
             document.getElementById('resultBox').classList.remove('hidden');
             document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
@@ -139,12 +210,16 @@
             const text = document.getElementById('finalPrompt').innerText;
             navigator.clipboard.writeText(text);
             const originalText = btn.innerHTML;
-            btn.innerHTML = '✅ 已複製';
-            setTimeout(() => btn.innerHTML = originalText, 2000);
+            btn.innerHTML = '<i class="fas fa-check"></i> 複製成功';
+            btn.classList.add('bg-green-600');
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('bg-green-600');
+            }, 2000);
         }
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+          navigator.serviceWorker.register('sw.js');
         }
     </script>
 </body>
