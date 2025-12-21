@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Lab Pro - V6.2 Intelligent Mode</title>
+    <title>ICS Prompt Lab Pro - V6.3 Refined</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,7 +22,6 @@
         @keyframes dice-roll { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .rolling { animation: dice-roll 0.5s ease-in-out; }
         select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1.2rem center; background-repeat: no-repeat; background-size: 1.2em; }
-        .mode-btn-active { @apply ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-bold !important; }
     </style>
 </head>
 <body class="p-4 bg-slate-50 dark:bg-slate-900 min-h-screen font-sans pb-10 flex justify-center items-start">
@@ -32,7 +31,7 @@
             <h1 class="text-3xl font-black flex items-center gap-3 relative z-10">
                 <i class="fas fa-wand-sparkles text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.2 Intelligent Mode</p>
+            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.3 Refined Edition</p>
             
             <button onclick="randomStyleOnly()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white group-hover:rotate-12 transition-transform"></i>
@@ -41,36 +40,25 @@
 
         <div class="p-7 space-y-8">
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 00. 創作模式 (智能優化)</label>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 01. 圖片類型 (Image Type)</label>
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="vibrate(); setMode('通用', this)" class="mode-btn mode-btn-active border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">通用模式</button>
-                    <button onclick="vibrate(); setMode('人像', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">人像細節</button>
-                    <button onclick="vibrate(); setMode('風景', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">壯闊風景</button>
-                    <button onclick="vibrate(); setMode('動漫', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">2D 動漫</button>
-                    <button onclick="vibrate(); setMode('LOGO', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">簡約圖誌</button>
-                    <button onclick="vibrate(); setMode('超現實', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">超現實主義</button>
-                </div>
-                <div id="modeHint" class="mt-2 text-[9px] text-gray-400 italic">模式說明：自動優化各場景光影與細節描述。</div>
-            </section>
-
-            <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 01. 圖片類型 (I)</label>
-                <div class="grid grid-cols-2 gap-3">
-                    <button id="btn-infographic" onclick="vibrate(); setType('infographic', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-4 rounded-2xl text-indigo-700 dark:text-indigo-300 text-sm font-bold transition-all shadow-sm">資訊圖表</button>
-                    <button id="btn-diagram" onclick="vibrate(); setType('diagram', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-4 rounded-2xl text-gray-500 dark:text-slate-400 text-sm font-medium transition-all">功能圖解</button>
-                    <button id="btn-flowchart" onclick="vibrate(); setType('flowchart', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-4 rounded-2xl text-gray-500 dark:text-slate-400 text-sm font-medium transition-all">流程圖</button>
-                    <button id="btn-timeline" onclick="vibrate(); setType('timeline', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-4 rounded-2xl text-gray-500 dark:text-slate-400 text-sm font-medium transition-all">時間軸</button>
+                    <button onclick="vibrate(); setType('general', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all">通用圖像</button>
+                    <button onclick="vibrate(); setType('infographic', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">資訊圖表</button>
+                    <button onclick="vibrate(); setType('diagram', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">功能圖解</button>
+                    <button onclick="vibrate(); setType('flowchart', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">流程圖</button>
+                    <button onclick="vibrate(); setType('portrait', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">人像攝影</button>
+                    <button onclick="vibrate(); setType('landscape', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">壯闊風景</button>
                 </div>
             </section>
 
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 02. 內容主題 (C)</label>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 02. 內容主題 (Content)</label>
                 <textarea id="content" rows="2" placeholder="輸入你想呈現的主題..." 
                        class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-base shadow-inner"></textarea>
             </section>
 
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (S - 32種)</label>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (Visual Style)</label>
                 <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-5 outline-none text-base shadow-sm">
                     <option value="" disabled selected>請選擇風格...</option>
                     <optgroup label="💼 專業商務">
@@ -82,10 +70,11 @@
                     </optgroup>
                     <optgroup label="🎨 插畫藝術">
                         <option value="Watercolor">水彩風 Watercolor</option>
+                        <option value="Oil Painting">油畫風 Oil Painting</option>
+                        <option value="Hand-drawn Sketch">素描風 Sketch</option>
                         <option value="Isometric 3D">等距風 Isometric 3D</option>
                         <option value="Flat Vector">扁平風 Flat Vector</option>
                         <option value="Kawaii">可愛風 Kawaii</option>
-                        <option value="Hand-drawn Sketch">手繪風 Hand-drawn</option>
                         <option value="Paper Cutout">剪紙風 Paper Cutout</option>
                     </optgroup>
                     <optgroup label="🎮 趣味創意">
@@ -97,25 +86,27 @@
                         <option value="Graffiti">塗鴉風 Graffiti</option>
                     </optgroup>
                     <optgroup label="📜 復古經典">
-                        <option value="Vintage Poster">18 海報風 Vintage Poster</option>
-                        <option value="Chalkboard">19 黑板風 Chalkboard</option>
-                        <option value="Analog Film">20 底片風 Analog Film</option>
-                        <option value="Pop Art">21 普普風 Pop Art</option>
-                        <option value="Da Vinci">22 達文西 Da Vinci</option>
+                        <option value="Vintage Poster">海報風 Vintage Poster</option>
+                        <option value="Chalkboard">黑板風 Chalkboard</option>
+                        <option value="Analog Film">底片風 Analog Film</option>
+                        <option value="Pop Art">普普風 Pop Art</option>
+                        <option value="Da Vinci">達文西 Da Vinci</option>
                     </optgroup>
                     <optgroup label="🔬 技術圖解">
-                        <option value="Blueprint">23 藍圖風 Blueprint</option>
-                        <option value="Cross-section">24 剖面圖 Cross-section</option>
-                        <option value="Wireframe">25 線框圖 Wireframe</option>
-                        <option value="Subway Map">26 地鐵圖 Subway Map</option>
+                        <option value="Blueprint">藍圖風 Blueprint</option>
+                        <option value="Cross-section">剖面圖 Cross-section</option>
+                        <option value="Wireframe">線框圖 Wireframe</option>
+                        <option value="Subway Map">地鐵圖 Subway Map</option>
                     </optgroup>
                     <optgroup label="✨ 特殊風格">
-                        <option value="Cyberpunk">27 賽博龐克 Cyberpunk</option>
-                        <option value="Steampunk">28 蒸氣龐克 Steampunk</option>
-                        <option value="Quilling">29 紙雕風 Quilling</option>
-                        <option value="Flat Lay">30 攝影風 Flat Lay</option>
-                        <option value="Glassmorphism">31 玻璃風 Glassmorphism</option>
-                        <option value="Diorama">32 小屋風 Diorama</option>
+                        <option value="Logo">標誌風 LOGO</option>
+                        <option value="Surreal">超現實 Surreal</option>
+                        <option value="Cyberpunk">賽博龐克 Cyberpunk</option>
+                        <option value="Steampunk">蒸氣龐克 Steampunk</option>
+                        <option value="Quilling">紙雕風 Quilling</option>
+                        <option value="Flat Lay">攝影風 Flat Lay</option>
+                        <option value="Glassmorphism">玻璃風 Glassmorphism</option>
+                        <option value="Diorama">小屋風 Diorama</option>
                     </optgroup>
                 </select>
 
@@ -125,7 +116,7 @@
             </section>
 
             <button onclick="vibrate(); generate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-xl transition-all active:scale-[0.96] flex justify-center items-center gap-2 text-lg">
-                生成指令 <i class="fas fa-magic"></i>
+                生成懶人指令 <i class="fas fa-magic"></i>
             </button>
 
             <div id="resultBox" class="hidden animate-in zoom-in-95 duration-300">
@@ -156,79 +147,55 @@
     </div>
 
     <script>
-        // 模式加權描述字典 (真正讓 Step 00 有用的部分)
-        const modeSpecs = {
-            "通用": "",
-            "人像": "Cinematic portrait lighting, extreme close-up details, expressive facial features, professional depth of field, sharp focus on eyes.",
-            "風景": "Epic wide-angle view, hyper-detailed natural scenery, golden hour lighting, cinematic atmosphere, high dynamic range.",
-            "動漫": "High-quality 2D digital art, vibrant cel-shading, stylized anime proportions, dynamic action lines, expressive character design.",
-            "LOGO": "Minimalist vector graphics, solid flat colors, clean professional logo design, symbolic meaning, isolated on white background.",
-            "超現實": "Surreal dreamscape, physics-defying elements, intricate mystical atmosphere, high-concept abstract art, Salvador Dalí inspired."
-        };
-
         const styleSpecs = {
-            "McKinsey": { spec: "Professional business framework, corporate blue.", desc: "顧問專業風：經典商務藍，強調數據邏輯。" },
+            "McKinsey": { spec: "Professional business framework, corporate blue.", desc: "顧問專業風：強調數據邏輯。" },
             "Corporate": { spec: "Modern office aesthetic, polished branding.", desc: "企業質感風：適合科技產品介紹。" },
-            "Minimalist": { spec: "Clean white space, high contrast.", desc: "極簡美學：大量留白，視覺焦點集中。" },
-            "Professional": { spec: "Clean slide design, balanced typography.", desc: "專業簡報：排版規整，適合工作報告。" },
-            "Framework": { spec: "Logical flow, systematic arrangement.", desc: "邏輯框架：清晰的模組化排版方式。" },
-            "Watercolor": { spec: "Soft watercolor wash, artistic edges.", desc: "手繪水彩：浪漫且具藝術感的筆觸。" },
-            "Isometric 3D": { spec: "30-degree isometric perspective, stacked cubic/geometric shapes, clear shadow layers for depth, video game map aesthetic, tech-forward modern colors.", desc: "等距視角：30度立體堆疊，科技感強。" },
-            "Flat Vector": { spec: "2D flat design, bold modern colors.", desc: "扁平插畫：簡潔明亮，適合網頁設計。" },
-            "Kawaii": { spec: "Cute characters, pastel colors.", desc: "可愛插畫：粉色調、圓潤，具親和力。" },
-            "Hand-drawn Sketch": { spec: "Pencil line texture, organic irregular shapes, rough sketch edges, notebook paper style, casual and approachable mood.", desc: "草圖手寫：親切自然，具手寫溫度。" },
-            "Paper Cutout": { spec: "Layered paper, subtle drop shadows.", desc: "層次剪紙：透過陰影創造手工立體感。" },
-            "Anime": { spec: "High-quality anime art style, vibrant colors, expressive characters, cel-shaded details.", desc: "精美動漫：高飽和色彩，充滿活力。" },
-            "Comic Book": { spec: "Bold ink lines, halftone dots.", desc: "美式漫畫：粗線條、網點，張力十足。" },
-            "Pixel Art": { spec: "16-bit retro style, pixel grid.", desc: "像素藝術：懷舊遊戲感，數位復古美。" },
-            "Claymation": { spec: "3D clay texture, visible fingerprints on surface, soft plasticine lighting, stop-motion animation aesthetic, warm and tactile feel.", desc: "黏土定格：溫潤質感，可見手工痕跡。" },
-            "Origami": { spec: "Folded paper, sharp creases.", desc: "細膩摺紙：幾何對稱，純淨紙質美。" },
-            "Graffiti": { spec: "Street art, spray paint texture.", desc: "街頭塗鴉：鮮豔奔放，具備都市酷感。" },
-            "Vintage Poster": { spec: "Retro aesthetic, weathered paper.", desc: "復古海報：懷舊配色，充滿歲月質感。" },
-            "Chalkboard": { spec: "Chalk texture on black background.", desc: "教室黑板：具備教育氛圍，手寫親切。" },
-            "Analog Film": { spec: "Film grain, light leaks, vintage color.", desc: "膠捲底片：復古顆粒感與溫暖光影。" },
-            "Pop Art": { spec: "High contrast, vibrant colors.", desc: "普普藝術：強烈對比色彩，時尚前衛。" },
-            "Da Vinci": { spec: "Sepia ink, aged parchment sketch.", desc: "達文西手稿：古老紙質與精密結構圖。" },
-            "Blueprint": { spec: "Technical white lines on cyan grid.", desc: "工程藍圖：精確、嚴謹的技術美學。" },
-            "Cross-section": { spec: "Cutaway view, structural analysis.", desc: "科學剖面：洞悉事物內部精密構造。" },
-            "Wireframe": { spec: "3D mesh, digital prototyping.", desc: "數位線框：極致的科技感與未來感。" },
-            "Subway Map": { spec: "Simplification, colorful lines.", desc: "地圖路網：適合梳理複雜的關聯性。" },
-            "Cyberpunk": { spec: "Neon lights, high-tech grit.", desc: "賽博龐克：霓虹藍紫色調，未來廢土感。" },
-            "Steampunk": { spec: "Victorian machinery, brass gears.", desc: "蒸氣龐克：黃銅、齒輪，機械美學。" },
-            "Quilling": { spec: "Intricate rolled paper art.", desc: "細緻紙雕：複雜的捲紙工藝立體感。" },
-            "Flat Lay": { spec: "Top-down bird's eye view, arranged real objects, clean light background, DIY aesthetic, organized and visually pleasing layout.", desc: "俯拍擺拍：整齊、療癒的俯視視角。" },
-            "Glassmorphism": { spec: "Frosted glass, blurred background.", desc: "玻璃擬態：磨砂半透明層次，現代時尚。" },
-            "Diorama": { spec: "Miniature scene, tilt-shift effect.", desc: "微縮景觀：像玩具一樣的小小世界感。" }
+            "Minimalist": { spec: "Clean white space, high contrast.", desc: "極簡美學：大量留白。" },
+            "Professional": { spec: "Clean slide design, balanced typography.", desc: "專業簡報：適合工作報告。" },
+            "Framework": { spec: "Logical flow, systematic arrangement.", desc: "邏輯框架：清晰的模組排版。" },
+            "Watercolor": { spec: "Soft watercolor wash, hand-painted texture.", desc: "手繪水彩：藝術感的暈染筆觸。" },
+            "Oil Painting": { spec: "Rich brushstrokes, canvas texture, classical oil paint aesthetic.", desc: "經典油畫：濃郁筆觸與畫布質感。" },
+            "Hand-drawn Sketch": { spec: "Pencil sketch, rough hand-drawn lines, charcoal texture.", desc: "素描風：手繪線條與炭筆質感。" },
+            "Isometric 3D": { spec: "30-degree isometric perspective, stacked shapes.", desc: "等距視角：立體堆疊，科技感強。" },
+            "Flat Vector": { spec: "2D flat design, bold modern colors.", desc: "扁平插畫：適合網頁風格。" },
+            "Kawaii": { spec: "Cute characters, pastel colors, soft edges.", desc: "可愛插畫：親和力十足。" },
+            "Paper Cutout": { spec: "Layered paper, subtle drop shadows.", desc: "層次剪紙：手工立體感。" },
+            "Anime": { spec: "Vibrant anime art, cel-shaded details.", desc: "精美動漫：充滿活力。" },
+            "Comic Book": { spec: "Bold ink lines, halftone dots.", desc: "美式漫畫：張力十足。" },
+            "Pixel Art": { spec: "16-bit retro style, pixel grid.", desc: "像素藝術：懷舊數位美。" },
+            "Claymation": { spec: "3D clay texture, visible fingerprints.", desc: "黏土定格：溫潤手工質感。" },
+            "Origami": { spec: "Folded paper, sharp creases.", desc: "細膩摺紙：純淨紙質美。" },
+            "Graffiti": { spec: "Street art, spray paint texture.", desc: "街頭塗鴉：都市酷感。" },
+            "Vintage Poster": { spec: "Retro aesthetic, weathered paper.", desc: "復古海報：歲月質感。" },
+            "Chalkboard": { spec: "Chalk texture on black background.", desc: "教室黑板：教育氛圍。" },
+            "Analog Film": { spec: "Film grain, vintage color film look.", desc: "膠捲底片：復古顆粒感。" },
+            "Pop Art": { spec: "High contrast, vibrant primary colors.", desc: "普普藝術：時尚前衛。" },
+            "Da Vinci": { spec: "Sepia ink, aged parchment sketch.", desc: "達文西手稿：古老精密製圖。" },
+            "Blueprint": { spec: "Technical white lines on cyan grid.", desc: "工程藍圖：嚴謹技術美學。" },
+            "Cross-section": { spec: "Cutaway view, structural analysis.", desc: "科學剖面：洞悉內部構造。" },
+            "Wireframe": { spec: "3D mesh structure, digital look.", desc: "數位線框：極致科技感。" },
+            "Subway Map": { spec: "Simplification, colorful transit lines.", desc: "地圖路網：梳理複雜關聯。" },
+            "Logo": { spec: "Minimalist vector logo, flat icon design, isolated on white background.", desc: "標誌風：簡約圖誌，適合商標設計。" },
+            "Surreal": { spec: "Dreamy surrealism, physics-defying elements, Salvador Dalí style.", desc: "超現實：非現實的夢幻感。" },
+            "Cyberpunk": { spec: "Neon lights, high-tech urban grit.", desc: "賽博龐克：未來廢土感。" },
+            "Steampunk": { spec: "Victorian machinery, brass gears.", desc: "蒸氣龐克：工業機械美。" },
+            "Quilling": { spec: "Intricate rolled paper art.", desc: "細緻紙雕：捲紙立體感。" },
+            "Flat Lay": { spec: "Top-down bird's eye view, arranged objects.", desc: "俯拍擺拍：整齊療癒。" },
+            "Glassmorphism": { spec: "Frosted glass layers, blurred background.", desc: "玻璃擬態：現代時尚層次。" },
+            "Diorama": { spec: "Miniature scene, tilt-shift effect.", desc: "微縮景觀：小小玩具世界。" }
         };
 
-        let currentMode = '通用';
-        let selectedType = 'infographic';
-        let history = JSON.parse(localStorage.getItem('prompt_history_v62') || '[]');
+        let selectedType = 'general';
+        let history = JSON.parse(localStorage.getItem('prompt_history_v63') || '[]');
 
         function vibrate() { if (navigator.vibrate) navigator.vibrate(15); }
-
-        function setMode(mode, btn) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('mode-btn-active'));
-            btn.classList.add('mode-btn-active');
-            // 更新提示
-            const hints = {
-                "通用": "模式說明：標準處理，適合多數場景。",
-                "人像": "模式說明：增強面部光影細節與眼神光。",
-                "風景": "模式說明：拉開景深感，強調大氣與壯闊感。",
-                "動漫": "模式說明：強化賽璐璐風格與 2D 線條質感。",
-                "LOGO": "模式說明：強調簡約幾何與純淨背景。",
-                "超現實": "模式說明：融合抽象概念與非現實奇幻感。"
-            };
-            document.getElementById('modeHint').innerText = hints[mode];
-        }
 
         function setType(type, btn) {
             selectedType = type;
             document.querySelectorAll('.type-btn').forEach(b => {
-                b.className = 'type-btn border border-gray-100 dark:border-slate-700 p-4 rounded-2xl text-gray-500 dark:text-slate-400 text-sm font-medium transition-all';
+                b.className = 'type-btn border border-gray-100 dark:border-slate-700 p-4 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all';
             });
-            btn.className = 'type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-4 rounded-2xl text-indigo-700 dark:text-indigo-300 text-sm font-bold transition-all shadow-sm';
+            btn.className = 'type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-4 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all shadow-sm';
         }
 
         function randomStyleOnly() {
@@ -253,13 +220,12 @@
         }
 
         function generate() {
-            const content = document.getElementById('content').value.trim() || "Amazing AI Art";
+            const content = document.getElementById('content').value.trim() || "AI & Future Art";
             const style = document.getElementById('style').value;
             if(!style) return alert('請先挑選一個風格！');
             
-            // 核心邏輯更新：合併 Mode 智慧規格
-            const modePrompt = modeSpecs[currentMode];
-            const prompt = `/imagine prompt: A ${style} style ${selectedType} about '${content}'. \n- ${styleSpecs[style].spec} \n- Scene weighting: ${modePrompt} \n- Aspect ratio: 9:16 --v 6.0`;
+            const typeLabel = (selectedType === 'general') ? "image" : selectedType;
+            const prompt = `/imagine prompt: A ${style} style ${typeLabel} about '${content}'. \n- ${styleSpecs[style].spec} \n- Aspect ratio: 9:16 --v 6.0`;
             
             document.getElementById('finalPrompt').innerText = prompt;
             document.getElementById('resultBox').classList.remove('hidden');
@@ -269,7 +235,7 @@
         function saveToHistory(s, c, p) {
             history.unshift({ style: s, content: c, prompt: p });
             if (history.length > 5) history.pop();
-            localStorage.setItem('prompt_history_v62', JSON.stringify(history));
+            localStorage.setItem('prompt_history_v63', JSON.stringify(history));
             renderHistory();
         }
 
@@ -292,7 +258,7 @@
             document.getElementById('resultBox').classList.remove('hidden');
         }
 
-        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v62'); renderHistory(); }
+        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v63'); renderHistory(); }
         function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('指令已複製！'); }
         function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
         function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
