@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Prompt Lab Pro - V6.6 Encyclopedia</title>
+    <title>ICS Lab Pro - V6.7 Tiered Select</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        tailwind.config = { darkMode: 'media' }
-    </script>
-
+    <script>tailwind.config = { darkMode: 'media' }</script>
     <style>
         body { -webkit-tap-highlight-color: transparent; transition: background-color 0.4s ease; }
         .app-card { border-radius: 32px; transition: all 0.3s ease; }
@@ -19,175 +15,94 @@
         @media (prefers-color-scheme: dark) { body { background-color: #0f172a; } }
         @keyframes dice-roll { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .rolling { animation: dice-roll 0.5s ease-in-out; }
-        select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1.2rem center; background-repeat: no-repeat; background-size: 1.2em; }
-        /* 優化長選單在手機上的顯示體驗 */
-        optgroup { font-weight: 800; color: #6366f1; background-color: #f8fafc; }
-        @media (prefers-color-scheme: dark) { optgroup { color: #a5b4fc; background-color: #1e293b; } }
-        option { font-weight: 500; color: #334155; background-color: #ffffff; padding: 8px; }
-        @media (prefers-color-scheme: dark) { option { color: #cbd5e1; background-color: #0f172a; } }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1rem center; background-repeat: no-repeat; background-size: 1.2em; }
     </style>
 </head>
 <body class="p-4 bg-slate-50 dark:bg-slate-900 min-h-screen font-sans pb-10 flex justify-center items-start">
 
     <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700">
         <div class="p-9 gradient-header text-white relative">
-            <h1 class="text-3xl font-black flex items-center gap-3 relative z-10">
-                <i class="fas fa-book-atlas text-yellow-300"></i> ICS Lab Pro
+            <h1 class="text-3xl font-black italic flex items-center gap-3 relative z-10">
+                <i class="fas fa-layer-group text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.6 Style Encyclopedia</p>
-            
+            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.7 Tiered Style Select</p>
             <button onclick="randomStyleOnly()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white group-hover:rotate-12 transition-transform"></i>
             </button>
         </div>
 
-        <div class="p-7 space-y-7">
+        <div class="p-7 space-y-8">
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 01. 圖片類型 (Image Type)</label>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 01. 圖片類型</label>
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="vibrate(); setType('general', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all">通用圖像</button>
-                    <button onclick="vibrate(); setType('infographic', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">資訊圖表</button>
-                    <button onclick="vibrate(); setType('diagram', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">功能圖解</button>
-                    <button onclick="vibrate(); setType('flowchart', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">流程圖</button>
-                    <button onclick="vibrate(); setType('portrait', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">人像攝影</button>
-                    <button onclick="vibrate(); setType('landscape', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">壯闊風景</button>
+                    <button onclick="vibrate(); setType('general', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-2.5 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all">通用圖像</button>
+                    <button onclick="vibrate(); setType('infographic', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">資訊圖表</button>
+                    <button onclick="vibrate(); setType('diagram', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">功能圖解</button>
+                    <button onclick="vibrate(); setType('flowchart', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">流程圖</button>
+                    <button onclick="vibrate(); setType('portrait', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">人像攝影</button>
+                    <button onclick="vibrate(); setType('landscape', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">壯闊風景</button>
                 </div>
             </section>
 
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 02. 內容主題 (Content)</label>
-                <textarea id="content" rows="2" placeholder="輸入主題內容..." 
-                       class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-base shadow-inner"></textarea>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 02. 內容主題</label>
+                <textarea id="content" rows="2" placeholder="你想呈現的主題內容..." class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-sm"></textarea>
             </section>
 
-            <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (Style Encyclopedia)</label>
-                <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-4 outline-none text-base shadow-sm max-h-60">
-                    <option value="" disabled selected>探索數百種風格...</option>
-                    
-                    <optgroup label="📸 攝影與照片 (Photography)">
-                        <option value="Photo">標準照片 Photo</option>
-                        <option value="Cinematic">電影質感 Cinematic</option>
-                        <option value="DSLR">單眼相機 DSLR</option>
-                        <option value="Polaroid">拍立得 Polaroid</option>
-                        <option value="Fujifilm">富士底片 Fujifilm</option>
-                        <option value="Vintage Photo">復古老照片 Vintage</option>
-                        <option value="Macro lens">微距鏡頭 Macro</option>
-                        <option value="Wide angle lens">廣角鏡頭 Wide Angle</option>
-                        <option value="Fish eye lens">魚眼鏡頭 Fish-eye</option>
-                        <option value="Tilt shift lens">移軸鏡頭 Tilt-shift</option>
-                        <option value="Golden hour">黃金時刻光 Golden Hour</option>
-                        <option value="Bokeh">散景效果 Bokeh</option>
-                    </optgroup>
-
-                    <optgroup label="🖌️ 繪畫媒材 (Painting Media)">
-                        <option value="Oil Painting">古典油畫 Oil</option>
-                        <option value="Watercolor">透明水彩 Watercolor</option>
-                        <option value="Acrylic Painting">壓克力畫 Acrylic</option>
-                        <option value="Sketch">素描草圖 Sketch</option>
-                        <option value="Charcoal Drawing">炭筆畫 Charcoal</option>
-                        <option value="Ink Drawing">水墨畫 Ink</option>
-                        <option value="Ukiyo-e">日本浮世繪 Ukiyo-e</option>
-                        <option value="Gongbi Painting">中國工筆畫 Gongbi</option>
-                        <option value="Printmaking">版畫風格 Printmaking</option>
-                        <option value="Fresco">濕壁畫 Fresco</option>
-                    </optgroup>
-
-                    <optgroup label="🏛️ 藝術流派與風格 (Art Movements)">
-                        <option value="Renaissance">文藝復興 Renaissance</option>
-                        <option value="Baroque">巴洛克 Baroque</option>
-                        <option value="Impressionism">印象派 Impressionism</option>
-                        <option value="Cubism">立體派 Cubism</option>
-                        <option value="Surrealism">超現實主義 Surrealism</option>
-                        <option value="Pop Art">普普藝術 Pop Art</option>
-                        <option value="Minimalism">極簡主義 Minimalism</option>
-                        <option value="Cyberpunk">賽博龐克 Cyberpunk</option>
-                        <option value="Steampunk">蒸氣龐克 Steampunk</option>
-                    </optgroup>
-
-                    <optgroup label="🎨 藝術家大師 (Artists)">
-                        <option value="Da Vinci">達文西 Da Vinci</option>
-                        <option value="Van Gogh">梵谷 Van Gogh</option>
-                        <option value="Picasso">畢卡索 Picasso</option>
-                        <option value="Dali">達利 Dali</option>
-                        <option value="Monet">莫內 Monet</option>
-                        <option value="Andy Warhol">安迪沃荷 Warhol</option>
-                        <option value="Kusama Yayoi">草間彌生 Kusama</option>
-                    </optgroup>
-
-                    <optgroup label="🎬 動畫與漫畫 (Anime & Comics)">
-                        <option value="Disney Animation">迪士尼風格 Disney</option>
-                        <option value="Pixar Animation">皮克斯 3D Pixar</option>
-                        <option value="Studio Ghibli">吉卜力手繪 Ghibli</option>
-                        <option value="Anime">日本動漫 Anime</option>
-                        <option value="Manga">日本漫畫 Manga</option>
-                        <option value="American Comic">美式漫畫 Comic Book</option>
-                        <option value="Claymation">黏土定格 Claymation</option>
-                    </optgroup>
-
-                    <optgroup label="✨ 特殊與設計風格 (Special & Design)">
-                        <option value="Logo Design">標誌設計 Logo</option>
-                        <option value="Flat Design">扁平設計 Flat</option>
-                        <option value="Infographic">資訊圖表 Infographic</option>
-                        <option value="Blueprint">工程藍圖 Blueprint</option>
-                        <option value="Origami">摺紙藝術 Origami</option>
-                        <option value="Paper Cutout">剪紙藝術 Paper Cut</option>
-                        <option value="Pixel Art">像素藝術 Pixel Art</option>
-                        <option value="Isometric 3D">等距立體 Isometric</option>
-                        <option value="Low Poly">低多邊形 Low Poly</option>
-                        <option value="3D Render">高品質 3D 渲染</option>
-                        <option value="LEGO">樂高積木 LEGO</option>
-                    </optgroup>
-                     <optgroup label="💼 專業商務應用 (Business)">
-                        <option value="McKinsey">顧問風 McKinsey</option>
-                        <option value="Corporate">企業質感 Corporate</option>
-                        <option value="Professional">專業簡報 Professional</option>
-                    </optgroup>
+            <section class="space-y-3">
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (雙層聯動)</label>
+                
+                <select id="styleCategory" onchange="vibrate(); updateSpecificStyles()" class="w-full p-4 bg-indigo-50/50 dark:bg-slate-900 border border-indigo-100 dark:border-slate-700 rounded-2xl font-black text-indigo-600 dark:text-indigo-400 outline-none text-sm shadow-sm">
+                    <option value="" disabled selected>1. 先選擇風格類別...</option>
+                    <option value="Photography">📸 攝影與照片</option>
+                    <option value="Painting">🖌️ 繪畫媒材與質感</option>
+                    <option value="ArtMovements">🏛️ 藝術流派與流派</option>
+                    <option value="FamousArtists">🎨 知名藝術家大師</option>
+                    <option value="AnimeComics">🎬 動畫與漫晝</option>
+                    <option value="DesignSpecial">✨ 特殊與設計風格</option>
+                    <option value="BusinessPro">💼 專業商務與應用</option>
                 </select>
 
-                <div id="previewCard" class="hidden p-4 rounded-2xl bg-indigo-50 dark:bg-slate-900 border border-indigo-100 dark:border-slate-700 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <p id="previewText" class="text-xs text-indigo-700 dark:text-indigo-300 leading-relaxed font-bold"></p>
+                <select id="styleDetail" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 outline-none text-sm shadow-sm" disabled>
+                    <option value="">2. 再選擇具體風格...</option>
+                </select>
+
+                <div id="previewCard" class="hidden p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-indigo-100 dark:border-slate-700 animate-in fade-in">
+                    <p id="previewText" class="text-xs text-indigo-600 dark:text-indigo-300 leading-relaxed font-bold"></p>
                 </div>
             </section>
 
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 04. 長寬比例 (Aspect Ratio)</label>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 04. 長寬比例</label>
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="setRatio('1:1', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">1:1 (貼文)</button>
-                    <button onclick="setRatio('4:5', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">4:5 (IG垂直)</button>
-                    <button id="defaultRatioBtn" onclick="setRatio('9:16', this)" class="ratio-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all shadow-sm">9:16 (短影音)</button>
-                    <button onclick="setRatio('16:9', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">16:9 (影片)</button>
-                    <button onclick="setRatio('3:2', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">3:2 (攝影)</button>
-                    <button onclick="setRatio('21:9', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">21:9 (Notion)</button>
+                    <button onclick="setRatio('1:1', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-[10px] font-medium transition-all">1:1</button>
+                    <button onclick="setRatio('4:5', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-[10px] font-medium transition-all">4:5</button>
+                    <button id="defaultRatioBtn" onclick="setRatio('9:16', this)" class="ratio-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-2.5 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all shadow-sm">9:16</button>
+                    <button onclick="setRatio('16:9', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-[10px] font-medium transition-all">16:9</button>
+                    <button onclick="setRatio('3:2', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-[10px] font-medium transition-all">3:2</button>
+                    <button onclick="setRatio('21:9', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-[10px] font-medium transition-all">21:9</button>
                 </div>
-                <div id="arHint" class="mt-2 text-[9px] text-gray-400 dark:text-slate-500 italic text-center">適用：Reels、TikTok、Stories 手機全螢幕體驗。</div>
             </section>
 
-            <button onclick="vibrate(); generate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-xl transition-all active:scale-[0.96] flex justify-center items-center gap-2 text-lg">
-                生成懶人指令 <i class="fas fa-magic"></i>
+            <button onclick="vibrate(); generate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-xl active:scale-[0.96] flex justify-center items-center gap-2 text-lg transition-all">
+                生成懶人指令 <i class="fas fa-wand-sparkles"></i>
             </button>
 
             <div id="resultBox" class="hidden animate-in zoom-in-95 duration-300">
                 <div class="bg-slate-900 rounded-[2rem] p-7 border border-slate-700 shadow-2xl relative">
-                    <p id="finalPrompt" class="text-indigo-200 text-xs font-mono whitespace-pre-line leading-relaxed bg-slate-950/50 p-5 rounded-2xl border border-white/5 shadow-inner mb-6"></p>
+                    <p id="finalPrompt" class="text-indigo-200 text-xs font-mono whitespace-pre-line leading-relaxed bg-slate-950 p-5 rounded-2xl border border-white/5 shadow-inner mb-6"></p>
                     <div class="grid grid-cols-3 gap-2">
-                        <button onclick="vibrate(); copyText()" class="bg-indigo-600 text-white p-4 rounded-xl text-xs font-black transition active:scale-90 flex flex-col items-center gap-1">
-                            <i class="far fa-copy text-lg"></i> 複製
-                        </button>
-                        <button onclick="vibrate(); shareLine()" class="bg-[#06C755] text-white p-4 rounded-xl text-xs font-black transition active:scale-90 flex flex-col items-center gap-1">
-                            <i class="fab fa-line text-lg"></i> LINE
-                        </button>
-                        <button onclick="vibrate(); shareFB()" class="bg-[#1877F2] text-white p-4 rounded-xl text-xs font-black transition active:scale-90 flex flex-col items-center gap-1">
-                            <i class="fab fa-facebook text-lg"></i> FB
-                        </button>
+                        <button onclick="vibrate(); copyText()" class="bg-indigo-600 text-white p-4 rounded-xl text-xs font-black"><i class="far fa-copy"></i></button>
+                        <button onclick="vibrate(); shareLine()" class="bg-[#06C755] text-white p-4 rounded-xl text-xs font-black"><i class="fab fa-line text-lg"></i></button>
+                        <button onclick="vibrate(); shareFB()" class="bg-[#1877F2] text-white p-4 rounded-xl text-xs font-black"><i class="fab fa-facebook text-lg"></i></button>
                     </div>
                 </div>
             </div>
 
-            <section id="historySection" class="pt-6">
+            <section id="historySection" class="pt-4 pb-6">
                 <div class="flex items-center justify-between mb-4 px-1">
-                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">歷史紀錄 (5筆)</label>
-                    <button onclick="vibrate(); clearHistory()" class="text-[10px] font-bold text-indigo-500">清除紀錄</button>
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">歷史紀錄</label>
+                    <button onclick="vibrate(); clearHistory()" class="text-[10px] font-bold text-indigo-500">清除</button>
                 </div>
                 <div id="historyList" class="space-y-3"></div>
             </section>
@@ -195,142 +110,156 @@
     </div>
 
     <script>
-        // 終極風格資料庫 (根據心智圖與先前資料整合)
+        // --- 完整風格聯動資料結構 ---
+        const categoryMap = {
+            "Photography": ["Photo", "Cinematic", "DSLR", "Polaroid", "Fujifilm", "Vintage Photo", "Macro lens", "Wide angle lens", "Fish eye lens", "Tilt shift lens", "Golden hour", "Bokeh"],
+            "Painting": ["Oil Painting", "Watercolor", "Acrylic Painting", "Sketch", "Charcoal Drawing", "Ink Drawing", "Ukiyo-e", "Gongbi Painting", "Printmaking", "Fresco"],
+            "ArtMovements": ["Renaissance", "Baroque", "Impressionism", "Cubism", "Surrealism", "Pop Art", "Minimalism", "Cyberpunk", "Steampunk"],
+            "FamousArtists": ["Da Vinci", "Van Gogh", "Picasso", "Dali", "Monet", "Andy Warhol", "Kusama Yayoi"],
+            "AnimeComics": ["Disney Animation", "Pixar Animation", "Studio Ghibli", "Anime", "Manga", "American Comic", "Claymation"],
+            "DesignSpecial": ["Logo Design", "Flat Design", "Infographic", "Blueprint", "Origami", "Paper Cutout", "Pixel Art", "Isometric 3D", "Low Poly", "3D Render", "LEGO"],
+            "BusinessPro": ["McKinsey", "Corporate", "Professional"]
+        };
+
         const styleSpecs = {
-            // --- 攝影與照片 ---
-            "Photo": { spec: "Realistic photography style, clear details, natural lighting.", desc: "標準照片：最寫實通用的攝影風格。" },
-            "Cinematic": { spec: "Cinematic movie still, dramatic lighting, wide aspect ratio, color grading.", desc: "電影質感：極具故事感與戲劇張力的光影。" },
-            "DSLR": { spec: "Shot on DSLR camera, high resolution, sharp focus, professional look.", desc: "單眼相機：專業相機的高畫質與銳利度。" },
-            "Polaroid": { spec: "Polaroid instant film style, vintage colors, white border frame, faded look.", desc: "拍立得：復古、帶有白框與特殊色偏。" },
-            "Fujifilm": { spec: "Fujifilm film grain, vibrant colors, classic film photography aesthetic.", desc: "富士底片：經典的膠片顆粒與發色。" },
-            "Vintage Photo": { spec: "Aged vintage photograph, sepia tones, scratches, worn texture.", desc: "復古老照片：泛黃、帶有歲月痕跡的質感。" },
-            "Macro lens": { spec: "Macro lens photography, extreme close-up, shallow depth of field, incredible details.", desc: "微距鏡頭：捕捉極微小世界的細節。" },
-            "Wide angle lens": { spec: "Wide angle lens view, expansive landscape, distorted perspective at edges.", desc: "廣角鏡頭：視野遼闊，具備張力。" },
-            "Fish eye lens": { spec: "Fish eye lens style, strong barrel distortion, ultra-wide circular view.", desc: "魚眼鏡頭：誇張的球形扭曲視角。" },
-            "Tilt shift lens": { spec: "Tilt shift lens effect, miniature faking, selective focus planes.", desc: "移軸鏡頭：讓世界看起來像小人國模型。" },
-            "Golden hour": { spec: "Golden hour lighting, warm, soft sunlight, long shadows, magical atmosphere.", desc: "黃金時刻光：日出日落時的溫暖迷人光影。" },
-            "Bokeh": { spec: "Photography with strong bokeh, blurred background lights, shallow depth of field.", desc: "散景效果：背景模糊的美麗光斑。" },
-
-            // --- 繪畫媒材 ---
-            "Oil Painting": { spec: "Classical oil painting style, rich visible brushstrokes, canvas texture.", desc: "古典油畫：濃郁的筆觸與畫布質感。" },
-            "Watercolor": { spec: "Watercolor painting, transparent colors, wet-on-wet bleeding, paper texture.", desc: "透明水彩：清透的暈染與流動感。" },
-            "Acrylic Painting": { spec: "Acrylic painting, bold colors, distinct layering, textured finish.", desc: "壓克力畫：鮮豔飽和，具備堆疊感。" },
-            "Sketch": { spec: "Hand-drawn pencil sketch, rough lines, shading with cross-hatching, paper grain.", desc: "素描草圖：手繪的線條與陰影質感。" },
-            "Charcoal Drawing": { spec: "Charcoal drawing style, deep blacks, smudged textures, rough paper.", desc: "炭筆畫：粗獷、高對比的黑白風格。" },
-            "Ink Drawing": { spec: "Traditional Eastern ink drawing, calligraphy brushstrokes, sumi-e style, negative space.", desc: "水墨畫：強調筆墨神韻與留白藝術。" },
-            "Ukiyo-e": { spec: "Japanese Ukiyo-e woodblock print style, bold outlines, flat colors, traditional patterns.", desc: "日本浮世繪：經典的木刻版畫風格。" },
-            "Gongbi Painting": { spec: "Chinese Gongbi painting style, meticulous brushwork, highly detailed, elegant colors.", desc: "中國工筆畫：精謹細膩的傳統畫風。" },
-            "Printmaking": { spec: "Linocut or woodcut printmaking style, bold graphic lines, textured ink transfer.", desc: "版畫風格：手工刻印的獨特質感。" },
-            "Fresco": { spec: "Fresco wall painting style, aged plaster texture, muted earthy colors, historical feel.", desc: "濕壁畫：牆壁上的古樸灰泥質感。" },
-
-            // --- 藝術流派 ---
-            "Renaissance": { spec: "Renaissance art style, classical composition, realistic anatomy, rich colors, sfumato.", desc: "文藝復興：古典、寫實與和諧構圖。" },
-            "Baroque": { spec: "Baroque art style, dramatic high contrast lighting (chiaroscuro), intense emotion, dynamic movement.", desc: "巴洛克：戲劇性的光影與動態感。" },
-            "Impressionism": { spec: "Impressionism style, loose brushwork, capturing light and atmosphere, visible strokes.", desc: "印象派：捕捉光影變化的瞬間筆觸。" },
-            "Cubism": { spec: "Cubism art style, fragmented geometry, multiple viewpoints, abstract forms.", desc: "立體派：幾何解構與多視角重組。" },
-            "Surrealism": { spec: "Surrealism art style, dreamlike scenes, illogical juxtapositions, melting forms.", desc: "超現實主義：如夢境般的奇幻與荒誕。" },
-            "Pop Art": { spec: "Pop Art style, bold colors, comic book aesthetics, halftone dots, repetitive imagery.", desc: "普普藝術：大膽配色與流行文化符號。" },
-            "Minimalism": { spec: "Minimalism art style, extreme simplicity, clean lines, limited color palette, negative space.", desc: "極簡主義：極致簡約，少即是多。" },
-            "Cyberpunk": { spec: "Cyberpunk aesthetic, neon lights, high-tech low-life, futuristic cityscape, gritty atmosphere.", desc: "賽博龐克：霓虹燈與未來科技廢土感。" },
-            "Steampunk": { spec: "Steampunk aesthetic, Victorian machinery, brass gears, steam powered technology, retro-futurism.", desc: "蒸氣龐克：維多利亞式的機械美學。" },
-
-            // --- 藝術家大師 ---
-            "Da Vinci": { spec: "Style of Leonardo da Vinci, sepia ink sketches, anatomical studies, engineering diagrams, aged paper.", desc: "達文西：古老手稿與精密素描。" },
-            "Van Gogh": { spec: "Style of Vincent van Gogh, expressive swirling brushstrokes, thick impasto paint, emotional colors.", desc: "梵谷：充滿情感的強烈旋轉筆觸。" },
-            "Picasso": { spec: "Style of Pablo Picasso, Cubist fragmentation, abstract faces, geometric forms, bold lines.", desc: "畢卡索：抽象立體派的幾何解構。" },
-            "Dali": { spec: "Style of Salvador Dalí, surreal desert landscapes, melting clocks, bizarre creatures, dream logic.", desc: "達利：超現實的夢幻與扭曲意象。" },
-            "Monet": { spec: "Style of Claude Monet, Impressionist water lilies, soft light reflections, garden scenes, hazy atmosphere.", desc: "莫內：柔和光影與睡蓮池的印象。" },
-            "Andy Warhol": { spec: "Style of Andy Warhol, silk screen printing look, high contrast colors, celebrity portraits, repetition.", desc: "安迪沃荷：絲網印刷與普普風肖像。" },
-            "Kusama Yayoi": { spec: "Style of Yayoi Kusama, infinite polka dots, vibrant colors, organic patterns, psychedelic.", desc: "草間彌生：標誌性的無限圓點藝術。" },
-
-            // --- 動畫與漫畫 ---
-            "Disney Animation": { spec: "Classic Disney animation style, hand-drawn feel, expressive characters, fairytale atmosphere.", desc: "迪士尼：經典手繪動畫的童話感。" },
-            "Pixar Animation": { spec: "Pixar 3D animation style, high quality CGI rendering, expressive characters, detailed textures.", desc: "皮克斯：高品質的 3D 動畫質感。" },
-            "Studio Ghibli": { spec: "Studio Ghibli art style, hand-painted watercolor backgrounds, gentle atmosphere, fantastical elements.", desc: "吉卜力：清新溫潤的手繪水彩風。" },
-            "Anime": { spec: "Typical Japanese anime style, cel-shading, large expressive eyes, dynamic action lines.", desc: "日本動漫：標準的日系動畫視覺。" },
-            "Manga": { spec: "Japanese black and white manga style, screen tones, speed lines, ink pen drawings.", desc: "日本漫畫：黑白網點與速度線風格。" },
-            "American Comic": { spec: "American comic book style, bold outlines, heavy shadows, halftone dot patterns, vibrant action.", desc: "美式漫畫：粗獷線條與強烈美漫風。" },
-            "Claymation": { spec: "Claymation stop-motion style, plasticine texture, visible fingerprints, handmade feel.", desc: "黏土定格：手工捏製的逐格動畫感。" },
-
-            // --- 特殊與設計 ---
-            "Logo Design": { spec: "Minimalist vector logo design, flat style, clean lines, isolated on white background.", desc: "標誌設計：簡約、專業的向量 LOGO。" },
-            "Flat Design": { spec: "Modern flat design illustration, simple shapes, bright colors, no complex textures.", desc: "扁平設計：簡潔明亮的現代插畫。" },
-            "Infographic": { spec: "Infographic style, clear data visualization, icons, charts, clean layout, informative.", desc: "資訊圖表：清晰的數據視覺化呈現。" },
-            "Blueprint": { spec: "Technical blueprint drawing, white lines on cyan blue grid paper, architectural plans.", desc: "工程藍圖：嚴謹的技術製圖美學。" },
-            "Origami": { spec: "Origami art style, folded paper textures, geometric facets, sharp creases.", desc: "摺紙藝術：紙張折疊的幾何立體感。" },
-            "Paper Cutout": { spec: "Paper cutout art style, layered colored paper, drop shadows creating depth.", desc: "剪紙藝術：層疊紙張的手工立體感。" },
-            "Pixel Art": { spec: "8-bit or 16-bit pixel art style, low resolution, grid-based, retro game aesthetic.", desc: "像素藝術：復古遊戲的點陣圖風格。" },
-            "Isometric 3D": { spec: "30-degree isometric 3D render, clean geometric shapes, stylized diorama look.", desc: "等距立體：適合呈現架構的 3D 視角。" },
-            "Low Poly": { spec: "Low poly 3D art, geometric polygon mesh, faceted look, minimalist 3D.", desc: "低多邊形：幾何刻面的簡約 3D 風格。" },
-            "3D Render": { spec: "High quality 3D product render, photorealistic, studio lighting, octane render.", desc: "3D 渲染：高品質的數位三維圖像。" },
-            "LEGO": { spec: "Built from LEGO bricks, plastic toy texture, studs visible, playful construction.", desc: "樂高積木：由積木拼砌而成的世界。" },
-
-            // --- 專業商務 ---
-            "McKinsey": { spec: "Professional business consulting style, clean slides, corporate blue palette, structured data.", desc: "顧問風：專業邏輯與商務簡報感。" },
-            "Corporate": { spec: "Modern corporate branding style, sleek design, professional stock photo feel.", desc: "企業質感：現代企業的品牌形象感。" },
-            "Professional": { spec: "Clean and balanced professional design, suitable for high-end presentations.", desc: "專業簡報：適合正式場合的設計。" }
+            "Photo": { spec: "Realistic photography, natural lighting.", desc: "標準照片：寫實通用的攝影風格。" },
+            "Cinematic": { spec: "Cinematic movie still, dramatic lighting, anamorphic.", desc: "電影質感：戲劇化光影與色調感。" },
+            "DSLR": { spec: "Shot on DSLR, high resolution, sharp focus.", desc: "單眼相機：專業、清晰的影像質感。" },
+            "Polaroid": { spec: "Polaroid instant film, vintage colors, white frame.", desc: "拍立得：復古底片色偏與白框感。" },
+            "Fujifilm": { spec: "Fujifilm film grain, vibrant film colors.", desc: "富士底片：經典膠捲顆粒與發色。" },
+            "Vintage Photo": { spec: "Aged photograph, sepia tones, worn texture.", desc: "復古老照片：懷舊歲月痕跡。" },
+            "Macro lens": { spec: "Macro photography, extreme close-up, high detail.", desc: "微距鏡頭：捕捉極細微物體的細節。" },
+            "Wide angle lens": { spec: "Wide angle view, expansive landscape.", desc: "廣角鏡頭：視野遼闊具備空間張力。" },
+            "Fish eye lens": { spec: "Fish eye distortion, ultra-wide circular view.", desc: "魚眼鏡頭：誇張的圓形扭曲視角。" },
+            "Tilt shift lens": { spec: "Tilt shift effect, miniature selective focus.", desc: "移軸鏡頭：讓世界變小人國模型。" },
+            "Golden hour": { spec: "Golden hour, warm sunlight, soft shadows.", desc: "黃金時刻：日出日落的溫暖光影。" },
+            "Bokeh": { spec: "Strong bokeh, blurred background lights.", desc: "散景效果：迷人的背影模糊光斑。" },
+            "Oil Painting": { spec: "Oil painting, rich brushstrokes, canvas.", desc: "古典油畫：濃郁筆觸與畫布質感。" },
+            "Watercolor": { spec: "Watercolor, soft wash, paper texture.", desc: "透明水彩：清透暈染與藝術筆觸。" },
+            "Acrylic Painting": { spec: "Acrylic, bold colors, textured finish.", desc: "壓克力畫：鮮豔飽和具備堆疊感。" },
+            "Sketch": { spec: "Pencil sketch, rough lines, hand-drawn.", desc: "素描草圖：手繪線條與陰影質感。" },
+            "Charcoal Drawing": { spec: "Charcoal drawing, smudged texture, deep blacks.", desc: "炭筆畫：粗獷、高對比黑白風格。" },
+            "Ink Drawing": { spec: "Traditional ink drawing, sumi-e, negative space.", desc: "水墨畫：強調筆墨神韻與留白。" },
+            "Ukiyo-e": { spec: "Ukiyo-e woodblock print, bold outlines.", desc: "日本浮世繪：經典木刻版畫風格。" },
+            "Gongbi Painting": { spec: "Gongbi painting, meticulous brushwork.", desc: "中國工筆畫：精謹細膩的傳統畫風。" },
+            "Printmaking": { spec: "Printmaking style, textured ink transfer.", desc: "版畫風格：手工刻印的獨特質感。" },
+            "Fresco": { spec: "Fresco wall painting, aged plaster texture.", desc: "濕壁畫：古樸灰泥牆壁質感。" },
+            "Renaissance": { spec: "Renaissance art, sfumato, realistic anatomy.", desc: "文藝復興：古典寫實與構圖。" },
+            "Baroque": { spec: "Baroque style, chiaroscuro, intense emotion.", desc: "巴洛克：戲劇性光影與動態感。" },
+            "Impressionism": { spec: "Impressionism, visible strokes, atmospheric light.", desc: "印象派：捕捉光影變化的瞬間。" },
+            "Cubism": { spec: "Cubism, fragmented geometry, multiple views.", desc: "立體派：幾何解構與多視角組。" },
+            "Surrealism": { spec: "Surrealism, dreamlike scenes, melting forms.", desc: "超現實：如夢境般的奇幻荒誕。" },
+            "Pop Art": { spec: "Pop Art, bold colors, halftone dots.", desc: "普普藝術：大膽配色與符號元素。" },
+            "Minimalism": { spec: "Minimalism, extreme simplicity, clean lines.", desc: "極簡主義：極致簡約，少即是多。" },
+            "Cyberpunk": { spec: "Cyberpunk, neon lights, futuristic cityscape.", desc: "賽博龐克：霓虹與未來廢土感。" },
+            "Steampunk": { spec: "Steampunk, brass gears, Victorian machinery.", desc: "蒸氣龐克：維多利亞機械美學。" },
+            "Da Vinci": { spec: "Leonardo da Vinci sketches, sepia ink, aged paper.", desc: "達文西：手稿筆記與精密素描。" },
+            "Van Gogh": { spec: "Vincent van Gogh style, thick impasto, swirling.", desc: "梵谷：強烈情感的旋轉筆觸。" },
+            "Picasso": { spec: "Pablo Picasso style, fragmented forms.", desc: "畢卡索：立體派與抽象解構。" },
+            "Dali": { spec: "Salvador Dalí style, melting objects, dream logic.", desc: "達利：超現實的夢幻扭曲。" },
+            "Monet": { spec: "Claude Monet style, soft light, hazy garden.", desc: "莫內：柔和光影與印象派風景。" },
+            "Andy Warhol": { spec: "Andy Warhol style, silk screen printing, high contrast.", desc: "安迪沃荷：絲網印刷普普風。" },
+            "Kusama Yayoi": { spec: "Yayoi Kusama style, infinite polka dots.", desc: "草間彌生：標誌性的無限圓點。" },
+            "Disney Animation": { spec: "Disney animation style, fairytale feel.", desc: "迪士尼：手繪動畫的童話感。" },
+            "Pixar Animation": { spec: "Pixar 3D style, high quality CGI.", desc: "皮克斯：高品質的 3D 動畫質感。" },
+            "Studio Ghibli": { spec: "Studio Ghibli, hand-painted watercolor look.", desc: "吉卜力：清新溫潤的手繪水彩風。" },
+            "Anime": { spec: "Typical Japanese anime, cel-shading.", desc: "日本動漫：標準日系動畫視覺。" },
+            "Manga": { spec: "Black and white manga, screen tones, ink.", desc: "日本漫畫：黑白網點與筆墨風格。" },
+            "American Comic": { spec: "American comic book, bold outlines, action.", desc: "美式漫畫：粗獷線條與張力。" },
+            "Claymation": { spec: "Claymation stop-motion, plasticine texture.", desc: "黏土定格：手工捏製的動畫感。" },
+            "Logo Design": { spec: "Minimalist vector logo, isolated on white.", desc: "標誌設計：簡約、專業的向量圖。" },
+            "Flat Design": { spec: "Flat design illustration, simple shapes.", desc: "扁平設計：簡潔明亮的現代插畫。" },
+            "Infographic": { spec: "Infographic, data visualization, icons.", desc: "資訊圖表：清晰的數據視覺化。" },
+            "Blueprint": { spec: "Technical blueprint, white lines on blue grid.", desc: "工程藍圖：嚴謹的技術製圖美學。" },
+            "Origami": { spec: "Origami art, folded paper textures.", desc: "摺紙藝術：紙張折疊的幾何感。" },
+            "Paper Cutout": { spec: "Paper cutout art, layered, drop shadows.", desc: "剪紙藝術：層疊紙張的立體感。" },
+            "Pixel Art": { spec: "Pixel art style, 8-bit retro game aesthetic.", desc: "像素藝術：復古點陣圖遊戲風。" },
+            "Isometric 3D": { spec: "Isometric 3D render, geometric shapes.", desc: "等距立體：適合架構的 3D 視角。" },
+            "Low Poly": { spec: "Low poly 3D, faceted geometric mesh.", desc: "低多邊形：幾何刻面的 3D 風格。" },
+            "3D Render": { spec: "High quality 3D render, octane, studio light.", desc: "3D 渲染：高品質的數位三維影像。" },
+            "LEGO": { spec: "LEGO bricks, plastic studs, toy construction.", desc: "樂高積木：積木拼砌成的世界。" },
+            "McKinsey": { spec: "McKinsey consulting style, structured data.", desc: "顧問風：專業邏輯與商務簡報感。" },
+            "Corporate": { spec: "Corporate branding, sleek professional photo.", desc: "企業質感：現代品牌的專業感。" },
+            "Professional": { spec: "Clean professional design, balanced layout.", desc: "專業簡報：適合正式場合的設計。" }
         };
 
-        const ratioSpecs = {
-            "1:1": { ar: "--ar 1:1", desc: "適合 Instagram 貼文、頭像、電商產品圖。" },
-            "4:5": { ar: "--ar 4:5", desc: "Instagram 最佳化垂直貼文，佔據更多手機版面。" },
-            "9:16": { ar: "--ar 9:16", desc: "適用：Reels、TikTok、Stories 手機全螢幕體驗。" },
-            "16:9": { ar: "--ar 16:9", desc: "適合 YouTube 影片、電腦螢幕桌布、電影視角。" },
-            "3:2": { ar: "--ar 3:2", desc: "專業攝影相片沖印常用比例。" },
-            "21:9": { ar: "--ar 21:9", desc: "超寬比例，最適合 Notion 封面與電影感視覺。" }
-        };
-
+        // --- 核心邏輯 ---
         let selectedType = 'general';
         let selectedRatio = '9:16';
-        let history = JSON.parse(localStorage.getItem('prompt_history_v66') || '[]');
+        let history = JSON.parse(localStorage.getItem('prompt_history_v67') || '[]');
 
         function vibrate() { if (navigator.vibrate) navigator.vibrate(15); }
+
+        // 動態更新第二層選單
+        function updateSpecificStyles(defaultStyle = "") {
+            const category = document.getElementById('styleCategory').value;
+            const styleDetail = document.getElementById('styleDetail');
+            
+            styleDetail.innerHTML = '<option value="">2. 再選擇具體風格...</option>';
+            styleDetail.disabled = !category;
+
+            if (category && categoryMap[category]) {
+                categoryMap[category].forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s;
+                    opt.textContent = s;
+                    styleDetail.appendChild(opt);
+                });
+                if (defaultStyle) styleDetail.value = defaultStyle;
+            }
+            updatePreview();
+        }
 
         function setType(type, btn) {
             selectedType = type;
             document.querySelectorAll('.type-btn').forEach(b => {
-                b.className = 'type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all';
+                b.className = 'type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all';
             });
-            btn.className = 'type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all shadow-sm';
+            btn.className = 'type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-2.5 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all shadow-sm';
         }
 
         function setRatio(ratio, btn) {
-            vibrate();
-            selectedRatio = ratio;
+            vibrate(); selectedRatio = ratio;
             document.querySelectorAll('.ratio-btn').forEach(b => {
-                b.className = 'ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all';
+                b.className = 'ratio-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all';
             });
-            btn.className = 'ratio-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all shadow-sm';
-            document.getElementById('arHint').innerText = "適用：" + ratioSpecs[ratio].desc;
+            btn.className = 'ratio-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-2.5 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all shadow-sm';
         }
 
+        // 智慧骰子：只換風格 (兩層隨機)
         function randomStyleOnly() {
             vibrate();
             const icon = document.getElementById('diceIcon');
             icon.classList.add('rolling');
             setTimeout(() => icon.classList.remove('rolling'), 500);
-            const styleSelect = document.getElementById('style');
-            const options = Array.from(styleSelect.querySelectorAll('option')).filter(o => o.value !== "");
-            styleSelect.value = options[Math.floor(Math.random() * options.length)].value;
-            updatePreview();
+
+            const categories = Object.keys(categoryMap);
+            const randomCat = categories[Math.floor(Math.random() * categories.length)];
+            const stylesInCat = categoryMap[randomCat];
+            const randomStyle = stylesInCat[Math.floor(Math.random() * stylesInCat.length)];
+
+            document.getElementById('styleCategory').value = randomCat;
+            updateSpecificStyles(randomStyle);
         }
 
         function updatePreview() {
-            const style = document.getElementById('style').value;
+            const style = document.getElementById('styleDetail').value;
             const card = document.getElementById('previewCard');
-            if(styleSpecs[style]) {
+            if(style && styleSpecs[style]) {
                 document.getElementById('previewText').innerText = "💡 " + styleSpecs[style].desc;
                 card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
             }
         }
 
         function generate() {
-            const content = document.getElementById('content').value.trim() || "Amazing AI Creation";
-            const style = document.getElementById('style').value;
-            if(!style) return alert('請先挑選一個風格喔！');
+            const content = document.getElementById('content').value.trim() || "Mysterious AI Creation";
+            const style = document.getElementById('styleDetail').value;
+            if(!style) return alert('請先選取視覺風格！');
             
             const typeLabel = (selectedType === 'general') ? "image" : selectedType;
-            const prompt = `/imagine prompt: A ${style} style ${typeLabel} about '${content}'. \n- ${styleSpecs[style].spec} \n- Aspect ratio: ${selectedRatio} ${ratioSpecs[selectedRatio].ar} --v 6.0`;
+            const prompt = `/imagine prompt: A ${style} style ${typeLabel} about '${content}'. \n- ${styleSpecs[style].spec} \n- Aspect ratio: ${selectedRatio} --ar ${selectedRatio} --v 6.0`;
             
             document.getElementById('finalPrompt').innerText = prompt;
             document.getElementById('resultBox').classList.remove('hidden');
@@ -340,14 +269,14 @@
         function saveToHistory(s, c, p) {
             history.unshift({ style: s, content: c, prompt: p });
             if (history.length > 5) history.pop();
-            localStorage.setItem('prompt_history_v66', JSON.stringify(history));
+            localStorage.setItem('prompt_history_v67', JSON.stringify(history));
             renderHistory();
         }
 
         function renderHistory() {
             const list = document.getElementById('historyList');
             list.innerHTML = history.map((item, index) => `
-                <div class="p-4 bg-gray-50 dark:bg-slate-900 rounded-2xl border flex justify-between items-center shadow-sm active:scale-95 transition-all" onclick="loadFromHistory(${index})">
+                <div class="p-4 bg-gray-50 dark:bg-slate-900 rounded-2xl border flex justify-between items-center active:scale-95 transition-all shadow-sm" onclick="loadFromHistory(${index})">
                     <div class="overflow-hidden">
                         <p class="text-[9px] font-black text-indigo-500 uppercase">${item.style}</p>
                         <p class="text-[12px] text-gray-700 dark:text-slate-300 font-bold truncate w-48">${item.content}</p>
@@ -362,7 +291,7 @@
             document.getElementById('resultBox').classList.remove('hidden');
         }
 
-        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v66'); renderHistory(); }
+        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v67'); renderHistory(); }
         function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('指令已複製！'); }
         function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
         function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
