@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Lab Pro - V6.1 All-in-One</title>
+    <title>ICS Lab Pro - V6.2 Intelligent Mode</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,7 +32,7 @@
             <h1 class="text-3xl font-black flex items-center gap-3 relative z-10">
                 <i class="fas fa-wand-sparkles text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.1 Ultimate Integration</p>
+            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.2 Intelligent Mode</p>
             
             <button onclick="randomStyleOnly()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white group-hover:rotate-12 transition-transform"></i>
@@ -41,15 +41,16 @@
 
         <div class="p-7 space-y-8">
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 00. 創作模式 (Mode)</label>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 00. 創作模式 (智能優化)</label>
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="vibrate(); setMode('通用', this)" class="mode-btn mode-btn-active border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">通用</button>
-                    <button onclick="vibrate(); setMode('人像', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">人像</button>
-                    <button onclick="vibrate(); setMode('風景', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">風景</button>
-                    <button onclick="vibrate(); setMode('動漫', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">動漫</button>
-                    <button onclick="vibrate(); setMode('LOGO', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">LOGO</button>
-                    <button onclick="vibrate(); setMode('超現實', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">超現實</button>
+                    <button onclick="vibrate(); setMode('通用', this)" class="mode-btn mode-btn-active border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">通用模式</button>
+                    <button onclick="vibrate(); setMode('人像', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">人像細節</button>
+                    <button onclick="vibrate(); setMode('風景', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">壯闊風景</button>
+                    <button onclick="vibrate(); setMode('動漫', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">2D 動漫</button>
+                    <button onclick="vibrate(); setMode('LOGO', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">簡約圖誌</button>
+                    <button onclick="vibrate(); setMode('超現實', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">超現實主義</button>
                 </div>
+                <div id="modeHint" class="mt-2 text-[9px] text-gray-400 italic">模式說明：自動優化各場景光影與細節描述。</div>
             </section>
 
             <section>
@@ -73,27 +74,27 @@
                 <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-5 outline-none text-base shadow-sm">
                     <option value="" disabled selected>請選擇風格...</option>
                     <optgroup label="💼 專業商務">
-                        <option value="McKinsey">01 顧問風 McKinsey</option>
-                        <option value="Corporate">02 企業風 Corporate</option>
-                        <option value="Minimalist">03 極簡風 Minimalist</option>
-                        <option value="Professional">04 簡報風 Professional</option>
-                        <option value="Framework">05 圖表風 Framework</option>
+                        <option value="McKinsey">顧問風 McKinsey</option>
+                        <option value="Corporate">企業風 Corporate</option>
+                        <option value="Minimalist">極簡風 Minimalist</option>
+                        <option value="Professional">簡報風 Professional</option>
+                        <option value="Framework">圖表風 Framework</option>
                     </optgroup>
                     <optgroup label="🎨 插畫藝術">
-                        <option value="Watercolor">06 水彩風 Watercolor</option>
-                        <option value="Isometric 3D">07 等距風 Isometric 3D</option>
-                        <option value="Flat Vector">08 扁平風 Flat Vector</option>
-                        <option value="Kawaii">09 可愛風 Kawaii</option>
-                        <option value="Hand-drawn Sketch">10 手繪風 Hand-drawn</option>
-                        <option value="Paper Cutout">11 剪紙風 Paper Cutout</option>
+                        <option value="Watercolor">水彩風 Watercolor</option>
+                        <option value="Isometric 3D">等距風 Isometric 3D</option>
+                        <option value="Flat Vector">扁平風 Flat Vector</option>
+                        <option value="Kawaii">可愛風 Kawaii</option>
+                        <option value="Hand-drawn Sketch">手繪風 Hand-drawn</option>
+                        <option value="Paper Cutout">剪紙風 Paper Cutout</option>
                     </optgroup>
                     <optgroup label="🎮 趣味創意">
-                        <option value="Anime">12 動漫風 Anime</option>
-                        <option value="Comic Book">13 漫畫風 Comic Book</option>
-                        <option value="Pixel Art">14 像素風 Pixel Art</option>
-                        <option value="Claymation">15 黏土風 Claymation</option>
-                        <option value="Origami">16 摺紙風 Origami</option>
-                        <option value="Graffiti">17 塗鴉風 Graffiti</option>
+                        <option value="Anime">動漫風 Anime</option>
+                        <option value="Comic Book">漫畫風 Comic Book</option>
+                        <option value="Pixel Art">像素風 Pixel Art</option>
+                        <option value="Claymation">黏土風 Claymation</option>
+                        <option value="Origami">摺紙風 Origami</option>
+                        <option value="Graffiti">塗鴉風 Graffiti</option>
                     </optgroup>
                     <optgroup label="📜 復古經典">
                         <option value="Vintage Poster">18 海報風 Vintage Poster</option>
@@ -155,7 +156,16 @@
     </div>
 
     <script>
-        // 根據 32 種風格清單建立字典
+        // 模式加權描述字典 (真正讓 Step 00 有用的部分)
+        const modeSpecs = {
+            "通用": "",
+            "人像": "Cinematic portrait lighting, extreme close-up details, expressive facial features, professional depth of field, sharp focus on eyes.",
+            "風景": "Epic wide-angle view, hyper-detailed natural scenery, golden hour lighting, cinematic atmosphere, high dynamic range.",
+            "動漫": "High-quality 2D digital art, vibrant cel-shading, stylized anime proportions, dynamic action lines, expressive character design.",
+            "LOGO": "Minimalist vector graphics, solid flat colors, clean professional logo design, symbolic meaning, isolated on white background.",
+            "超現實": "Surreal dreamscape, physics-defying elements, intricate mystical atmosphere, high-concept abstract art, Salvador Dalí inspired."
+        };
+
         const styleSpecs = {
             "McKinsey": { spec: "Professional business framework, corporate blue.", desc: "顧問專業風：經典商務藍，強調數據邏輯。" },
             "Corporate": { spec: "Modern office aesthetic, polished branding.", desc: "企業質感風：適合科技產品介紹。" },
@@ -193,7 +203,7 @@
 
         let currentMode = '通用';
         let selectedType = 'infographic';
-        let history = JSON.parse(localStorage.getItem('prompt_history_v61') || '[]');
+        let history = JSON.parse(localStorage.getItem('prompt_history_v62') || '[]');
 
         function vibrate() { if (navigator.vibrate) navigator.vibrate(15); }
 
@@ -201,6 +211,16 @@
             currentMode = mode;
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('mode-btn-active'));
             btn.classList.add('mode-btn-active');
+            // 更新提示
+            const hints = {
+                "通用": "模式說明：標準處理，適合多數場景。",
+                "人像": "模式說明：增強面部光影細節與眼神光。",
+                "風景": "模式說明：拉開景深感，強調大氣與壯闊感。",
+                "動漫": "模式說明：強化賽璐璐風格與 2D 線條質感。",
+                "LOGO": "模式說明：強調簡約幾何與純淨背景。",
+                "超現實": "模式說明：融合抽象概念與非現實奇幻感。"
+            };
+            document.getElementById('modeHint').innerText = hints[mode];
         }
 
         function setType(type, btn) {
@@ -237,8 +257,9 @@
             const style = document.getElementById('style').value;
             if(!style) return alert('請先挑選一個風格！');
             
-            const modePrompt = currentMode !== '通用' ? `Scene mode: ${currentMode}. ` : "";
-            const prompt = `/imagine prompt: A ${style} style ${selectedType} about '${content}'. \n- ${modePrompt}${styleSpecs[style].spec} \n- Aspect ratio: 9:16 --v 6.0`;
+            // 核心邏輯更新：合併 Mode 智慧規格
+            const modePrompt = modeSpecs[currentMode];
+            const prompt = `/imagine prompt: A ${style} style ${selectedType} about '${content}'. \n- ${styleSpecs[style].spec} \n- Scene weighting: ${modePrompt} \n- Aspect ratio: 9:16 --v 6.0`;
             
             document.getElementById('finalPrompt').innerText = prompt;
             document.getElementById('resultBox').classList.remove('hidden');
@@ -248,7 +269,7 @@
         function saveToHistory(s, c, p) {
             history.unshift({ style: s, content: c, prompt: p });
             if (history.length > 5) history.pop();
-            localStorage.setItem('prompt_history_v61', JSON.stringify(history));
+            localStorage.setItem('prompt_history_v62', JSON.stringify(history));
             renderHistory();
         }
 
@@ -271,7 +292,7 @@
             document.getElementById('resultBox').classList.remove('hidden');
         }
 
-        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v61'); renderHistory(); }
+        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v62'); renderHistory(); }
         function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('指令已複製！'); }
         function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
         function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
