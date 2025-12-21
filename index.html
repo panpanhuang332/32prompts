@@ -5,27 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>第一次AI生圖就上手 - 9527</title>
     <meta name="theme-color" content="#6366f1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/10431/10431980.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>tailwind.config = { darkMode: 'media' }</script>
     <style>
-        body {
-            -webkit-tap-highlight-color: transparent;
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-            background: linear-gradient(135deg, #f0f4ff 0%, #e5e7eb 100%);
-        }
-        @media (prefers-color-scheme: dark) {
-            body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-        }
-        .app-card { border-radius: 40px; backdrop-filter: blur(20px); }
+        body { -webkit-tap-highlight-color: transparent; font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: linear-gradient(135deg, #f0f4ff 0%, #e5e7eb 100%); }
+        @media (prefers-color-scheme: dark) { body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } }
+        .app-card { border-radius: 40px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.2); }
         .gradient-header { background: linear-gradient(120deg, #6366f1, #8b5cf6, #d946ef); background-size: 200% 200%; animation: gradientBG 6s ease infinite; }
         @keyframes gradientBG { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
-        .input-premium { background-color: #f8fafc; transition: all 0.3s ease; }
-        @media (prefers-color-scheme: dark) { .input-premium { background-color: #1e293b; color: #e2e8f0; } }
         select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a855f7' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1rem center; background-repeat: no-repeat; background-size: 1.1em; }
         select:disabled { opacity: 0.4; cursor: not-allowed; }
         @keyframes dice-roll { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -34,13 +27,13 @@
 </head>
 <body class="p-4 min-h-screen pb-10 flex justify-center items-start py-8">
 
-    <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden relative">
+    <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card overflow-hidden relative shadow-2xl">
         <div class="p-10 gradient-header text-white relative overflow-hidden">
             <div class="relative z-10">
                 <h1 class="text-3xl font-black italic tracking-tighter">第一次AI生圖就上手</h1>
                 <p class="text-purple-100 text-xl mt-2 font-black tracking-[0.4em]">9527</p>
             </div>
-            <button onclick="randomStyleOnly()" class="absolute bottom-8 right-8 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3.5 rounded-2xl border border-white/40 active:scale-90 shadow-lg">
+            <button onclick="randomStyleOnly()" class="absolute bottom-8 right-8 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3.5 rounded-2xl border border-white/40 active:scale-90 group shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white"></i>
             </button>
         </div>
@@ -49,33 +42,35 @@
             <section>
                 <label class="text-xs font-black text-purple-600 dark:text-purple-400 mb-4 block tracking-widest uppercase">Step 01. 圖片類型</label>
                 <div class="grid grid-cols-3 gap-3">
-                    <button onclick="setType('general', this)" class="type-btn ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-900/30 p-3 rounded-2xl text-purple-700 dark:text-purple-300 text-xs font-bold transition-all">通用圖像</button>
-                    <button onclick="setType('infographic', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">資訊圖表</button>
-                    <button onclick="setType('portrait', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">人像攝影</button>
-                    <button onclick="setType('landscape', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">壯闊風景</button>
-                    <button onclick="setType('diagram', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">功能圖解</button>
-                    <button onclick="setType('flowchart', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">流程圖</button>
+                    <button id="type-general" onclick="vibrate(); setType('general', this)" class="type-btn ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-900/30 p-3 rounded-2xl text-purple-700 dark:text-purple-300 text-xs font-bold transition-all shadow-sm">通用圖像</button>
+                    <button id="type-infographic" onclick="vibrate(); setType('infographic', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">資訊圖表</button>
+                    <button id="type-portrait" onclick="vibrate(); setType('portrait', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">人像攝影</button>
+                    <button id="type-landscape" onclick="vibrate(); setType('landscape', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">壯闊風景</button>
+                    <button id="type-diagram" onclick="vibrate(); setType('diagram', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">功能圖解</button>
+                    <button id="type-flowchart" onclick="vibrate(); setType('flowchart', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">流程圖</button>
                 </div>
             </section>
 
             <section>
                 <label class="text-xs font-black text-purple-600 dark:text-purple-400 mb-4 block tracking-widest uppercase">Step 02. 內容主題</label>
-                <textarea id="content" rows="2" placeholder="你想呈現什麼內容？" class="input-premium w-full p-4 rounded-2xl outline-none text-gray-700 text-sm"></textarea>
+                <textarea id="content" rows="2" placeholder="你想呈現什麼畫面？" class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border-2 border-transparent focus:border-purple-500 rounded-2xl outline-none text-gray-700 dark:text-slate-200 text-sm transition-all"></textarea>
             </section>
 
             <section class="space-y-4">
                 <label class="text-xs font-black text-purple-600 dark:text-purple-400 block tracking-widest uppercase">Step 03. 視覺風格與參數</label>
-                <select id="styleCategory" onchange="vibrate(); updateTieredUI()" class="input-premium w-full p-4 rounded-2xl font-black text-purple-600 outline-none text-sm">
-                    <option value="" disabled selected>1. 選擇風格分類...</option>
-                    <option id="opt-pro-photo" value="ProPhotography">📸 專業攝影與參數</option>
+                <select id="styleCategory" onchange="vibrate(); updateTieredUI()" class="w-full p-4 bg-indigo-50/50 dark:bg-slate-900 border-2 border-transparent rounded-2xl font-black text-purple-600 text-sm outline-none">
+                    <option value="" disabled selected>1. 選擇風格類別...</option>
+                    <option id="opt-pro-photo" value="ProPhotography">📸 專業攝影與參數 (可啟用輔助)</option>
                     <option value="Photography">📷 一般攝影與照片風格</option>
                     <option value="Painting">🖌️ 繪畫媒材與質感</option>
                     <option value="AnimeComics">🎬 動畫與漫畫</option>
                 </select>
-                <select id="styleDetail" onchange="vibrate(); updatePreview()" class="input-premium w-full p-4 rounded-2xl font-bold text-gray-700 outline-none text-sm" disabled>
-                    <option value="">2. 再選擇具體風格...</option>
+
+                <select id="styleDetail" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border-2 border-transparent rounded-2xl font-bold text-gray-700 dark:text-slate-200 text-sm outline-none" disabled>
+                    <option value="">2. 再選擇具體規格...</option>
                 </select>
-                <select id="proAssist" onchange="vibrate(); updatePreview()" class="input-premium w-full p-4 rounded-2xl font-bold text-gray-700 outline-none text-sm" disabled>
+
+                <select id="proAssist" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border-2 border-transparent rounded-2xl font-bold text-gray-700 dark:text-slate-200 text-sm outline-none" disabled>
                     <option value="" selected>3. 專業攝影輔助 (鎖定中)...</option>
                     <option value="bright">環境較明亮 Bright</option>
                     <option value="dark">環境較暗 Dark</option>
@@ -87,25 +82,25 @@
 
             <section class="space-y-4">
                 <label class="text-xs font-black text-purple-600 dark:text-purple-400 block tracking-widest uppercase">Step 04. 長寬比例</label>
-                <select id="ratioSelect" onchange="vibrate(); handleRatioChange()" class="input-premium w-full p-4 rounded-2xl font-bold text-gray-700 outline-none text-sm">
-                    <option value="1:1">1:1 (正方形)</option>
+                <select id="ratioSelect" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border-2 border-transparent rounded-2xl font-bold text-gray-700 dark:text-slate-200 text-sm outline-none">
+                    <option value="1:1">1:1 (正方形貼文)</option>
                     <option value="9:16" selected>9:16 (手機短影音)</option>
                     <option value="16:9">16:9 (電腦寬屏)</option>
-                    <option value="custom">✍️ 自訂比例</option>
+                    <option value="21:9">21:9 (Notion 封面)</option>
                 </select>
             </section>
 
-            <button onclick="vibrate(); generate()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black py-5 rounded-[20px] text-lg active:scale-[0.96] transition-all">
+            <button onclick="vibrate(); generate()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black py-5 rounded-[20px] text-lg active:scale-95 transition-all shadow-lg">
                 生成大師指令 <i class="fas fa-wand-magic-sparkles"></i>
             </button>
 
             <div id="resultBox" class="hidden animate-in zoom-in-95 duration-300">
-                <div class="bg-slate-900 rounded-[2.5rem] p-7 border-2 border-slate-700/50 relative overflow-hidden">
+                <div class="bg-slate-900 rounded-[2.5rem] p-7 border-2 border-slate-700 relative overflow-hidden">
                     <p id="finalPrompt" class="text-purple-200 text-xs font-mono bg-slate-950/80 p-5 rounded-3xl mb-6 select-all"></p>
                     <div class="grid grid-cols-3 gap-3">
-                        <button onclick="vibrate(); copyText()" class="bg-purple-600 text-white p-4 rounded-2xl flex items-center justify-center"><i class="far fa-copy text-lg"></i></button>
-                        <button onclick="vibrate(); shareLine()" class="bg-[#06C755] text-white p-4 rounded-2xl flex items-center justify-center"><i class="fab fa-line text-xl"></i></button>
-                        <button onclick="vibrate(); shareFB()" class="bg-[#1877F2] text-white p-4 rounded-2xl flex items-center justify-center"><i class="fab fa-facebook text-lg"></i></button>
+                        <button onclick="copyText()" class="bg-purple-600 text-white p-4 rounded-2xl flex items-center justify-center"><i class="far fa-copy text-lg"></i></button>
+                        <button onclick="shareLine()" class="bg-[#06C755] text-white p-4 rounded-2xl flex items-center justify-center"><i class="fab fa-line text-xl"></i></button>
+                        <button onclick="shareFB()" class="bg-[#1877F2] text-white p-4 rounded-2xl flex items-center justify-center"><i class="fab fa-facebook text-lg"></i></button>
                     </div>
                 </div>
             </div>
@@ -113,21 +108,25 @@
     </div>
 
     <script>
-        // PWA 註冊腳本
+        // PWA 註冊邏輯強化
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js');
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js').then(function(reg) {
+                    console.log('SW 註冊成功', reg.scope);
+                }, function(err) {
+                    console.log('SW 註冊失敗', err);
+                });
             });
         }
 
         const categoryMap = {
-            "ProPhotography": ["macro lens", "prime lens", "wide angle lens", "bokeh", "magic hour", "HDR"],
-            "Photography": ["Photo", "life photo", "portrait photography", "DSLR style", "Polaroid style"],
+            "ProPhotography": ["macro lens", "prime lens", "bokeh", "HDR"],
+            "Photography": ["Photo", "life photo", "portrait photography", "DSLR style"],
             "Painting": ["Oil Painting", "Watercolor", "Sketch"],
             "AnimeComics": ["Anime", "Manga", "Studio Ghibli"]
         };
 
-        const styleDisplayNames = { "macro lens": "微距鏡頭 Macro", "Photo": "標準照片 Photo", "Anime": "日本動漫 Anime" };
+        const styleDisplayNames = { "macro lens": "微距鏡頭 Macro", "Photo": "標準照片 Photo" };
         let selectedType = 'general';
 
         function vibrate() { if (navigator.vibrate) navigator.vibrate(10); }
@@ -135,7 +134,7 @@
         function setType(type, btn) {
             selectedType = type;
             document.querySelectorAll('.type-btn').forEach(b => b.className = 'type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium');
-            btn.className = 'type-btn ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-900/30 p-3 rounded-2xl text-purple-700 dark:text-purple-300 text-xs font-bold';
+            btn.className = 'type-btn ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-900/30 p-3 rounded-2xl text-purple-700 dark:text-purple-300 text-xs font-bold shadow-sm';
             
             const pro = document.getElementById('opt-pro-photo');
             const allowed = ['general', 'landscape', 'portrait'];
@@ -146,7 +145,7 @@
             const cat = document.getElementById('styleCategory').value;
             const detail = document.getElementById('styleDetail');
             const assist = document.getElementById('proAssist');
-            detail.innerHTML = '<option value="">2. 再選擇具體規格...</option>';
+            detail.innerHTML = '<option value="">2. 再選擇具體風格...</option>';
             detail.disabled = !cat;
             if (cat && categoryMap[cat]) {
                 categoryMap[cat].forEach(k => {
@@ -156,20 +155,21 @@
                 });
             }
             assist.disabled = (cat !== "ProPhotography");
+            if(assist.disabled) assist.value = "";
         }
 
         function generate() {
-            const content = document.getElementById('content').value.trim() || "Masterpiece";
+            const content = document.getElementById('content').value.trim() || "Amazing Art";
             const style = document.getElementById('styleDetail').value;
             const assist = document.getElementById('proAssist').value;
-            if(!style) return alert('請選取視覺風格！');
+            if(!style) return alert('請選取風格！');
             const ratio = document.getElementById('ratioSelect').value;
-            const prompt = `/imagine prompt: A ${style} ${assist || ""} style ${selectedType} showcasing ${content} --ar ${ratio} --no text, words, letters, font, watermark, logo, signature --v 6.1`;
+            const prompt = `/imagine prompt: A ${style} ${assist || ""} style ${selectedType} showcasing ${content} --ar ${ratio} --no text, words, letters, watermark, logo --v 6.1`;
             document.getElementById('finalPrompt').innerText = prompt;
             document.getElementById('resultBox').classList.remove('hidden');
         }
 
-        function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('已複製！'); }
+        function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('指令已複製！'); }
         function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
         function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
     </script>
