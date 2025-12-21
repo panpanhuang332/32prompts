@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Prompt Lab Pro - V6.5 Full Integration</title>
+    <title>ICS Prompt Lab Pro - V6.6 Encyclopedia</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,6 +20,11 @@
         @keyframes dice-roll { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .rolling { animation: dice-roll 0.5s ease-in-out; }
         select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1.2rem center; background-repeat: no-repeat; background-size: 1.2em; }
+        /* 優化長選單在手機上的顯示體驗 */
+        optgroup { font-weight: 800; color: #6366f1; background-color: #f8fafc; }
+        @media (prefers-color-scheme: dark) { optgroup { color: #a5b4fc; background-color: #1e293b; } }
+        option { font-weight: 500; color: #334155; background-color: #ffffff; padding: 8px; }
+        @media (prefers-color-scheme: dark) { option { color: #cbd5e1; background-color: #0f172a; } }
     </style>
 </head>
 <body class="p-4 bg-slate-50 dark:bg-slate-900 min-h-screen font-sans pb-10 flex justify-center items-start">
@@ -27,9 +32,9 @@
     <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700">
         <div class="p-9 gradient-header text-white relative">
             <h1 class="text-3xl font-black flex items-center gap-3 relative z-10">
-                <i class="fas fa-wand-sparkles text-yellow-300"></i> ICS Lab Pro
+                <i class="fas fa-book-atlas text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.5 Full Integration</p>
+            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.6 Style Encyclopedia</p>
             
             <button onclick="randomStyleOnly()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white group-hover:rotate-12 transition-transform"></i>
@@ -56,60 +61,87 @@
             </section>
 
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (Visual Style)</label>
-                <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-4 outline-none text-base shadow-sm">
-                    <option value="" disabled selected>請選擇風格...</option>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (Style Encyclopedia)</label>
+                <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-4 outline-none text-base shadow-sm max-h-60">
+                    <option value="" disabled selected>探索數百種風格...</option>
                     
-                    <optgroup label="📸 攝影模式 (Photography 1.png)">
-                        <option value="photo">標準照片 Photo</option>
-                        <option value="life photo">生活照 Life Photo</option>
-                        <option value="group photo">團體照 Group Photo</option>
-                        <option value="group selfie photo">自拍團照 Group Selfie</option>
-                        <option value="portrait photography">人像攝影 Portrait</option>
-                        <option value="ports photography">運動攝影 Sports</option>
-                        <option value="still life photo">靜物攝影 Still Life</option>
+                    <optgroup label="📸 攝影與照片 (Photography)">
+                        <option value="Photo">標準照片 Photo</option>
+                        <option value="Cinematic">電影質感 Cinematic</option>
+                        <option value="DSLR">單眼相機 DSLR</option>
+                        <option value="Polaroid">拍立得 Polaroid</option>
+                        <option value="Fujifilm">富士底片 Fujifilm</option>
+                        <option value="Vintage Photo">復古老照片 Vintage</option>
+                        <option value="Macro lens">微距鏡頭 Macro</option>
+                        <option value="Wide angle lens">廣角鏡頭 Wide Angle</option>
+                        <option value="Fish eye lens">魚眼鏡頭 Fish-eye</option>
+                        <option value="Tilt shift lens">移軸鏡頭 Tilt-shift</option>
+                        <option value="Golden hour">黃金時刻光 Golden Hour</option>
+                        <option value="Bokeh">散景效果 Bokeh</option>
                     </optgroup>
 
-                    <optgroup label="👁️ 鏡頭與焦距 (Oxxo Specs)">
-                        <option value="macro lens">微距鏡頭 Macro (細節)</option>
-                        <option value="wide angle lens">廣角鏡頭 Wide Angle</option>
-                        <option value="fish eye lens">魚眼鏡頭 Fish-eye</option>
-                        <option value="tilt shift lens">移軸鏡頭 Tilt-shift</option>
-                        <option value="telephoto lens">望遠鏡頭 Telephoto</option>
+                    <optgroup label="🖌️ 繪畫媒材 (Painting Media)">
+                        <option value="Oil Painting">古典油畫 Oil</option>
+                        <option value="Watercolor">透明水彩 Watercolor</option>
+                        <option value="Acrylic Painting">壓克力畫 Acrylic</option>
+                        <option value="Sketch">素描草圖 Sketch</option>
+                        <option value="Charcoal Drawing">炭筆畫 Charcoal</option>
+                        <option value="Ink Drawing">水墨畫 Ink</option>
+                        <option value="Ukiyo-e">日本浮世繪 Ukiyo-e</option>
+                        <option value="Gongbi Painting">中國工筆畫 Gongbi</option>
+                        <option value="Printmaking">版畫風格 Printmaking</option>
+                        <option value="Fresco">濕壁畫 Fresco</option>
                     </optgroup>
 
-                    <optgroup label="🎬 攝影風格 (Oxxo Specs)">
-                        <option value="Cinematic">電影劇照 Cinematic</option>
-                        <option value="DSLR style">單眼風格 DSLR</option>
-                        <option value="Polaroid style">拍立得 Polaroid</option>
-                        <option value="GoPro style">GoPro 運動視角</option>
-                        <option value="Fujifilm style">富士底片感 Fujifilm</option>
-                        <option value="LOMO style">LOMO 濾鏡感</option>
-                    </optgroup>
-
-                    <optgroup label="🎨 藝術與媒材 (提示詞.png)">
-                        <option value="Oil Painting">油畫風 Oil Painting</option>
-                        <option value="Watercolor">水彩風 Watercolor</option>
-                        <option value="Hand-drawn Sketch">素描風 Sketch</option>
-                        <option value="Surreal">超現實 Surreal</option>
-                        <option value="Chinese Ink">東方水墨 Ink</option>
-                        <option value="Ukiyo-e">日本浮世繪</option>
-                    </optgroup>
-
-                    <optgroup label="✨ 特色創作 (提示詞.png)">
-                        <option value="Logo">標誌設計 LOGO</option>
-                        <option value="Poster">廣告海報 Poster</option>
-                        <option value="Interior">室內設計 Interior</option>
-                        <option value="Anime">動漫風 Anime</option>
+                    <optgroup label="🏛️ 藝術流派與風格 (Art Movements)">
+                        <option value="Renaissance">文藝復興 Renaissance</option>
+                        <option value="Baroque">巴洛克 Baroque</option>
+                        <option value="Impressionism">印象派 Impressionism</option>
+                        <option value="Cubism">立體派 Cubism</option>
+                        <option value="Surrealism">超現實主義 Surrealism</option>
+                        <option value="Pop Art">普普藝術 Pop Art</option>
+                        <option value="Minimalism">極簡主義 Minimalism</option>
                         <option value="Cyberpunk">賽博龐克 Cyberpunk</option>
+                        <option value="Steampunk">蒸氣龐克 Steampunk</option>
                     </optgroup>
 
-                    <optgroup label="💼 專業與趣味 (Original 32)">
+                    <optgroup label="🎨 藝術家大師 (Artists)">
+                        <option value="Da Vinci">達文西 Da Vinci</option>
+                        <option value="Van Gogh">梵谷 Van Gogh</option>
+                        <option value="Picasso">畢卡索 Picasso</option>
+                        <option value="Dali">達利 Dali</option>
+                        <option value="Monet">莫內 Monet</option>
+                        <option value="Andy Warhol">安迪沃荷 Warhol</option>
+                        <option value="Kusama Yayoi">草間彌生 Kusama</option>
+                    </optgroup>
+
+                    <optgroup label="🎬 動畫與漫畫 (Anime & Comics)">
+                        <option value="Disney Animation">迪士尼風格 Disney</option>
+                        <option value="Pixar Animation">皮克斯 3D Pixar</option>
+                        <option value="Studio Ghibli">吉卜力手繪 Ghibli</option>
+                        <option value="Anime">日本動漫 Anime</option>
+                        <option value="Manga">日本漫畫 Manga</option>
+                        <option value="American Comic">美式漫畫 Comic Book</option>
+                        <option value="Claymation">黏土定格 Claymation</option>
+                    </optgroup>
+
+                    <optgroup label="✨ 特殊與設計風格 (Special & Design)">
+                        <option value="Logo Design">標誌設計 Logo</option>
+                        <option value="Flat Design">扁平設計 Flat</option>
+                        <option value="Infographic">資訊圖表 Infographic</option>
+                        <option value="Blueprint">工程藍圖 Blueprint</option>
+                        <option value="Origami">摺紙藝術 Origami</option>
+                        <option value="Paper Cutout">剪紙藝術 Paper Cut</option>
+                        <option value="Pixel Art">像素藝術 Pixel Art</option>
+                        <option value="Isometric 3D">等距立體 Isometric</option>
+                        <option value="Low Poly">低多邊形 Low Poly</option>
+                        <option value="3D Render">高品質 3D 渲染</option>
+                        <option value="LEGO">樂高積木 LEGO</option>
+                    </optgroup>
+                     <optgroup label="💼 專業商務應用 (Business)">
                         <option value="McKinsey">顧問風 McKinsey</option>
-                        <option value="Isometric 3D">等距風 Isometric</option>
-                        <option value="Claymation">黏土風 Claymation</option>
-                        <option value="Diorama">小屋風 Diorama</option>
-                        <option value="LEGO">樂高風 LEGO</option>
+                        <option value="Corporate">企業質感 Corporate</option>
+                        <option value="Professional">專業簡報 Professional</option>
                     </optgroup>
                 </select>
 
@@ -163,44 +195,80 @@
     </div>
 
     <script>
-        // 匯總所有附件的風格描述
+        // 終極風格資料庫 (根據心智圖與先前資料整合)
         const styleSpecs = {
-            // 攝影模式 (攝影1.png)
-            "photo": { spec: "Realistic photography style, professional lighting.", desc: "標準攝影：最通用的寫實照片質感。" },
-            "life photo": { spec: "Candid life photo, natural lifestyle, unposed, realistic.", desc: "生活照：自然、不刻意的生活感照片。" },
-            "group photo": { spec: "Group photo, multiple people, clear faces.", desc: "團體照：多人合照，構圖穩定。" },
-            "group selfie photo": { spec: "Group selfie style, person holding phone, dynamic.", desc: "自拍團體照：像是一群人用手機自拍的視角。" },
-            "portrait photography": { spec: "Portrait photography, bokeh background, sharp focus on face.", desc: "人像攝影：專業棚拍或戶外人像，背景虛化。" },
-            "ports photography": { spec: "Sports photography, fast shutter speed, motion blur, dynamic action.", desc: "運動攝影：捕捉動態瞬間的高速攝影。" },
-            "still life photo": { spec: "Still life photography, controlled studio lighting, artistic arrangement.", desc: "靜物攝影：產品或靜物的精緻打光拍攝。" },
+            // --- 攝影與照片 ---
+            "Photo": { spec: "Realistic photography style, clear details, natural lighting.", desc: "標準照片：最寫實通用的攝影風格。" },
+            "Cinematic": { spec: "Cinematic movie still, dramatic lighting, wide aspect ratio, color grading.", desc: "電影質感：極具故事感與戲劇張力的光影。" },
+            "DSLR": { spec: "Shot on DSLR camera, high resolution, sharp focus, professional look.", desc: "單眼相機：專業相機的高畫質與銳利度。" },
+            "Polaroid": { spec: "Polaroid instant film style, vintage colors, white border frame, faded look.", desc: "拍立得：復古、帶有白框與特殊色偏。" },
+            "Fujifilm": { spec: "Fujifilm film grain, vibrant colors, classic film photography aesthetic.", desc: "富士底片：經典的膠片顆粒與發色。" },
+            "Vintage Photo": { spec: "Aged vintage photograph, sepia tones, scratches, worn texture.", desc: "復古老照片：泛黃、帶有歲月痕跡的質感。" },
+            "Macro lens": { spec: "Macro lens photography, extreme close-up, shallow depth of field, incredible details.", desc: "微距鏡頭：捕捉極微小世界的細節。" },
+            "Wide angle lens": { spec: "Wide angle lens view, expansive landscape, distorted perspective at edges.", desc: "廣角鏡頭：視野遼闊，具備張力。" },
+            "Fish eye lens": { spec: "Fish eye lens style, strong barrel distortion, ultra-wide circular view.", desc: "魚眼鏡頭：誇張的球形扭曲視角。" },
+            "Tilt shift lens": { spec: "Tilt shift lens effect, miniature faking, selective focus planes.", desc: "移軸鏡頭：讓世界看起來像小人國模型。" },
+            "Golden hour": { spec: "Golden hour lighting, warm, soft sunlight, long shadows, magical atmosphere.", desc: "黃金時刻光：日出日落時的溫暖迷人光影。" },
+            "Bokeh": { spec: "Photography with strong bokeh, blurred background lights, shallow depth of field.", desc: "散景效果：背景模糊的美麗光斑。" },
 
-            // 鏡頭與焦距 (Oxxo Specs)
-            "macro lens": { spec: "Macro lens photography, extreme close-up, hyper-detailed texture.", desc: "微距鏡頭：捕捉極細微的紋理與細節。" },
-            "wide angle lens": { spec: "Wide angle lens, expansive view, architectural perspective.", desc: "廣角鏡頭：適合拍風景、建築，視野遼闊。" },
-            "fish eye lens": { spec: "Fish eye lens, panoramic distortion, ultra-wide circular view.", desc: "魚眼鏡頭：誇張的球形扭曲，視覺張力大。" },
-            "tilt shift lens": { spec: "Tilt shift lens, miniature effect, selective focus.", desc: "移軸鏡頭：讓真實世界看起來像模型小人國。" },
+            // --- 繪畫媒材 ---
+            "Oil Painting": { spec: "Classical oil painting style, rich visible brushstrokes, canvas texture.", desc: "古典油畫：濃郁的筆觸與畫布質感。" },
+            "Watercolor": { spec: "Watercolor painting, transparent colors, wet-on-wet bleeding, paper texture.", desc: "透明水彩：清透的暈染與流動感。" },
+            "Acrylic Painting": { spec: "Acrylic painting, bold colors, distinct layering, textured finish.", desc: "壓克力畫：鮮豔飽和，具備堆疊感。" },
+            "Sketch": { spec: "Hand-drawn pencil sketch, rough lines, shading with cross-hatching, paper grain.", desc: "素描草圖：手繪的線條與陰影質感。" },
+            "Charcoal Drawing": { spec: "Charcoal drawing style, deep blacks, smudged textures, rough paper.", desc: "炭筆畫：粗獷、高對比的黑白風格。" },
+            "Ink Drawing": { spec: "Traditional Eastern ink drawing, calligraphy brushstrokes, sumi-e style, negative space.", desc: "水墨畫：強調筆墨神韻與留白藝術。" },
+            "Ukiyo-e": { spec: "Japanese Ukiyo-e woodblock print style, bold outlines, flat colors, traditional patterns.", desc: "日本浮世繪：經典的木刻版畫風格。" },
+            "Gongbi Painting": { spec: "Chinese Gongbi painting style, meticulous brushwork, highly detailed, elegant colors.", desc: "中國工筆畫：精謹細膩的傳統畫風。" },
+            "Printmaking": { spec: "Linocut or woodcut printmaking style, bold graphic lines, textured ink transfer.", desc: "版畫風格：手工刻印的獨特質感。" },
+            "Fresco": { spec: "Fresco wall painting style, aged plaster texture, muted earthy colors, historical feel.", desc: "濕壁畫：牆壁上的古樸灰泥質感。" },
 
-            // 攝影風格 (Oxxo Specs)
-            "Cinematic": { spec: "Cinematic movie style, dramatic lighting, anamorphic look.", desc: "電影劇照：充滿故事感與戲劇化的光影。" },
-            "DSLR style": { spec: "Digital DSLR photography style, high resolution, crisp details.", desc: "單眼風格：專業數位單眼相機質感。" },
-            "Polaroid style": { spec: "Polaroid instant film style, vintage colors, white border.", desc: "拍立得：復古、帶有即拍即得的底片感。" },
-            "Fujifilm style": { spec: "Fujifilm superia style, film grain, iconic color science.", desc: "富士底片：獨特的色彩科學與顆粒感。" },
+            // --- 藝術流派 ---
+            "Renaissance": { spec: "Renaissance art style, classical composition, realistic anatomy, rich colors, sfumato.", desc: "文藝復興：古典、寫實與和諧構圖。" },
+            "Baroque": { spec: "Baroque art style, dramatic high contrast lighting (chiaroscuro), intense emotion, dynamic movement.", desc: "巴洛克：戲劇性的光影與動態感。" },
+            "Impressionism": { spec: "Impressionism style, loose brushwork, capturing light and atmosphere, visible strokes.", desc: "印象派：捕捉光影變化的瞬間筆觸。" },
+            "Cubism": { spec: "Cubism art style, fragmented geometry, multiple viewpoints, abstract forms.", desc: "立體派：幾何解構與多視角重組。" },
+            "Surrealism": { spec: "Surrealism art style, dreamlike scenes, illogical juxtapositions, melting forms.", desc: "超現實主義：如夢境般的奇幻與荒誕。" },
+            "Pop Art": { spec: "Pop Art style, bold colors, comic book aesthetics, halftone dots, repetitive imagery.", desc: "普普藝術：大膽配色與流行文化符號。" },
+            "Minimalism": { spec: "Minimalism art style, extreme simplicity, clean lines, limited color palette, negative space.", desc: "極簡主義：極致簡約，少即是多。" },
+            "Cyberpunk": { spec: "Cyberpunk aesthetic, neon lights, high-tech low-life, futuristic cityscape, gritty atmosphere.", desc: "賽博龐克：霓虹燈與未來科技廢土感。" },
+            "Steampunk": { spec: "Steampunk aesthetic, Victorian machinery, brass gears, steam powered technology, retro-futurism.", desc: "蒸氣龐克：維多利亞式的機械美學。" },
 
-            // 提示詞.png 風格
-            "Oil Painting": { spec: "Oil painting style, rich brushstrokes, canvas texture.", desc: "油畫風：濃郁的顏料質感與藝術筆觸。" },
-            "Watercolor": { spec: "Watercolor painting, soft color wash, flowing ink.", desc: "水彩風：輕透的色塊與流動的藝術感。" },
-            "Hand-drawn Sketch": { spec: "Hand-drawn pencil sketch, rough lines, charcoal texture.", desc: "素描風：手繪線條感與炭筆陰影。" },
-            "Surreal": { spec: "Surrealism art style, dreamlike elements, bizarre logic.", desc: "超現實：如夢境般的場景與奇幻元素。" },
-            "Logo": { spec: "Minimalist vector logo, flat icon design, isolated on white.", desc: "標誌設計：適合創作簡約、專業的 LOGO。" },
-            "Poster": { spec: "Advertising poster design, graphic layout, vibrant colors.", desc: "海報設計：具備平面設計感的商業排版。" },
-            "Interior": { spec: "Interior design rendering, modern architecture, soft lighting.", desc: "室內設計：空間構圖與現代裝修美感。" },
-            "Anime": { spec: "High-quality anime art style, cel-shaded, vibrant.", desc: "動漫風：高飽和色彩的 2D 動漫質感。" },
+            // --- 藝術家大師 ---
+            "Da Vinci": { spec: "Style of Leonardo da Vinci, sepia ink sketches, anatomical studies, engineering diagrams, aged paper.", desc: "達文西：古老手稿與精密素描。" },
+            "Van Gogh": { spec: "Style of Vincent van Gogh, expressive swirling brushstrokes, thick impasto paint, emotional colors.", desc: "梵谷：充滿情感的強烈旋轉筆觸。" },
+            "Picasso": { spec: "Style of Pablo Picasso, Cubist fragmentation, abstract faces, geometric forms, bold lines.", desc: "畢卡索：抽象立體派的幾何解構。" },
+            "Dali": { spec: "Style of Salvador Dalí, surreal desert landscapes, melting clocks, bizarre creatures, dream logic.", desc: "達利：超現實的夢幻與扭曲意象。" },
+            "Monet": { spec: "Style of Claude Monet, Impressionist water lilies, soft light reflections, garden scenes, hazy atmosphere.", desc: "莫內：柔和光影與睡蓮池的印象。" },
+            "Andy Warhol": { spec: "Style of Andy Warhol, silk screen printing look, high contrast colors, celebrity portraits, repetition.", desc: "安迪沃荷：絲網印刷與普普風肖像。" },
+            "Kusama Yayoi": { spec: "Style of Yayoi Kusama, infinite polka dots, vibrant colors, organic patterns, psychedelic.", desc: "草間彌生：標誌性的無限圓點藝術。" },
 
-            // 原始 32 風格精選
-            "McKinsey": { spec: "Professional business framework, corporate blue.", desc: "顧問風：強調專業邏輯與商務藍調。" },
-            "Isometric 3D": { spec: "30-degree isometric perspective, 3D cubic shapes.", desc: "等距風：立體方塊堆疊，適合呈現架構。" },
-            "Claymation": { spec: "3D clay texture, visible fingerprints, handmade feel.", desc: "黏土風：如定格動畫般的捏製質感。" },
-            "Diorama": { spec: "Miniature diorama, tilt-shift effect, tiny world.", desc: "小屋風：精緻的微縮景觀模型。" }
+            // --- 動畫與漫畫 ---
+            "Disney Animation": { spec: "Classic Disney animation style, hand-drawn feel, expressive characters, fairytale atmosphere.", desc: "迪士尼：經典手繪動畫的童話感。" },
+            "Pixar Animation": { spec: "Pixar 3D animation style, high quality CGI rendering, expressive characters, detailed textures.", desc: "皮克斯：高品質的 3D 動畫質感。" },
+            "Studio Ghibli": { spec: "Studio Ghibli art style, hand-painted watercolor backgrounds, gentle atmosphere, fantastical elements.", desc: "吉卜力：清新溫潤的手繪水彩風。" },
+            "Anime": { spec: "Typical Japanese anime style, cel-shading, large expressive eyes, dynamic action lines.", desc: "日本動漫：標準的日系動畫視覺。" },
+            "Manga": { spec: "Japanese black and white manga style, screen tones, speed lines, ink pen drawings.", desc: "日本漫畫：黑白網點與速度線風格。" },
+            "American Comic": { spec: "American comic book style, bold outlines, heavy shadows, halftone dot patterns, vibrant action.", desc: "美式漫畫：粗獷線條與強烈美漫風。" },
+            "Claymation": { spec: "Claymation stop-motion style, plasticine texture, visible fingerprints, handmade feel.", desc: "黏土定格：手工捏製的逐格動畫感。" },
+
+            // --- 特殊與設計 ---
+            "Logo Design": { spec: "Minimalist vector logo design, flat style, clean lines, isolated on white background.", desc: "標誌設計：簡約、專業的向量 LOGO。" },
+            "Flat Design": { spec: "Modern flat design illustration, simple shapes, bright colors, no complex textures.", desc: "扁平設計：簡潔明亮的現代插畫。" },
+            "Infographic": { spec: "Infographic style, clear data visualization, icons, charts, clean layout, informative.", desc: "資訊圖表：清晰的數據視覺化呈現。" },
+            "Blueprint": { spec: "Technical blueprint drawing, white lines on cyan blue grid paper, architectural plans.", desc: "工程藍圖：嚴謹的技術製圖美學。" },
+            "Origami": { spec: "Origami art style, folded paper textures, geometric facets, sharp creases.", desc: "摺紙藝術：紙張折疊的幾何立體感。" },
+            "Paper Cutout": { spec: "Paper cutout art style, layered colored paper, drop shadows creating depth.", desc: "剪紙藝術：層疊紙張的手工立體感。" },
+            "Pixel Art": { spec: "8-bit or 16-bit pixel art style, low resolution, grid-based, retro game aesthetic.", desc: "像素藝術：復古遊戲的點陣圖風格。" },
+            "Isometric 3D": { spec: "30-degree isometric 3D render, clean geometric shapes, stylized diorama look.", desc: "等距立體：適合呈現架構的 3D 視角。" },
+            "Low Poly": { spec: "Low poly 3D art, geometric polygon mesh, faceted look, minimalist 3D.", desc: "低多邊形：幾何刻面的簡約 3D 風格。" },
+            "3D Render": { spec: "High quality 3D product render, photorealistic, studio lighting, octane render.", desc: "3D 渲染：高品質的數位三維圖像。" },
+            "LEGO": { spec: "Built from LEGO bricks, plastic toy texture, studs visible, playful construction.", desc: "樂高積木：由積木拼砌而成的世界。" },
+
+            // --- 專業商務 ---
+            "McKinsey": { spec: "Professional business consulting style, clean slides, corporate blue palette, structured data.", desc: "顧問風：專業邏輯與商務簡報感。" },
+            "Corporate": { spec: "Modern corporate branding style, sleek design, professional stock photo feel.", desc: "企業質感：現代企業的品牌形象感。" },
+            "Professional": { spec: "Clean and balanced professional design, suitable for high-end presentations.", desc: "專業簡報：適合正式場合的設計。" }
         };
 
         const ratioSpecs = {
@@ -214,7 +282,7 @@
 
         let selectedType = 'general';
         let selectedRatio = '9:16';
-        let history = JSON.parse(localStorage.getItem('prompt_history_v65') || '[]');
+        let history = JSON.parse(localStorage.getItem('prompt_history_v66') || '[]');
 
         function vibrate() { if (navigator.vibrate) navigator.vibrate(15); }
 
@@ -257,9 +325,9 @@
         }
 
         function generate() {
-            const content = document.getElementById('content').value.trim() || "Amazing AI Art";
+            const content = document.getElementById('content').value.trim() || "Amazing AI Creation";
             const style = document.getElementById('style').value;
-            if(!style) return alert('請先選擇風格喔！');
+            if(!style) return alert('請先挑選一個風格喔！');
             
             const typeLabel = (selectedType === 'general') ? "image" : selectedType;
             const prompt = `/imagine prompt: A ${style} style ${typeLabel} about '${content}'. \n- ${styleSpecs[style].spec} \n- Aspect ratio: ${selectedRatio} ${ratioSpecs[selectedRatio].ar} --v 6.0`;
@@ -272,7 +340,7 @@
         function saveToHistory(s, c, p) {
             history.unshift({ style: s, content: c, prompt: p });
             if (history.length > 5) history.pop();
-            localStorage.setItem('prompt_history_v65', JSON.stringify(history));
+            localStorage.setItem('prompt_history_v66', JSON.stringify(history));
             renderHistory();
         }
 
@@ -294,7 +362,7 @@
             document.getElementById('resultBox').classList.remove('hidden');
         }
 
-        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v65'); renderHistory(); }
+        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v66'); renderHistory(); }
         function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('指令已複製！'); }
         function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
         function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
