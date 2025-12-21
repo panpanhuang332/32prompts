@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Prompt Lab Pro - V6.0</title>
+    <title>ICS Lab Pro - V6.1 All-in-One</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,25 +16,23 @@
         body { -webkit-tap-highlight-color: transparent; transition: background-color 0.4s ease; }
         .app-card { border-radius: 32px; transition: all 0.3s ease; }
         .gradient-header { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
-        @media (prefers-color-scheme: dark) {
-            body { background-color: #0f172a; }
-        }
+        @media (prefers-color-scheme: dark) { body { background-color: #0f172a; } }
         .dot { transition: all 0.3s ease-in-out; }
         input:checked ~ .dot { transform: translateX(100%); background-color: #4f46e5; }
         @keyframes dice-roll { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .rolling { animation: dice-roll 0.5s ease-in-out; }
         select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1.2rem center; background-repeat: no-repeat; background-size: 1.2em; }
+        .mode-btn-active { @apply ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 font-bold !important; }
     </style>
 </head>
 <body class="p-4 bg-slate-50 dark:bg-slate-900 min-h-screen font-sans pb-10 flex justify-center items-start">
 
     <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700">
         <div class="p-9 gradient-header text-white relative">
-            <div class="absolute top-0 right-0 p-4 opacity-10 text-8xl"><i class="fas fa-magic"></i></div>
             <h1 class="text-3xl font-black flex items-center gap-3 relative z-10">
                 <i class="fas fa-wand-sparkles text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.0 Pure Generation</p>
+            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.1 Ultimate Integration</p>
             
             <button onclick="randomStyleOnly()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white group-hover:rotate-12 transition-transform"></i>
@@ -43,7 +41,19 @@
 
         <div class="p-7 space-y-8">
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 01. 圖片類型</label>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 00. 創作模式 (Mode)</label>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="vibrate(); setMode('通用', this)" class="mode-btn mode-btn-active border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">通用</button>
+                    <button onclick="vibrate(); setMode('人像', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">人像</button>
+                    <button onclick="vibrate(); setMode('風景', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">風景</button>
+                    <button onclick="vibrate(); setMode('動漫', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">動漫</button>
+                    <button onclick="vibrate(); setMode('LOGO', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">LOGO</button>
+                    <button onclick="vibrate(); setMode('超現實', this)" class="mode-btn border border-gray-100 dark:border-slate-700 p-2 rounded-xl text-[10px] font-medium transition-all">超現實</button>
+                </div>
+            </section>
+
+            <section>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 01. 圖片類型 (I)</label>
                 <div class="grid grid-cols-2 gap-3">
                     <button id="btn-infographic" onclick="vibrate(); setType('infographic', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-4 rounded-2xl text-indigo-700 dark:text-indigo-300 text-sm font-bold transition-all shadow-sm">資訊圖表</button>
                     <button id="btn-diagram" onclick="vibrate(); setType('diagram', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-4 rounded-2xl text-gray-500 dark:text-slate-400 text-sm font-medium transition-all">功能圖解</button>
@@ -53,15 +63,15 @@
             </section>
 
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 02. 內容主題</label>
-                <textarea id="content" rows="2" placeholder="你想呈現什麼內容？（此處不會被骰子更動）" 
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 02. 內容主題 (C)</label>
+                <textarea id="content" rows="2" placeholder="輸入你想呈現的主題..." 
                        class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-base shadow-inner"></textarea>
             </section>
 
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (32種)</label>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-4 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (S - 32種)</label>
                 <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-5 outline-none text-base shadow-sm">
-                    <option value="" disabled selected>請選擇視覺風格...</option>
+                    <option value="" disabled selected>請選擇風格...</option>
                     <optgroup label="💼 專業商務">
                         <option value="McKinsey">01 顧問風 McKinsey</option>
                         <option value="Corporate">02 企業風 Corporate</option>
@@ -86,7 +96,7 @@
                         <option value="Graffiti">17 塗鴉風 Graffiti</option>
                     </optgroup>
                     <optgroup label="📜 復古經典">
-                        <option value="Vintage Poster">18 海報風 Vintage</option>
+                        <option value="Vintage Poster">18 海報風 Vintage Poster</option>
                         <option value="Chalkboard">19 黑板風 Chalkboard</option>
                         <option value="Analog Film">20 底片風 Analog Film</option>
                         <option value="Pop Art">21 普普風 Pop Art</option>
@@ -113,17 +123,6 @@
                 </div>
             </section>
 
-            <section class="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-900/50 rounded-2xl border border-gray-100 dark:border-slate-700">
-                <span class="text-xs font-bold text-gray-700 dark:text-slate-300">負面內容過濾</span>
-                <label class="flex items-center cursor-pointer">
-                    <div class="relative">
-                        <input type="checkbox" id="negSwitch" class="sr-only" checked onchange="vibrate()">
-                        <div class="block bg-gray-200 dark:bg-slate-700 w-10 h-6 rounded-full transition"></div>
-                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
-                    </div>
-                </label>
-            </section>
-
             <button onclick="vibrate(); generate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-xl transition-all active:scale-[0.96] flex justify-center items-center gap-2 text-lg">
                 生成指令 <i class="fas fa-magic"></i>
             </button>
@@ -132,7 +131,7 @@
                 <div class="bg-slate-900 rounded-[2rem] p-7 border border-slate-700 shadow-2xl relative">
                     <p id="finalPrompt" class="text-indigo-200 text-xs font-mono whitespace-pre-line leading-relaxed bg-slate-950/50 p-5 rounded-2xl border border-white/5 shadow-inner mb-6"></p>
                     <div class="grid grid-cols-3 gap-2">
-                        <button onclick="vibrate(); copyText()" class="bg-indigo-600 text-white p-4 rounded-xl text-xs font-black transition active:scale-90 flex flex-col items-center gap-1 shadow-lg shadow-indigo-900/40">
+                        <button onclick="vibrate(); copyText()" class="bg-indigo-600 text-white p-4 rounded-xl text-xs font-black transition active:scale-90 flex flex-col items-center gap-1">
                             <i class="far fa-copy text-lg"></i> 複製
                         </button>
                         <button onclick="vibrate(); shareLine()" class="bg-[#06C755] text-white p-4 rounded-xl text-xs font-black transition active:scale-90 flex flex-col items-center gap-1">
@@ -156,23 +155,23 @@
     </div>
 
     <script>
-        // --- 完整風格字典 ---
+        // 根據 32 種風格清單建立字典
         const styleSpecs = {
             "McKinsey": { spec: "Professional business framework, corporate blue.", desc: "顧問專業風：經典商務藍，強調數據邏輯。" },
-            "Corporate": { spec: "Modern office aesthetic, polished branding.", desc: "企業質感風：適合科技產品介紹或現代品牌。" },
-            "Minimalist": { spec: "Clean white space, high contrast.", desc: "極簡美學：大量留白，視覺焦點極致集中。" },
+            "Corporate": { spec: "Modern office aesthetic, polished branding.", desc: "企業質感風：適合科技產品介紹。" },
+            "Minimalist": { spec: "Clean white space, high contrast.", desc: "極簡美學：大量留白，視覺焦點集中。" },
             "Professional": { spec: "Clean slide design, balanced typography.", desc: "專業簡報：排版規整，適合工作報告。" },
             "Framework": { spec: "Logical flow, systematic arrangement.", desc: "邏輯框架：清晰的模組化排版方式。" },
             "Watercolor": { spec: "Soft watercolor wash, artistic edges.", desc: "手繪水彩：浪漫且具藝術感的筆觸。" },
-            "Isometric 3D": { spec: "30-degree isometric, cubic shapes.", desc: "等距視角：30度立體堆疊，科技感強。" },
+            "Isometric 3D": { spec: "30-degree isometric perspective, stacked cubic/geometric shapes, clear shadow layers for depth, video game map aesthetic, tech-forward modern colors.", desc: "等距視角：30度立體堆疊，科技感強。" },
             "Flat Vector": { spec: "2D flat design, bold modern colors.", desc: "扁平插畫：簡潔明亮，適合網頁設計。" },
             "Kawaii": { spec: "Cute characters, pastel colors.", desc: "可愛插畫：粉色調、圓潤，具親和力。" },
-            "Hand-drawn Sketch": { spec: "Pencil line texture, rough edges.", desc: "草圖手寫：親切自然，具溫度感。" },
+            "Hand-drawn Sketch": { spec: "Pencil line texture, organic irregular shapes, rough sketch edges, notebook paper style, casual and approachable mood.", desc: "草圖手寫：親切自然，具手寫溫度。" },
             "Paper Cutout": { spec: "Layered paper, subtle drop shadows.", desc: "層次剪紙：透過陰影創造手工立體感。" },
-            "Anime": { spec: "High-quality anime art, cel-shaded.", desc: "精美動漫：高飽和色彩，充滿活力。" },
+            "Anime": { spec: "High-quality anime art style, vibrant colors, expressive characters, cel-shaded details.", desc: "精美動漫：高飽和色彩，充滿活力。" },
             "Comic Book": { spec: "Bold ink lines, halftone dots.", desc: "美式漫畫：粗線條、網點，張力十足。" },
             "Pixel Art": { spec: "16-bit retro style, pixel grid.", desc: "像素藝術：懷舊遊戲感，數位復古美。" },
-            "Claymation": { spec: "3D clay texture, visible fingerprints.", desc: "黏土定格：溫潤質感，可見手工痕跡。" },
+            "Claymation": { spec: "3D clay texture, visible fingerprints on surface, soft plasticine lighting, stop-motion animation aesthetic, warm and tactile feel.", desc: "黏土定格：溫潤質感，可見手工痕跡。" },
             "Origami": { spec: "Folded paper, sharp creases.", desc: "細膩摺紙：幾何對稱，純淨紙質美。" },
             "Graffiti": { spec: "Street art, spray paint texture.", desc: "街頭塗鴉：鮮豔奔放，具備都市酷感。" },
             "Vintage Poster": { spec: "Retro aesthetic, weathered paper.", desc: "復古海報：懷舊配色，充滿歲月質感。" },
@@ -187,15 +186,22 @@
             "Cyberpunk": { spec: "Neon lights, high-tech grit.", desc: "賽博龐克：霓虹藍紫色調，未來廢土感。" },
             "Steampunk": { spec: "Victorian machinery, brass gears.", desc: "蒸氣龐克：黃銅、齒輪，機械美學。" },
             "Quilling": { spec: "Intricate rolled paper art.", desc: "細緻紙雕：複雜的捲紙工藝立體感。" },
-            "Flat Lay": { spec: "Top-down view, arranged objects.", desc: "攝影擺拍：整齊、療癒的俯視視角。" },
+            "Flat Lay": { spec: "Top-down bird's eye view, arranged real objects, clean light background, DIY aesthetic, organized and visually pleasing layout.", desc: "俯拍擺拍：整齊、療癒的俯視視角。" },
             "Glassmorphism": { spec: "Frosted glass, blurred background.", desc: "玻璃擬態：磨砂半透明層次，現代時尚。" },
             "Diorama": { spec: "Miniature scene, tilt-shift effect.", desc: "微縮景觀：像玩具一樣的小小世界感。" }
         };
 
+        let currentMode = '通用';
         let selectedType = 'infographic';
-        let history = JSON.parse(localStorage.getItem('prompt_history_v6') || '[]');
+        let history = JSON.parse(localStorage.getItem('prompt_history_v61') || '[]');
 
         function vibrate() { if (navigator.vibrate) navigator.vibrate(15); }
+
+        function setMode(mode, btn) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('mode-btn-active'));
+            btn.classList.add('mode-btn-active');
+        }
 
         function setType(type, btn) {
             selectedType = type;
@@ -205,7 +211,6 @@
             btn.className = 'type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-4 rounded-2xl text-indigo-700 dark:text-indigo-300 text-sm font-bold transition-all shadow-sm';
         }
 
-        // --- 優化後的骰子功能: 只換風格 ---
         function randomStyleOnly() {
             vibrate();
             const icon = document.getElementById('diceIcon');
@@ -228,24 +233,22 @@
         }
 
         function generate() {
-            const content = document.getElementById('content').value.trim() || "Awesome Project";
+            const content = document.getElementById('content').value.trim() || "Amazing AI Art";
             const style = document.getElementById('style').value;
             if(!style) return alert('請先挑選一個風格！');
             
-            const negPrompt = document.getElementById('negSwitch').checked ? "\nNegative: low quality, distorted text, watermark, signature." : "";
-            const prompt = `/imagine prompt: A ${style} style ${selectedType} about '${content}'. \n- ${styleSpecs[style].spec} \n- Aspect ratio: 9:16 --v 6.0${negPrompt}`;
+            const modePrompt = currentMode !== '通用' ? `Scene mode: ${currentMode}. ` : "";
+            const prompt = `/imagine prompt: A ${style} style ${selectedType} about '${content}'. \n- ${modePrompt}${styleSpecs[style].spec} \n- Aspect ratio: 9:16 --v 6.0`;
             
             document.getElementById('finalPrompt').innerText = prompt;
             document.getElementById('resultBox').classList.remove('hidden');
-            document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
-            
             saveToHistory(style, content, prompt);
         }
 
         function saveToHistory(s, c, p) {
             history.unshift({ style: s, content: c, prompt: p });
             if (history.length > 5) history.pop();
-            localStorage.setItem('prompt_history_v6', JSON.stringify(history));
+            localStorage.setItem('prompt_history_v61', JSON.stringify(history));
             renderHistory();
         }
 
@@ -268,7 +271,7 @@
             document.getElementById('resultBox').classList.remove('hidden');
         }
 
-        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v6'); renderHistory(); }
+        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v61'); renderHistory(); }
         function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('指令已複製！'); }
         function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
         function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
