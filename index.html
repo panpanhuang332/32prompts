@@ -27,26 +27,17 @@
             appId: "YOUR_APP_ID"
         };
 
-        // 初始化 Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // 登入功能
         window.login = async () => {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                console.log("登入成功:", result.user);
-            } catch (error) {
-                console.error("登入失敗:", error);
-                alert("登入失敗，請稍後再試");
-            }
+            try { await signInWithPopup(auth, provider); } 
+            catch (error) { console.error("登入失敗:", error); alert("登入失敗"); }
         };
 
-        // 登出功能
         window.logout = () => signOut(auth);
 
-        // 監聽登入狀態切換 UI
         onAuthStateChanged(auth, (user) => {
             const loginBtn = document.getElementById('loginBtn');
             const userInfo = document.getElementById('userInfo');
@@ -58,7 +49,7 @@
                 userInfo.classList.remove('hidden');
                 userImg.src = user.photoURL;
                 generateBtn.disabled = false;
-                generateBtn.innerText = "生成大師指令 (已登入)";
+                generateBtn.innerHTML = '生成大師指令 <i class="fas fa-wand-magic-sparkles ml-2"></i>';
             } else {
                 loginBtn.classList.remove('hidden');
                 userInfo.classList.add('hidden');
@@ -83,7 +74,7 @@
 
     <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card overflow-hidden relative shadow-2xl">
         <div class="p-10 gradient-header text-white relative overflow-hidden">
-            <div class="flex justify-between items-start relative z-10">
+            <div class="flex justify-between items-center relative z-10">
                 <div>
                     <h1 class="text-3xl font-black italic tracking-tighter">第一次AI生圖就上手</h1>
                     <p class="text-purple-100 text-xl mt-2 font-black tracking-[0.4em]">9527</p>
@@ -98,9 +89,6 @@
                     </div>
                 </div>
             </div>
-            <button onclick="randomStyleOnly()" class="absolute bottom-8 right-8 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3.5 rounded-2xl border border-white/40 active:scale-90 group shadow-lg">
-                <i id="diceIcon" class="fas fa-dice text-2xl text-white"></i>
-            </button>
         </div>
 
         <div class="p-8 space-y-9">
@@ -119,39 +107,45 @@
             </section>
 
             <section class="space-y-4">
-                <label class="text-xs font-black text-purple-600 dark:text-purple-400 block tracking-widest uppercase">Step 03. 視覺風格與參數</label>
+                <label class="text-xs font-black text-purple-600 dark:text-purple-400 block tracking-widest uppercase">Step 03. 視覺風格</label>
                 <select id="styleCategory" onchange="vibrate(); updateTieredUI()" class="w-full p-4 bg-indigo-50/50 dark:bg-slate-900 border-2 border-transparent rounded-2xl font-black text-purple-600 text-sm outline-none">
                     <option value="" disabled selected>1. 選擇風格類別...</option>
                     <option value="Photography">📷 一般攝影</option>
                     <option value="AnimeComics">🎬 動畫與漫畫</option>
+                    <option value="Painting">🖌️ 藝術繪畫風格</option>
                 </select>
-                <select id="styleDetail" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border-2 border-transparent rounded-2xl font-bold text-gray-700 dark:text-slate-200 text-sm outline-none" disabled>
+                <select id="styleDetail" onchange="vibrate()" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border-2 border-transparent rounded-2xl font-bold text-gray-700 dark:text-slate-200 text-sm outline-none" disabled>
                     <option value="">2. 再選擇具體規格...</option>
                 </select>
             </section>
 
             <button id="generateBtn" disabled onclick="vibrate(); generate()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black py-5 rounded-[20px] text-lg active:scale-95 transition-all shadow-lg">
-                請先登入以使用生成功能 <i class="fas fa-wand-magic-sparkles"></i>
+                請先登入以使用生成功能
             </button>
 
             <div id="resultBox" class="hidden animate-in zoom-in-95 duration-300">
-                <div class="bg-slate-900 rounded-[2.5rem] p-7 border-2 border-slate-700 relative overflow-hidden text-white">
+                <div class="bg-slate-900 rounded-[2.5rem] p-7 border-2 border-slate-700 relative overflow-hidden">
                     <p id="finalPrompt" class="text-purple-200 text-xs font-mono bg-slate-950/80 p-5 rounded-3xl mb-6 select-all"></p>
-                    <button onclick="copyText()" class="w-full bg-purple-600 p-4 rounded-2xl flex items-center justify-center font-bold italic tracking-widest uppercase">Copy Prompt</button>
+                    <button onclick="copyText()" class="w-full bg-purple-600 text-white p-4 rounded-2xl font-bold italic">COPY PROMPT</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ... 原有的 JavaScript 邏輯 (setType, updateTieredUI, generate, copyText 等)
         let selectedType = 'general';
-        const categoryMap = { "Photography": ["Photo", "Portrait"], "AnimeComics": ["Anime", "Studio Ghibli"] };
+        const categoryMap = { 
+            "Photography": ["Photo", "Portrait", "Macro", "Wide Angle"], 
+            "AnimeComics": ["Anime", "Studio Ghibli", "Cyberpunk Manga"],
+            "Painting": ["Oil Painting", "Watercolor", "Sketch"]
+        };
+
         function setType(type, btn) {
             selectedType = type;
             document.querySelectorAll('.type-btn').forEach(b => b.className = 'type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium');
             btn.className = 'type-btn ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-900/30 p-3 rounded-2xl text-purple-700 dark:text-purple-300 text-xs font-bold shadow-sm';
         }
+
         function updateTieredUI() {
             const cat = document.getElementById('styleCategory').value;
             const detail = document.getElementById('styleDetail');
@@ -165,14 +159,20 @@
                 });
             }
         }
+
         function generate() {
-            const content = document.getElementById('content').value || "Art";
-            const style = document.getElementById('styleDetail').value;
+            const content = document.getElementById('content').value || "Mysterious landscape";
+            const style = document.getElementById('styleDetail').value || "Original Style";
             const prompt = `/imagine prompt: A ${style} of ${content} --ar 9:16 --v 6.1`;
             document.getElementById('finalPrompt').innerText = prompt;
             document.getElementById('resultBox').classList.remove('hidden');
         }
-        function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('已複製'); }
+
+        function copyText() { 
+            navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); 
+            alert('指令已複製！'); 
+        }
+        
         function vibrate() { if (navigator.vibrate) navigator.vibrate(10); }
     </script>
 </body>
