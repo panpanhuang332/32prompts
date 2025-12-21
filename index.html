@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Lab Pro - V6.8 Bilingual Select</title>
+    <title>ICS Lab Pro - V6.9 Photo Enhanced</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,9 +23,9 @@
     <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700">
         <div class="p-9 gradient-header text-white relative">
             <h1 class="text-3xl font-black italic flex items-center gap-3 relative z-10">
-                <i class="fas fa-layer-group text-yellow-300"></i> ICS Lab Pro
+                <i class="fas fa-camera-retro text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.8 Traditional Chinese Refined</p>
+            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.9 Photography Enhanced</p>
             <button onclick="randomStyleOnly()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white group-hover:rotate-12 transition-transform"></i>
             </button>
@@ -56,7 +56,7 @@
                     <option value="" disabled selected>1. 先選擇風格類別...</option>
                     <option value="Photography">📸 攝影與照片</option>
                     <option value="Painting">🖌️ 繪畫媒材與質感</option>
-                    <option value="ArtMovements">🏛️ 藝術流派與流派</option>
+                    <option value="ArtMovements">🏛️ 藝術流派與風格</option>
                     <option value="FamousArtists">🎨 知名藝術家大師</option>
                     <option value="AnimeComics">🎬 動畫與漫畫</option>
                     <option value="DesignSpecial">✨ 特殊與設計風格</option>
@@ -110,9 +110,10 @@
     </div>
 
     <script>
-        // --- 具體風格顯示名稱對照表 (補回中文標籤) ---
+        // --- 具體風格顯示名稱對照表 (新增您要求的攝影項目) ---
         const styleDisplayNames = {
-            "Photo": "標準照片 Photo", "Cinematic": "電影質感 Cinematic", "DSLR": "單眼相機 DSLR", "Polaroid": "拍立得 Polaroid", "Fujifilm": "富士底片 Fujifilm", "Vintage Photo": "復古老照片 Vintage", "Macro lens": "微距鏡頭 Macro", "Wide angle lens": "廣角鏡頭 Wide", "Fish eye lens": "魚眼鏡頭 Fish-eye", "Tilt shift lens": "移軸鏡頭 Tilt-shift", "Golden hour": "黃金時刻 Golden Hour", "Bokeh": "散景效果 Bokeh",
+            "Photo": "標準照片 Photo", "life photo": "生活照 Life Photo", "group photo": "團體照 Group Photo", "group selfie photo": "自拍團體照 Group Selfie", "selfie photo": "個人自拍照 Selfie", "portrait photography": "人像攝影 Portrait", "ports photography": "運動攝影 Sports", "still life photo": "靜物攝影 Still Life",
+            "Cinematic": "電影質感 Cinematic", "DSLR": "單眼相機 DSLR", "Polaroid": "拍立得 Polaroid", "Fujifilm": "富士底片 Fujifilm", "Vintage Photo": "復古老照片 Vintage", "Macro lens": "微距鏡頭 Macro", "Wide angle lens": "廣角鏡頭 Wide", "Fish eye lens": "魚眼鏡頭 Fish-eye", "Tilt shift lens": "移軸鏡頭 Tilt-shift", "Golden hour": "黃金時刻 Golden Hour", "Bokeh": "散景效果 Bokeh",
             "Oil Painting": "古典油畫 Oil", "Watercolor": "透明水彩 Watercolor", "Acrylic Painting": "壓克力畫 Acrylic", "Sketch": "素描草圖 Sketch", "Charcoal Drawing": "炭筆畫 Charcoal", "Ink Drawing": "水墨畫 Ink", "Ukiyo-e": "日本浮世繪 Ukiyo-e", "Gongbi Painting": "中國工筆畫 Gongbi", "Printmaking": "版畫風格 Printmaking", "Fresco": "濕壁畫 Fresco",
             "Renaissance": "文藝復興 Renaissance", "Baroque": "巴洛克 Baroque", "Impressionism": "印象派 Impressionism", "Cubism": "立體派 Cubism", "Surrealism": "超現實主義 Surrealism", "Pop Art": "普普藝術 Pop Art", "Minimalism": "極簡主義 Minimalism", "Cyberpunk": "賽博龐克 Cyberpunk", "Steampunk": "蒸氣龐克 Steampunk",
             "Da Vinci": "達文西 Da Vinci", "Van Gogh": "梵谷 Van Gogh", "Picasso": "畢卡索 Picasso", "Dali": "達利 Dali", "Monet": "莫內 Monet", "Andy Warhol": "安迪沃荷 Warhol", "Kusama Yayoi": "草間彌生 Kusama",
@@ -122,7 +123,7 @@
         };
 
         const categoryMap = {
-            "Photography": ["Photo", "Cinematic", "DSLR", "Polaroid", "Fujifilm", "Vintage Photo", "Macro lens", "Wide angle lens", "Fish eye lens", "Tilt shift lens", "Golden hour", "Bokeh"],
+            "Photography": ["Photo", "life photo", "group photo", "group selfie photo", "selfie photo", "portrait photography", "ports photography", "still life photo", "Cinematic", "DSLR", "Polaroid", "Fujifilm", "Vintage Photo", "Macro lens", "Wide angle lens", "Fish eye lens", "Tilt shift lens", "Golden hour", "Bokeh"],
             "Painting": ["Oil Painting", "Watercolor", "Acrylic Painting", "Sketch", "Charcoal Drawing", "Ink Drawing", "Ukiyo-e", "Gongbi Painting", "Printmaking", "Fresco"],
             "ArtMovements": ["Renaissance", "Baroque", "Impressionism", "Cubism", "Surrealism", "Pop Art", "Minimalism", "Cyberpunk", "Steampunk"],
             "FamousArtists": ["Da Vinci", "Van Gogh", "Picasso", "Dali", "Monet", "Andy Warhol", "Kusama Yayoi"],
@@ -133,28 +134,35 @@
 
         const styleSpecs = {
             "Photo": { spec: "Realistic photography, natural lighting.", desc: "寫實通用的攝影風格。" },
-            "Cinematic": { spec: "Cinematic movie still, dramatic lighting, color grading.", desc: "戲劇化光影與色調感。" },
-            "DSLR": { spec: "Shot on DSLR, high resolution, sharp focus.", desc: "專業、清晰的影像質感。" },
-            "Polaroid": { spec: "Polaroid instant film, vintage colors, white frame.", desc: "復古底片色偏與白框感。" },
-            "Fujifilm": { spec: "Fujifilm film grain, vibrant film colors.", desc: "經典膠捲顆粒與發色。" },
-            "Vintage Photo": { spec: "Aged photograph, sepia tones, worn texture.", desc: "懷舊歲月痕跡。" },
+            "life photo": { spec: "Life photo, candid, informal, natural lifestyle photography.", desc: "生活照：自然、不刻意的生活感照片。" },
+            "group photo": { spec: "Group photo, multiple people, formal or informal group shot.", desc: "團體照：多人合照，構圖穩定清晰。" },
+            "group selfie photo": { spec: "Group selfie, one person holding phone, wide angle selfie of a group.", desc: "自拍團體照：像是一群人用手機自拍的視角。" },
+            "selfie photo": { spec: "Selfie, close up, person holding phone camera.", desc: "個人自拍照：單人持手機自拍視角。" },
+            "portrait photography": { spec: "Portrait photography, professional lighting, sharp focus on eyes, bokeh.", desc: "人像攝影：專業人像質感，背景虛化。" },
+            "ports photography": { spec: "Sports photography, dynamic motion, fast shutter speed, high action.", desc: "運動攝影：捕捉動態瞬間的高速攝影。" },
+            "still life photo": { spec: "Still life photography, studio lighting, arranged objects.", desc: "靜物攝影：產品或靜物的精緻打光拍攝。" },
+            "Cinematic": { spec: "Cinematic movie still, dramatic lighting, color grading.", desc: "電影質感：戲劇化光影與色調感。" },
+            "DSLR": { spec: "Shot on DSLR, high resolution, sharp focus.", desc: "單眼相機：專業、清晰的影像質感。" },
+            "Polaroid": { spec: "Polaroid instant film, vintage colors, white frame.", desc: "拍立得：復古底片色偏與白框感。" },
+            "Fujifilm": { spec: "Fujifilm film grain, vibrant film colors.", desc: "富士底片：經典膠捲顆粒與發色。" },
+            "Vintage Photo": { spec: "Aged photograph, sepia tones, worn texture.", desc: "復古老照片：懷舊歲月痕跡。" },
             "Macro lens": { spec: "Macro photography, extreme close-up, high detail.", desc: "捕捉極細微物體的細節。" },
             "Wide angle lens": { spec: "Wide angle view, expansive landscape.", desc: "視野遼闊具備空間張力。" },
             "Fish eye lens": { spec: "Fish eye distortion, ultra-wide circular view.", desc: "誇張的圓形扭曲視角。" },
             "Tilt shift lens": { spec: "Tilt shift effect, miniature selective focus.", desc: "讓世界變小人國模型。" },
             "Golden hour": { spec: "Golden hour, warm sunlight, soft shadows.", desc: "日出日落的溫暖光影。" },
             "Bokeh": { spec: "Strong bokeh, blurred background lights.", desc: "迷人的背影模糊光斑。" },
-            "Oil Painting": { spec: "Oil painting, rich brushstrokes, canvas.", desc: "濃郁筆觸與畫布質感。" },
-            "Watercolor": { spec: "Watercolor, soft wash, paper texture.", desc: "清透暈染與藝術筆觸。" },
-            "Acrylic Painting": { spec: "Acrylic, bold colors, textured finish.", desc: "鮮豔飽和具備堆疊感。" },
+            "Oil Painting": { spec: "Oil painting, rich brushstrokes, canvas.", desc: "古典油畫：濃郁筆觸與畫布質感。" },
+            "Watercolor": { spec: "Watercolor, soft wash, paper texture.", desc: "透明水彩：清透暈染與藝術筆觸。" },
+            "Acrylic Painting": { spec: "Acrylic, bold colors, textured finish.", desc: "壓克力畫：鮮豔飽和具備堆疊感。" },
             "Sketch": { spec: "Pencil sketch, rough lines, hand-drawn.", desc: "手繪線條與陰影質感。" },
-            "Charcoal Drawing": { spec: "Charcoal drawing, smudged texture, deep blacks.", desc: "粗獷、高對比黑白風格。" },
+            "Charcoal Drawing": { spec: "Charcoal drawing, smudged texture, deep blacks.", desc: "炭筆畫：粗獷、高對比黑白風格。" },
             "Ink Drawing": { spec: "Traditional ink drawing, sumi-e, negative space.", desc: "強調筆墨神韻與留白。" },
             "Ukiyo-e": { spec: "Ukiyo-e woodblock print, bold outlines.", desc: "經典木刻版畫風格。" },
             "Gongbi Painting": { spec: "Gongbi painting, meticulous brushwork.", desc: "精謹細膩的傳統畫風。" },
             "Printmaking": { spec: "Printmaking style, textured ink transfer.", desc: "手工刻印的獨特質感。" },
             "Fresco": { spec: "Fresco wall painting, aged plaster texture.", desc: "古樸灰泥牆壁質感。" },
-            "Renaissance": { spec: "Renaissance art, sfumato, realistic anatomy.", desc: "古典寫實與構圖。" },
+            "Renaissance": { spec: "Renaissance art, sfumato, realistic anatomy.", desc: "文藝復興：古典寫實與構圖。" },
             "Baroque": { spec: "Baroque style, chiaroscuro, intense emotion.", desc: "戲劇性光影與動態感。" },
             "Impressionism": { spec: "Impressionism, visible strokes, atmospheric light.", desc: "捕捉光影變化的瞬間。" },
             "Cubism": { spec: "Cubism, fragmented geometry, multiple views.", desc: "幾何解構與多視角組。" },
@@ -163,9 +171,9 @@
             "Minimalism": { spec: "Minimalism, extreme simplicity, clean lines.", desc: "極致簡約，少即是多。" },
             "Cyberpunk": { spec: "Cyberpunk, neon lights, futuristic cityscape.", desc: "霓虹與未來廢土感。" },
             "Steampunk": { spec: "Steampunk, brass gears, Victorian machinery.", desc: "維多利亞機械美學。" },
-            "Da Vinci": { spec: "Leonardo da Vinci sketches, sepia ink, aged paper.", desc: "手稿筆記與精密素描。" },
+            "Da Vinci": { spec: "Leonardo da Vinci sketches, sepia ink, aged paper.", desc: "達文西：手稿筆記與精密素描。" },
             "Van Gogh": { spec: "Vincent van Gogh style, thick impasto, swirling.", desc: "強烈情感的旋轉筆觸。" },
-            "Picasso": { spec: "Pablo Picasso style, fragmented forms.", desc: "立體派與抽象解構。" },
+            "Picasso": { spec: "Pablo Picasso style, fragmented forms.", desc: "畢卡索：立體派與抽象解構。" },
             "Dali": { spec: "Salvador Dalí style, melting objects, dream logic.", desc: "超現實的夢幻扭曲。" },
             "Monet": { spec: "Claude Monet style, soft light, hazy garden.", desc: "柔和光影與印象派風景。" },
             "Andy Warhol": { spec: "Andy Warhol style, silk screen printing, high contrast.", desc: "絲網印刷普普風。" },
@@ -196,7 +204,7 @@
         // --- 核心邏輯 ---
         let selectedType = 'general';
         let selectedRatio = '9:16';
-        let history = JSON.parse(localStorage.getItem('prompt_history_v68') || '[]');
+        let history = JSON.parse(localStorage.getItem('prompt_history_v69') || '[]');
 
         function vibrate() { if (navigator.vibrate) navigator.vibrate(15); }
 
@@ -211,7 +219,6 @@
                 categoryMap[category].forEach(key => {
                     const opt = document.createElement('option');
                     opt.value = key;
-                    // 使用顯示名稱對照表 (補回中文)
                     opt.textContent = styleDisplayNames[key] || key;
                     styleDetail.appendChild(opt);
                 });
@@ -261,7 +268,7 @@
         }
 
         function generate() {
-            const content = document.getElementById('content').value.trim() || "Mysterious AI Creation";
+            const content = document.getElementById('content').value.trim() || "Amazing AI Creation";
             const style = document.getElementById('styleDetail').value;
             if(!style) return alert('請先選取視覺風格！');
             
@@ -276,7 +283,7 @@
         function saveToHistory(s, c, p) {
             history.unshift({ style: s, content: c, prompt: p });
             if (history.length > 5) history.pop();
-            localStorage.setItem('prompt_history_v68', JSON.stringify(history));
+            localStorage.setItem('prompt_history_v69', JSON.stringify(history));
             renderHistory();
         }
 
@@ -298,7 +305,7 @@
             document.getElementById('resultBox').classList.remove('hidden');
         }
 
-        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v68'); renderHistory(); }
+        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v69'); renderHistory(); }
         function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('指令已複製！'); }
         function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
         function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
