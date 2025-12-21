@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Lab Pro - V7.6 Hardcore No-Text</title>
+    <title>ICS Lab Pro - V7.7 Logic Locked</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,6 +17,7 @@
         .rolling { animation: dice-roll 0.5s ease-in-out; }
         select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1.2rem center; background-repeat: no-repeat; background-size: 1.2em; }
         select:disabled { opacity: 0.5; cursor: not-allowed; background-color: #f1f5f9; color: #94a3b8; }
+        .hidden-option { display: none; }
     </style>
 </head>
 <body class="p-4 bg-slate-50 dark:bg-slate-900 min-h-screen font-sans pb-10 flex justify-center items-start">
@@ -24,9 +25,9 @@
     <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700">
         <div class="p-9 gradient-header text-white relative">
             <h1 class="text-3xl font-black italic flex items-center gap-3 relative z-10">
-                <i class="fas fa-eye-slash text-yellow-300"></i> ICS Lab Pro
+                <i class="fas fa-lock-open text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V7.6 Encyclopedia & No-Text Logic</p>
+            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V7.7 Smart Logic Controller</p>
             <button onclick="randomStyleOnly()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white"></i>
             </button>
@@ -34,30 +35,34 @@
 
         <div class="p-7 space-y-8">
             <section>
-                <label class="text-[10px] font-black text-indigo-500 mb-3 block tracking-[0.2em] uppercase">Step 01. 圖片類型</label>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 01. 圖片類型</label>
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="setType('general', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-2.5 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all">通用圖像</button>
-                    <button onclick="setType('infographic', this)" class="type-btn border border-gray-100 p-2.5 rounded-xl text-gray-500 text-[10px] font-medium transition-all">資訊圖表</button>
-                    <button onclick="setType('portrait', this)" class="type-btn border border-gray-100 p-2.5 rounded-xl text-gray-500 text-[10px] font-medium transition-all">人像攝影</button>
+                    <button id="type-general" onclick="vibrate(); setType('general', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-2.5 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all">通用圖像</button>
+                    <button id="type-infographic" onclick="vibrate(); setType('infographic', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">資訊圖表</button>
+                    <button id="type-diagram" onclick="vibrate(); setType('diagram', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">功能圖解</button>
+                    <button id="type-flowchart" onclick="vibrate(); setType('flowchart', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">流程圖</button>
+                    <button id="type-portrait" onclick="vibrate(); setType('portrait', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">人像攝影</button>
+                    <button id="type-landscape" onclick="vibrate(); setType('landscape', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-2.5 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">壯闊風景</button>
                 </div>
             </section>
 
             <section>
                 <label class="text-[10px] font-black text-indigo-500 mb-3 block tracking-[0.2em] uppercase">Step 02. 內容主題</label>
-                <textarea id="content" rows="2" placeholder="例如：海灘的落日 (不需加引號)" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-sm shadow-inner"></textarea>
+                <textarea id="content" rows="2" placeholder="你想呈現什麼內容？" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-sm shadow-inner"></textarea>
             </section>
 
             <section class="space-y-3">
-                <label class="text-[10px] font-black text-indigo-500 block tracking-[0.2em] uppercase">Step 03. 視覺風格百科全書</label>
+                <label class="text-[10px] font-black text-indigo-500 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (條件鎖定)</label>
                 
                 <select id="styleCategory" onchange="vibrate(); updateTieredUI()" class="w-full p-4 bg-indigo-50/50 dark:bg-slate-900 border border-indigo-100 rounded-2xl font-black text-indigo-600 text-sm">
-                    <option value="" disabled selected>1. 選擇大分類...</option>
-                    <option value="Photography">📸 攝影風格與工藝</option>
-                    <option value="LensLight">👁️ 鏡頭參數與光影</option>
-                    <option value="Angles">📐 取景遠近與角度</option>
-                    <option value="MediaCraft">🖌️ 媒材、材質與工藝</option>
-                    <option value="ArtStyle">🏛️ 藝術流派與大師</option>
-                    <option value="AnimDesign">🎬 動畫、漫晝與設計</option>
+                    <option value="" disabled selected>1. 選擇風格分類...</option>
+                    <option id="opt-pro-photo" value="ProPhotography">📸 專業攝影與參數 (攝影專屬)</option>
+                    <option value="Photography">📷 一般攝影與照片風格</option>
+                    <option value="Painting">🖌️ 繪畫媒材與質感</option>
+                    <option value="ArtMovements">🏛️ 藝術流派與流派</option>
+                    <option value="FamousArtists">🎨 知名藝術家大師</option>
+                    <option value="AnimeComics">🎬 動畫與漫晝</option>
+                    <option value="DesignSpecial">✨ 特殊與設計風格</option>
                 </select>
 
                 <select id="styleDetail" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border border-gray-100 rounded-2xl font-bold text-gray-700 text-sm" disabled>
@@ -65,11 +70,11 @@
                 </select>
 
                 <select id="proAssist" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border border-gray-100 rounded-2xl font-bold text-gray-700 text-sm" disabled>
-                    <option value="" selected>3. 專業攝影輔助 (鎖定中)...</option>
+                    <option value="" selected>3. 專業攝影輔助描述 (鎖定中)...</option>
                     <option value="bright">環境較明亮 Bright</option>
                     <option value="dark">環境較暗 Dark</option>
                     <option value="realistic">逼真的 Realistic</option>
-                    <option value="very realistic">極致逼真 (毛髮紋理)</option>
+                    <option value="very realistic">極致逼真 (強調細節)</option>
                     <option value="8K">8K 頂級畫質</option>
                 </select>
 
@@ -91,12 +96,12 @@
             </section>
 
             <button onclick="vibrate(); generate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-xl active:scale-[0.96] flex justify-center items-center gap-2 text-lg">
-                生成純淨指令 <i class="fas fa-magic"></i>
+                生成純淨大師指令 <i class="fas fa-magic"></i>
             </button>
 
             <div id="resultBox" class="hidden animate-in zoom-in-95 duration-300">
                 <div class="bg-slate-900 rounded-[2rem] p-7 border border-slate-700 shadow-2xl relative">
-                    <p id="finalPrompt" class="text-indigo-200 text-xs font-mono whitespace-pre-line leading-relaxed bg-slate-950 p-5 rounded-2xl border border-white/5 mb-6"></p>
+                    <p id="finalPrompt" class="text-indigo-200 text-xs font-mono whitespace-pre-line leading-relaxed bg-slate-950 p-5 rounded-2xl border border-white/5 shadow-inner mb-6"></p>
                     <div class="grid grid-cols-3 gap-2">
                         <button onclick="vibrate(); copyText()" class="bg-indigo-600 text-white p-4 rounded-xl flex items-center justify-center"><i class="far fa-copy"></i></button>
                         <button onclick="vibrate(); shareLine()" class="bg-[#06C755] text-white p-4 rounded-xl flex items-center justify-center"><i class="fab fa-line text-lg"></i></button>
@@ -108,35 +113,53 @@
     </div>
 
     <script>
+        // --- 完整風格資料與對照表 ---
         const categoryMap = {
-            "Photography": ["Photo", "life photo", "group photo", "portrait photography", "DSLR style", "Polaroid style", "Fujifilm", "Calotype print", "Albumen print"],
-            "LensLight": ["macro lens", "wide angle lens", "fish eye lens", "tilt shift lens", "bokeh", "magic hour", "golden hour", "soft light"],
-            "Angles": ["face close-up", "full body shot", "far away shot", "low angle view", "bird view", "satellite view", "first person view"],
-            "MediaCraft": ["pencil", "watercolor painting", "oil painting", "ink drawing", "paper art", "origami art", "mosaic", "LEGO"],
-            "ArtStyle": ["Renaissance", "Impressionism", "Surrealism", "Cyber Art", "Da Vinci", "Van Gogh", "Dali"],
-            "AnimDesign": ["2D cartoon", "Manga", "American comic book", "Studio Ghibli", "Pixar", "mascot logo", "knolling"]
+            "ProPhotography": ["macro lens", "prime lens", "long focal length lens", "wide angle lens", "fish eye lens", "tilt shift lens", "bokeh", "magic hour", "golden hour", "blue hour", "lens flare", "multiple exposure", "panning", "motion blur", "vgnetting", "ambient light", "hard light", "soft light", "back light", "rim light", "HDR", "4K HDR"],
+            "Photography": ["Photo", "life photo", "group photo", "portrait photography", "DSLR style", "Polaroid style", "Fujifilm", "Calotype print", "Albumen print", "movie style", "cinematic photo style"],
+            "Painting": ["Oil Painting", "Watercolor", "Sketch", "Ink Drawing", "Ukiyo-e"],
+            "ArtMovements": ["Renaissance", "Impressionism", "Surrealism", "Pop Art", "Minimalism", "Cyberpunk"],
+            "FamousArtists": ["Da Vinci", "Van Gogh", "Picasso", "Dali", "Monet", "Kusama Yayoi"],
+            "AnimeComics": ["Disney Animation", "Pixar", "Studio Ghibli", "Anime", "Manga", "American Comic", "Claymation"],
+            "DesignSpecial": ["Logo Design", "Flat Design", "Infographic", "Blueprint", "Origami", "Pixel Art", "Isometric 3D", "LEGO"]
         };
 
         const styleDisplayNames = {
-            "Photo": "標準照片 Photo", "life photo": "生活照 (自然)", "group photo": "團體照", "portrait photography": "人像攝影", "DSLR style": "數位單眼", "Polaroid style": "拍立得", "macro lens": "微距鏡頭", "wide angle lens": "廣角鏡頭", "bird view": "鳥瞰視角", "Studio Ghibli": "吉卜力畫風", "knolling": "開箱排列照", "mascot logo": "吉祥物標誌"
-        };
-
-        const styleSpecs = {
-            "Photo": { spec: "Realistic photography, clear details.", desc: "標準寫實風格。" },
-            "macro lens": { spec: "Macro lens, extreme close-up details.", desc: "捕捉微小細節。" },
-            "bird view": { spec: "Bird's eye view, looking down from above.", desc: "由高處向下俯瞰。" },
-            "bright": { spec: "Bright lighting, high key.", desc: "環境明亮。" },
-            "8K": { spec: "8K resolution, extreme details.", desc: "極致畫質。" }
+            "macro lens": "微距鏡頭 Macro", "prime lens": "定焦鏡頭 Prime", "long focal length lens": "望遠鏡頭 Tele", "wide angle lens": "廣角鏡頭 Wide", "fish eye lens": "魚眼鏡頭 Fish-eye", "tilt shift lens": "移軸鏡頭 Tilt-shift", "bokeh": "散景效果 Bokeh", "magic hour": "魔幻時刻 Magic Hour", "golden hour": "黃金時刻 Golden Hour", "blue hour": "藍色時刻 Blue Hour", "lens flare": "鏡頭眩光 Flare", "multiple exposure": "重複曝光 Exposure", "panning": "平移拍攝 Panning", "motion blur": "動態模糊 Motion", "vgnetting": "暈影暗角 Vignette", "ambient light": "環境光 Ambient", "hard light": "硬光打法 Hard", "soft light": "柔光打法 Soft", "back light": "背光剪影 Backlight", "rim light": "輪廓光 Rim", "HDR": "高動態範圍 HDR", "4K HDR": "極致 4K HDR",
+            "Photo": "標準照片 Photo", "life photo": "生活照 Life", "group photo": "團體照 Group", "portrait photography": "人像攝影 Portrait", "DSLR style": "單眼風格 DSLR", "Polaroid style": "拍立得 Polaroid", "Fujifilm": "富士底片 Fujifilm", "Oil Painting": "古典油畫 Oil", "Sketch": "素描草圖 Sketch", "Anime": "日本動漫 Anime"
         };
 
         let selectedType = 'general';
-        let history = JSON.parse(localStorage.getItem('prompt_history_v76') || '[]');
+        let history = JSON.parse(localStorage.getItem('prompt_history_v77') || '[]');
 
         function vibrate() { if (navigator.vibrate) navigator.vibrate(15); }
 
         function handleRatioChange() {
             const s = document.getElementById('ratioSelect');
             document.getElementById('customRatioBox').className = s.value === 'custom' ? 'block' : 'hidden';
+        }
+
+        // --- 核心鎖定邏輯：Step 01 影響 Step 03 選項 ---
+        function setType(type, btn) {
+            selectedType = type;
+            document.querySelectorAll('.type-btn').forEach(b => b.className = 'type-btn border border-gray-100 p-2.5 rounded-xl text-gray-500 text-[10px] font-medium transition-all');
+            btn.className = 'type-btn ring-2 ring-indigo-500 bg-indigo-50 p-2.5 rounded-xl text-indigo-700 text-[10px] font-bold transition-all shadow-sm';
+
+            const proOption = document.getElementById('opt-pro-photo');
+            const allowedTypes = ['general', 'landscape', 'portrait'];
+            
+            if (allowedTypes.includes(type)) {
+                proOption.disabled = false;
+                proOption.text = "📸 專業攝影與參數 (攝影專屬)";
+            } else {
+                proOption.disabled = true;
+                proOption.text = "📸 專業攝影與參數 (僅限攝影類型)";
+                // 如果目前剛好選在專業攝影上，則強制重置
+                if (document.getElementById('styleCategory').value === "ProPhotography") {
+                    document.getElementById('styleCategory').value = "";
+                    updateTieredUI();
+                }
+            }
         }
 
         function updateTieredUI(defaultStyle = "") {
@@ -155,21 +178,30 @@
                 if (defaultStyle) detail.value = defaultStyle;
             }
 
-            assist.disabled = (cat !== "Photography" && cat !== "LensLight");
-            if (assist.disabled) { assist.value = ""; assist.options[0].textContent = "3. 專業攝影輔助 (鎖定中)..."; }
-            else { assist.options[0].textContent = "3. 專業攝影輔助 (選填)..."; }
+            // 專業攝影輔助解鎖邏輯
+            if (cat === "ProPhotography" || cat === "Photography") {
+                assist.disabled = false;
+                assist.options[0].textContent = "3. 專業攝影輔助 (選填)...";
+            } else {
+                assist.disabled = true;
+                assist.value = "";
+                assist.options[0].textContent = "3. 專業攝影輔助 (僅限攝影類)...";
+            }
             updatePreview();
-        }
-
-        function setType(type, btn) {
-            selectedType = type;
-            document.querySelectorAll('.type-btn').forEach(b => b.className = 'type-btn border border-gray-100 p-2.5 rounded-xl text-gray-500 text-[10px] font-medium transition-all');
-            btn.className = 'type-btn ring-2 ring-indigo-500 bg-indigo-50 p-2.5 rounded-xl text-indigo-700 text-[10px] font-bold transition-all shadow-sm';
         }
 
         function randomStyleOnly() {
             vibrate();
-            const cats = Object.keys(categoryMap);
+            const icon = document.getElementById('diceIcon');
+            icon.classList.add('rolling'); setTimeout(() => icon.classList.remove('rolling'), 500);
+            
+            const allowedTypes = ['general', 'landscape', 'portrait'];
+            let cats = Object.keys(categoryMap);
+            // 隨機時也受 Step 01 限制
+            if (!allowedTypes.includes(selectedType)) {
+                cats = cats.filter(c => c !== "ProPhotography");
+            }
+            
             const randomCat = cats[Math.floor(Math.random() * cats.length)];
             document.getElementById('styleCategory').value = randomCat;
             updateTieredUI(categoryMap[randomCat][Math.floor(Math.random() * categoryMap[randomCat].length)]);
@@ -177,14 +209,13 @@
 
         function updatePreview() {
             const d = document.getElementById('styleDetail').value;
-            const a = document.getElementById('proAssist').value;
             const card = document.getElementById('previewCard');
-            if (d || a) { document.getElementById('previewText').innerText = "💡 風格組合已就緒。"; card.classList.remove('hidden'); }
+            if (d) { document.getElementById('previewText').innerText = "💡 風格已鎖定，準備生成無文字指令。"; card.classList.remove('hidden'); }
             else { card.classList.add('hidden'); }
         }
 
         function generate() {
-            const content = document.getElementById('content').value.trim() || "Amazing View";
+            const content = document.getElementById('content').value.trim() || "Masterpiece";
             const style = document.getElementById('styleDetail').value;
             const assist = document.getElementById('proAssist').value;
             if(!style) return alert('請選擇視覺風格！');
@@ -192,9 +223,6 @@
             const ratioSelect = document.getElementById('ratioSelect').value;
             let arValue = ratioSelect === 'custom' ? (document.getElementById('customRatioInput').value || "1:1") : ratioSelect;
             
-            let specsStr = (styleSpecs[style]?.spec || style) + (assist ? ", " + (styleSpecs[assist]?.spec || assist) : "");
-            
-            // V7.6 終極修正：強制加入負向指令並調整語法
             const prompt = `/imagine prompt: A ${style} ${assist || ""} style ${selectedType} showcasing ${content} --ar ${arValue} --no text, words, letters, font, watermark, logo, signature --v 6.1`;
             
             document.getElementById('finalPrompt').innerText = prompt;
