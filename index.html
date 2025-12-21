@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Prompt Lab Pro - V5.6 Full</title>
+    <title>ICS Prompt Lab Pro - V5.7 Fixed</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,14 +18,11 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .nav-active { @apply text-indigo-600 dark:text-indigo-400 font-black; }
-        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.4); }
         .gradient-header { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
         @media (prefers-color-scheme: dark) {
             body { background-color: #0f172a; }
-            .glass-panel { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); }
         }
         canvas { max-width: 100%; height: auto; cursor: crosshair; touch-action: none; background: #f8fafc; }
-        .dot { transition: all 0.3s ease-in-out; }
         input:checked ~ .dot { transform: translateX(100%); background-color: #4f46e5; }
         @keyframes dice-roll { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .rolling { animation: dice-roll 0.5s ease-in-out; }
@@ -40,15 +37,15 @@
                 <h1 class="text-3xl font-black flex items-center gap-3 relative z-10">
                     <i class="fas fa-magic text-yellow-300"></i> ICS Lab
                 </h1>
-                <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">32 Styles Full Edition</p>
-                <button onclick="randomSurprise()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group">
-                    <i id="diceIcon" class="fas fa-dice text-2xl text-white group-hover:rotate-12 transition-transform"></i>
+                <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V5.7 Final Edition</p>
+                <button onclick="randomSurprise()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90">
+                    <i id="diceIcon" class="fas fa-dice text-2xl text-white"></i>
                 </button>
             </div>
 
             <div class="p-6 space-y-7">
                 <section>
-                    <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 01. 圖片類型</label>
+                    <label class="text-[10px] font-black text-indigo-500 mb-3 block tracking-[0.2em] uppercase">Step 01. 圖片類型</label>
                     <div class="grid grid-cols-2 gap-2">
                         <button id="btn-infographic" onclick="vibrate(); setType('infographic', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-2xl text-indigo-700 dark:text-indigo-300 text-xs font-bold transition-all">資訊圖表</button>
                         <button id="btn-diagram" onclick="vibrate(); setType('diagram', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">功能圖解</button>
@@ -58,14 +55,14 @@
                 </section>
 
                 <section>
-                    <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 02. 內容主題</label>
-                    <textarea id="content" rows="2" placeholder="你想呈現什麼內容？" class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-sm"></textarea>
+                    <label class="text-[10px] font-black text-indigo-500 mb-3 block tracking-[0.2em] uppercase">Step 02. 內容主題</label>
+                    <textarea id="content" rows="2" placeholder="輸入你想呈現的主題..." class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-sm"></textarea>
                 </section>
 
                 <section>
-                    <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (32種)</label>
+                    <label class="text-[10px] font-black text-indigo-500 mb-3 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (32種)</label>
                     <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-3 outline-none text-sm appearance-none shadow-sm">
-                        <option value="" disabled selected>挑選一個風格...</option>
+                        <option value="" disabled selected>請選擇風格...</option>
                         <optgroup label="💼 專業商務">
                             <option value="McKinsey">01 顧問風 McKinsey</option>
                             <option value="Corporate">02 企業風 Corporate</option>
@@ -111,20 +108,9 @@
                             <option value="Diorama">32 小屋風 Diorama</option>
                         </optgroup>
                     </select>
-                    <div id="previewCard" class="hidden p-4 rounded-2xl glass-panel border border-indigo-100 dark:border-indigo-900/30">
+                    <div id="previewCard" class="hidden p-4 rounded-2xl bg-indigo-50 dark:bg-slate-900 border border-indigo-100 dark:border-slate-700">
                         <p id="previewText" class="text-xs text-gray-500 dark:text-slate-400 leading-relaxed font-medium"></p>
                     </div>
-                </section>
-
-                <section class="flex items-center justify-between p-4 bg-indigo-50/50 dark:bg-slate-900/50 rounded-2xl border border-indigo-100 dark:border-slate-700">
-                    <span class="text-xs font-bold text-gray-700 dark:text-slate-200">過濾負面內容 (建議開啟)</span>
-                    <label class="flex items-center cursor-pointer">
-                        <div class="relative">
-                            <input type="checkbox" id="negSwitch" class="sr-only" checked onchange="vibrate()">
-                            <div class="block bg-gray-200 dark:bg-slate-700 w-10 h-6 rounded-full transition"></div>
-                            <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
-                        </div>
-                    </label>
                 </section>
 
                 <button onclick="vibrate(); generate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-xl transition-all active:scale-95 flex justify-center items-center gap-2 text-lg">
@@ -144,7 +130,7 @@
 
                 <section id="historySection" class="pt-4 pb-10">
                     <div class="flex items-center justify-between mb-3 px-1">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">最近生成 (5筆)</label>
+                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">歷史紀錄 (5筆)</label>
                         <button onclick="vibrate(); clearHistory()" class="text-[10px] font-bold text-indigo-500">清除</button>
                     </div>
                     <div id="historyList" class="space-y-2"></div>
@@ -155,31 +141,248 @@
         <div id="repairTab" class="tab-content">
             <div class="p-8 bg-slate-800 text-white">
                 <h1 class="text-2xl font-black italic text-indigo-400 uppercase">Repair Master</h1>
-                <p class="text-[10px] tracking-widest opacity-60 uppercase mt-1">手動字體匹配修復引擎</p>
+                <p class="text-[10px] tracking-widest opacity-60 uppercase mt-1">中文字體無損修復引擎</p>
             </div>
             <div class="p-6 space-y-6">
-                <div id="uploadArea" class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-3xl p-10 text-center" onclick="document.getElementById('fileInput').click()">
+                <div id="uploadArea" class="border-2 border-dashed border-slate-200 rounded-3xl p-10 text-center" onclick="document.getElementById('fileInput').click()">
                     <i class="fas fa-file-image text-4xl text-indigo-500 mb-3"></i>
-                    <p class="text-xs font-bold text-gray-500">上傳損壞的圖檔</p>
+                    <p class="text-xs font-bold text-gray-500">點擊上傳圖檔</p>
                     <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="loadImage(this)">
                 </div>
-                <div id="editorArea" class="hidden space-y-4 animate-in fade-in">
-                    <div class="rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-700 shadow-inner">
-                        <canvas id="mainCanvas"></canvas>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 p-4 bg-gray-50 dark:bg-slate-900 rounded-2xl">
-                        <div class="col-span-1">
-                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">字體大小: <span id="sizeVal">28</span>px</label>
-                            <input type="range" id="fontSize" min="10" max="100" value="28" oninput="document.getElementById('sizeVal').innerText=this.value" class="w-full h-2 bg-gray-200 rounded-lg appearance-none">
+                <div id="editorArea" class="hidden space-y-4">
+                    <canvas id="mainCanvas" class="rounded-2xl shadow-inner border border-gray-200"></canvas>
+                    <div class="grid grid-cols-2 gap-3 p-4 bg-gray-50 dark:bg-slate-900 rounded-2xl border">
+                        <div>
+                            <label class="text-[9px] font-black text-gray-400 uppercase block mb-1">大小: <span id="sizeVal">28</span>px</label>
+                            <input type="range" id="fontSize" min="10" max="100" value="28" oninput="document.getElementById('sizeVal').innerText=this.value" class="w-full">
                         </div>
-                        <div class="col-span-1">
-                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">字體選擇</label>
-                            <select id="fontFamily" class="w-full text-xs p-1.5 rounded-lg bg-white border border-gray-200 outline-none">
+                        <div>
+                            <label class="text-[9px] font-black text-gray-400 uppercase block mb-1">字體</label>
+                            <select id="fontFamily" class="w-full text-xs p-1.5 rounded-lg border">
                                 <option value="sans-serif">標準黑體</option>
                                 <option value="serif">經典宋體</option>
-                                <option value="'Microsoft JhengHei', sans-serif">微軟正黑</option>
                             </select>
                         </div>
                         <div class="col-span-2">
-                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center">文字顏色</label>
-                            <input type="color" id="textColor" value="#333333" class="w
+                            <label class="text-[9px] font-black text-gray-400 uppercase block mb-1">顏色</label>
+                            <input type="color" id="textColor" value="#333333" class="w-full h-8 cursor-pointer">
+                        </div>
+                    </div>
+                    <button onclick="downloadImage()" class="w-full bg-green-600 text-white py-4 rounded-2xl font-black">下載修復圖</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="textOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-6">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 w-full max-w-xs space-y-4">
+            <h3 class="font-bold text-gray-800 dark:text-white">請輸入正確文字</h3>
+            <input type="text" id="correctText" class="w-full p-4 bg-gray-100 dark:bg-slate-900 rounded-xl text-xl text-center font-bold outline-none text-gray-700 dark:text-white" autofocus>
+            <div class="flex gap-2">
+                <button onclick="applyText()" class="flex-1 bg-indigo-600 text-white py-4 rounded-xl font-bold">修復</button>
+                <button onclick="closeOverlay()" class="flex-1 bg-gray-200 text-gray-500 py-4 rounded-xl font-bold">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-2 flex justify-around items-center z-50">
+        <button onclick="switchTab('genTab', this)" class="nav-btn nav-active flex flex-col items-center p-2">
+            <i class="fas fa-magic text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">指令生成</span>
+        </button>
+        <button onclick="switchTab('repairTab', this)" class="nav-btn text-gray-400 flex flex-col items-center p-2">
+            <i class="fas fa-tools text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">圖像修復</span>
+        </button>
+    </nav>
+
+    <script>
+        // ------------------ 完整 32 種風格字典 ------------------
+        const styleSpecs = {
+            "McKinsey": { spec: "Professional business framework, corporate blue.", desc: "顧問專業風：經典商務藍，強調數據邏輯。" },
+            "Corporate": { spec: "Modern office aesthetic, polished branding.", desc: "企業質感風：適合科技產品介紹。" },
+            "Minimalist": { spec: "Clean white space, high contrast.", desc: "極簡美學：大量留白，視覺焦點集中。" },
+            "Professional": { spec: "Clean slide design, balanced typography.", desc: "專業簡報：排版規整，適合工作報告。" },
+            "Framework": { spec: "Logical flow, systematic arrangement.", desc: "邏輯框架：清晰的模組化排版。" },
+            "Watercolor": { spec: "Soft watercolor wash, artistic edges.", desc: "手繪水彩：浪漫且具藝術感的筆觸。" },
+            "Isometric 3D": { spec: "30-degree isometric, cubic shapes.", desc: "等距視角：立體堆疊，科技感強。" },
+            "Flat Vector": { spec: "2D flat design, bold colors.", desc: "扁平插畫：簡潔明亮，適合網頁設計。" },
+            "Kawaii": { spec: "Cute characters, pastel colors.", desc: "可愛插畫：粉色調、圓潤親和。" },
+            "Hand-drawn Sketch": { spec: "Pencil line texture, rough edges.", desc: "草圖手寫：親切自然具溫度。" },
+            "Paper Cutout": { spec: "Layered paper, drop shadows.", desc: "層次剪紙：立體手工質感。" },
+            "Anime": { spec: "High-quality anime art, vibrant.", desc: "精美動漫：角色充滿活力。" },
+            "Comic Book": { spec: "Bold lines, halftone dots.", desc: "美式漫畫：視覺張力十足。" },
+            "Pixel Art": { spec: "16-bit retro, pixel grid.", desc: "像素藝術：懷舊遊戲數位美。" },
+            "Claymation": { spec: "3D clay texture, fingerprints.", desc: "黏土定格：溫潤手工質感。" },
+            "Origami": { spec: "Folded paper, sharp creases.", desc: "細膩摺紙：幾何對稱純淨感。" },
+            "Graffiti": { spec: "Street art, spray texture.", desc: "街頭塗鴉：鮮豔都市酷感。" },
+            "Vintage Poster": { spec: "Retro, weathered paper.", desc: "復古海報：懷舊歲月質感。" },
+            "Chalkboard": { spec: "Chalk texture, black background.", desc: "教室黑板：教育氛圍親切。" },
+            "Analog Film": { spec: "Film grain, vintage color.", desc: "膠捲底片：復古顆粒感與光影。" },
+            "Pop Art": { spec: "High contrast, primary colors.", desc: "普普藝術：強烈配色時尚前衛。" },
+            "Da Vinci": { spec: "Sepia ink, parchment sketch.", desc: "達文西手稿：古老精密製圖。" },
+            "Blueprint": { spec: "White lines on cyan grid.", desc: "工程藍圖：嚴謹技術美學。" },
+            "Cross-section": { spec: "Cutaway view, structural.", desc: "科學剖面：洞悉內部構造。" },
+            "Wireframe": { spec: "3D mesh, tech-forward.", desc: "數位線框：極致科技與未來感。" },
+            "Subway Map": { spec: "Simplification, colorful lines.", desc: "地圖路網：梳理複雜關聯。" },
+            "Cyberpunk": { spec: "Neon lights, high-tech grit.", desc: "賽博龐克：藍紫色調未來感。" },
+            "Steampunk": { spec: "Victorian, brass gears.", desc: "蒸氣龐克：工業機械美學。" },
+            "Quilling": { spec: "Intricate rolled paper art.", desc: "細緻紙雕：捲紙工藝立體感。" },
+            "Flat Lay": { spec: "Top-down, arranged objects.", desc: "攝影擺拍：整齊療癒的俯視。" },
+            "Glassmorphism": { spec: "Frosted glass, blurred.", desc: "玻璃擬態：現代時尚層次。" },
+            "Diorama": { spec: "Miniature scene, tilt-shift.", desc: "微縮景觀：小小玩具世界。" }
+        };
+
+        const randomTopics = ["未來城市的垂直農場", "量子電腦內部構造", "深海發光生物", "太空殖民地生態圈", "貓咪統治的城市"];
+
+        // ------------------ 指令生成邏輯 ------------------
+        let history = JSON.parse(localStorage.getItem('prompt_history') || '[]');
+        let selectedType = 'infographic';
+
+        function vibrate() { if (navigator.vibrate) navigator.vibrate(15); }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.className = 'nav-btn text-gray-400 flex flex-col items-center p-2';
+            });
+            btn.className = 'nav-btn nav-active flex flex-col items-center p-2';
+        }
+
+        function setType(type, btn) {
+            selectedType = type;
+            document.querySelectorAll('.type-btn').forEach(b => {
+                b.className = 'type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all';
+            });
+            btn.className = 'type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-2xl text-indigo-700 dark:text-indigo-300 text-xs font-bold transition-all';
+        }
+
+        // 智慧隨機 (修復完成)
+        function randomSurprise() {
+            vibrate();
+            const icon = document.getElementById('diceIcon');
+            icon.classList.add('rolling');
+            setTimeout(() => icon.classList.remove('rolling'), 500);
+
+            // 1. 隨機類型
+            const types = ['infographic', 'diagram', 'flowchart', 'timeline'];
+            const randomType = types[Math.floor(Math.random() * types.length)];
+            const targetBtn = document.getElementById('btn-' + randomType);
+            if (targetBtn) setType(randomType, targetBtn);
+
+            // 2. 隨機主題
+            document.getElementById('content').value = randomTopics[Math.floor(Math.random() * randomTopics.length)];
+
+            // 3. 隨機風格
+            const styleSelect = document.getElementById('style');
+            const options = Array.from(styleSelect.querySelectorAll('option')).filter(o => o.value !== "");
+            if (options.length > 0) {
+                styleSelect.value = options[Math.floor(Math.random() * options.length)].value;
+                updatePreview();
+            }
+        }
+
+        function updatePreview() {
+            const style = document.getElementById('style').value;
+            const card = document.getElementById('previewCard');
+            if(styleSpecs[style]) {
+                document.getElementById('previewText').innerText = styleSpecs[style].desc;
+                card.classList.remove('hidden');
+            }
+        }
+
+        function generate() {
+            const content = document.getElementById('content').value.trim() || "Concept";
+            const style = document.getElementById('style').value;
+            if(!style) return alert('請先選擇風格');
+            const negPrompt = "\nNegative: low quality, blurry, distorted text.";
+            const fullPrompt = `/imagine prompt: A ${style} style ${selectedType} about '${content}'. \n- ${styleSpecs[style].spec} \n- AR 9:16${negPrompt} --v 6.0`;
+            document.getElementById('finalPrompt').innerText = fullPrompt;
+            document.getElementById('resultBox').classList.remove('hidden');
+            saveToHistory(style, content, fullPrompt);
+            renderHistory();
+        }
+
+        function saveToHistory(s, c, p) {
+            history.unshift({ style: s, content: c, prompt: p });
+            if (history.length > 5) history.pop();
+            localStorage.setItem('prompt_history', JSON.stringify(history));
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = history.map((item, index) => `
+                <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border flex justify-between items-center shadow-sm" onclick="loadFromHistory(${index})">
+                    <div><p class="text-[9px] font-bold text-indigo-500 uppercase">${item.style}</p>
+                    <p class="text-[11px] text-gray-500 truncate w-40 font-medium">${item.content}</p></div>
+                    <i class="fas fa-magic text-[10px] text-indigo-300"></i>
+                </div>`).join('');
+        }
+
+        function loadFromHistory(i) {
+            const item = history[i];
+            document.getElementById('finalPrompt').innerText = item.prompt;
+            document.getElementById('resultBox').classList.remove('hidden');
+        }
+
+        function clearHistory() { history = []; localStorage.removeItem('prompt_history'); renderHistory(); }
+        function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('已複製！'); }
+        function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
+        function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
+
+        // ------------------ 圖像修復邏輯 ------------------
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentX, currentY, bgImg;
+
+        function loadImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    bgImg = new Image();
+                    bgImg.onload = () => {
+                        canvas.width = bgImg.width; canvas.height = bgImg.height;
+                        ctx.drawImage(bgImg, 0, 0);
+                        document.getElementById('editorArea').classList.remove('hidden');
+                        document.getElementById('uploadArea').classList.add('hidden');
+                    };
+                    bgImg.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            currentX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            currentY = (e.clientY - rect.top) * (canvas.height / rect.height);
+            const p = ctx.getImageData(currentX, currentY, 1, 1).data;
+            if (p[0] < 200) document.getElementById('textColor').value = "#" + ((1 << 24) + (p[0] << 16) + (p[1] << 8) + p[2]).toString(16).slice(1);
+            document.getElementById('textOverlay').classList.remove('hidden');
+            document.getElementById('textOverlay').classList.add('flex');
+        });
+
+        function applyText() {
+            const text = document.getElementById('correctText').value;
+            const size = parseInt(document.getElementById('fontSize').value);
+            const color = document.getElementById('textColor').value;
+            if (!text) return;
+            const bg = ctx.getImageData(currentX - size, currentY, 1, 1).data;
+            ctx.fillStyle = `rgb(${bg[0]}, ${bg[1]}, ${bg[2]})`;
+            ctx.fillRect(currentX - size, currentY - size, size * 2, size * 2);
+            ctx.fillStyle = color;
+            ctx.font = `bold ${size}px ${document.getElementById('fontFamily').value}`;
+            ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            ctx.fillText(text, currentX, currentY);
+            closeOverlay();
+            document.getElementById('correctText').value = '';
+        }
+
+        function closeOverlay() { document.getElementById('textOverlay').classList.add('hidden'); }
+        function downloadImage() { const a = document.createElement('a'); a.download = 'fixed.png'; a.href = canvas.toDataURL(); a.click(); }
+
+        renderHistory();
+    </script>
+</body>
+</html>
