@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Prompt Lab Pro - V3.0</title>
+    <title>ICS Prompt Lab Pro - V4.0</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,10 +21,14 @@
             body { background-color: #0f172a; }
             .glass-panel { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); }
         }
-        /* Switch Toggle Style */
         .dot { transition: all 0.3s ease-in-out; }
         input:checked ~ .dot { transform: translateX(100%); background-color: #4f46e5; }
-        input:checked ~ .block { background-color: #e0e7ff; }
+        /* 骰子旋轉動畫 */
+        @keyframes dice-roll {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .rolling { animation: dice-roll 0.5s ease-in-out; }
     </style>
 </head>
 <body class="p-4 bg-slate-50 dark:bg-slate-900 flex justify-center items-start min-h-screen font-sans pb-20">
@@ -32,32 +36,36 @@
     <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden border border-gray-100 dark:border-slate-700">
         <div class="p-8 gradient-header text-white relative">
             <h1 class="text-3xl font-black flex items-center gap-3 relative z-10">
-                <i class="fas fa-rocket text-yellow-300"></i> ICS Lab Pro
+                <i class="fas fa-brain text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V3.0 Feature Enhanced</p>
+            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V4.0 Smart Edition</p>
+            
+            <button onclick="randomSurprise()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group">
+                <i id="diceIcon" class="fas fa-dice text-2xl text-white group-hover:rotate-12 transition-transform"></i>
+            </button>
         </div>
 
         <div class="p-6 space-y-7">
             <section>
                 <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 01. 圖片類型</label>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="vibrate(); setType('infographic', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-2xl text-indigo-700 dark:text-indigo-300 text-xs font-bold transition-all">資訊圖表</button>
-                    <button onclick="vibrate(); setType('diagram', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">功能圖解</button>
-                    <button onclick="vibrate(); setType('flowchart', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">流程圖</button>
-                    <button onclick="vibrate(); setType('timeline', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">時間軸</button>
+                <div class="grid grid-cols-2 gap-2" id="typeGroup">
+                    <button id="btn-infographic" onclick="vibrate(); setType('infographic', this)" class="type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-2xl text-indigo-700 dark:text-indigo-300 text-xs font-bold transition-all">資訊圖表</button>
+                    <button id="btn-diagram" onclick="vibrate(); setType('diagram', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">功能圖解</button>
+                    <button id="btn-flowchart" onclick="vibrate(); setType('flowchart', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">流程圖</button>
+                    <button id="btn-timeline" onclick="vibrate(); setType('timeline', this)" class="type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">時間軸</button>
                 </div>
             </section>
 
             <section>
                 <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 02. 內容主題</label>
-                <textarea id="content" rows="2" placeholder="你想呈現什麼主題？" 
+                <textarea id="content" rows="2" placeholder="輸入主題，或點擊右上角骰子..." 
                        class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-sm"></textarea>
             </section>
 
             <section>
-                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (32種)</label>
-                <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-3 outline-none text-sm appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:1em] shadow-sm">
-                    <option value="" disabled selected>選擇風格...</option>
+                <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 03. 視覺風格</label>
+                <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-3 outline-none text-sm appearance-none shadow-sm">
+                    <option value="" disabled selected>挑選一個風格...</option>
                     <optgroup label="💼 專業商務">
                         <option value="McKinsey">顧問風 McKinsey</option>
                         <option value="Corporate">企業風 Corporate</option>
@@ -95,12 +103,12 @@
                         <option value="Subway Map">地鐵圖 Subway Map</option>
                     </optgroup>
                     <optgroup label="✨ 特殊風格">
-                        <option value="Cyberpunk">27 賽博龐克 Cyberpunk</option>
-                        <option value="Steampunk">28 蒸氣龐克 Steampunk</option>
-                        <option value="Quilling">29 紙雕風 Quilling</option>
-                        <option value="Flat Lay">30 攝影風 Flat Lay</option>
-                        <option value="Glassmorphism">31 玻璃風 Glassmorphism</option>
-                        <option value="Diorama">32 小屋風 Diorama</option>
+                        <option value="Cyberpunk">賽博龐克 Cyberpunk</option>
+                        <option value="Steampunk">蒸氣龐克 Steampunk</option>
+                        <option value="Quilling">紙雕風 Quilling</option>
+                        <option value="Flat Lay">攝影風 Flat Lay</option>
+                        <option value="Glassmorphism">玻璃風 Glassmorphism</option>
+                        <option value="Diorama">小屋風 Diorama</option>
                     </optgroup>
                 </select>
 
@@ -112,7 +120,7 @@
             <section class="flex items-center justify-between p-4 bg-indigo-50/50 dark:bg-slate-900/50 rounded-2xl border border-indigo-100 dark:border-slate-700">
                 <div class="flex items-center gap-2">
                     <i class="fas fa-shield-halved text-indigo-500 text-sm"></i>
-                    <span class="text-xs font-bold text-gray-700 dark:text-slate-200">過濾負面內容 (建議開啟)</span>
+                    <span class="text-xs font-bold text-gray-700 dark:text-slate-200">過濾負面內容 (濾鏡)</span>
                 </div>
                 <label class="flex items-center cursor-pointer">
                     <div class="relative">
@@ -130,28 +138,20 @@
             <div id="resultBox" class="hidden animate-in zoom-in-95 duration-300">
                 <div class="bg-slate-900 rounded-[2rem] p-6 border border-slate-700 shadow-2xl">
                     <p id="finalPrompt" class="text-indigo-200 text-xs font-mono whitespace-pre-line leading-relaxed bg-slate-950 p-4 rounded-xl border border-white/5 mb-6"></p>
-                    
                     <div class="grid grid-cols-3 gap-2">
-                        <button onclick="vibrate(); copyText()" class="col-span-1 bg-indigo-600 text-white p-3 rounded-xl text-xs font-bold transition active:scale-90 flex flex-col items-center gap-1">
-                            <i class="far fa-copy text-lg"></i> 複製
-                        </button>
-                        <button onclick="vibrate(); shareLine()" class="col-span-1 bg-[#06C755] text-white p-3 rounded-xl text-xs font-bold transition active:scale-90 flex flex-col items-center gap-1">
-                            <i class="fab fa-line text-xl"></i> LINE
-                        </button>
-                        <button onclick="vibrate(); shareFB()" class="col-span-1 bg-[#1877F2] text-white p-3 rounded-xl text-xs font-bold transition active:scale-90 flex flex-col items-center gap-1">
-                            <i class="fab fa-facebook text-xl"></i> FB
-                        </button>
+                        <button onclick="vibrate(); copyText()" class="bg-indigo-600 text-white p-3 rounded-xl text-xs font-bold flex flex-col items-center gap-1"><i class="far fa-copy"></i> 複製</button>
+                        <button onclick="vibrate(); shareLine()" class="bg-[#06C755] text-white p-3 rounded-xl text-xs font-bold flex flex-col items-center gap-1"><i class="fab fa-line"></i> LINE</button>
+                        <button onclick="vibrate(); shareFB()" class="bg-[#1877F2] text-white p-3 rounded-xl text-xs font-bold flex flex-col items-center gap-1"><i class="fab fa-facebook"></i> FB</button>
                     </div>
                 </div>
             </div>
 
             <section id="historySection" class="pt-4">
                 <div class="flex items-center justify-between mb-3 px-1">
-                    <label class="text-[10px] font-black text-gray-400 tracking-[0.2em] uppercase">最近生成 (最多5筆)</label>
-                    <button onclick="vibrate(); clearHistory()" class="text-[10px] font-bold text-indigo-500">清除紀錄</button>
+                    <label class="text-[10px] font-black text-gray-400 tracking-[0.2em] uppercase">歷史紀錄</label>
+                    <button onclick="vibrate(); clearHistory()" class="text-[10px] font-bold text-indigo-500">清除</button>
                 </div>
-                <div id="historyList" class="space-y-2">
-                    </div>
+                <div id="historyList" class="space-y-2"></div>
             </section>
         </div>
     </div>
@@ -159,6 +159,12 @@
     <script>
         let selectedType = 'infographic';
         let history = JSON.parse(localStorage.getItem('prompt_history') || '[]');
+
+        const randomTopics = [
+            "未來城市的垂直農場", "量子電腦的內部構造", "深海中的發光生物", "極簡主義的居家辦公室", 
+            "太空殖民地的生態圈", "大腦神經元的連結", "手工藝咖啡的沖泡過程", "森林中的秘密圖書館",
+            "貓咪統治的現代都市", "北極光的能量波動", "古埃及的科技文明", "微型世界的冒險"
+        ];
 
         const styleSpecs = {
             "McKinsey": { spec: "Professional business framework, corporate blue.", desc: "顧問風：強調邏輯與數據美學。" },
@@ -168,12 +174,43 @@
             "Isometric 3D": { spec: "30-degree isometric, tech-forward colors.", desc: "等距視角：30度角立體堆疊。" },
             "Anime": { spec: "High-quality anime art, cel-shaded.", desc: "動漫風：高飽和、充滿活力。" },
             "Claymation": { spec: "3D clay texture, visible fingerprints.", desc: "黏土風：具溫潤手工質感。" },
-            "Flat Lay": { spec: "Top-down view, arranged objects.", desc: "攝影擺拍：整齊療癒的俯視角。" }
-            // ... 其餘 32 種風格代碼與之前一致
+            "Flat Lay": { spec: "Top-down view, arranged objects.", desc: "攝影擺拍：整齊療癒的俯視角。" },
+            "Cyberpunk": { spec: "Neon lights, high-tech grit.", desc: "賽博龐克：霓虹藍紫色調。" },
+            "Diorama": { spec: "Miniature scene, tilt-shift effect.", desc: "微縮景觀：小小世界的精緻感。" }
+            // 其餘風格可依此類推...
         };
 
         function vibrate() {
             if (window.navigator && window.navigator.vibrate) window.navigator.vibrate(15);
+        }
+
+        // 智慧隨機功能
+        function randomSurprise() {
+            vibrate();
+            const icon = document.getElementById('diceIcon');
+            icon.classList.add('rolling');
+            setTimeout(() => icon.classList.remove('rolling'), 500);
+
+            // 1. 隨機圖片類型
+            const types = ['infographic', 'diagram', 'flowchart', 'timeline'];
+            const randomType = types[Math.floor(Math.random() * types.length)];
+            const typeBtn = document.getElementById('btn-' + randomType);
+            setType(randomType, typeBtn);
+
+            // 2. 隨機內容
+            const randomContent = randomTopics[Math.floor(Math.random() * randomTopics.length)];
+            document.getElementById('content').value = randomContent;
+
+            // 3. 隨機風格
+            const styleSelect = document.getElementById('style');
+            const options = Array.from(styleSelect.querySelectorAll('option')).filter(o => o.value !== "");
+            const randomOption = options[Math.floor(Math.random() * options.length)];
+            styleSelect.value = randomOption.value;
+            
+            updatePreview();
+            
+            // 自動生成 (可選)
+            // generate(); 
         }
 
         function setType(type, btn) {
@@ -190,19 +227,21 @@
             if(styleSpecs[style]) {
                 document.getElementById('previewText').innerText = styleSpecs[style].desc;
                 card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
             }
         }
 
         function generate() {
-            const content = document.getElementById('content').value.trim() || "AI Concept";
+            const content = document.getElementById('content').value.trim() || "Mysterious Concept";
             const style = document.getElementById('style').value;
             if(!style) return alert('請先選擇風格');
 
             const isNeg = document.getElementById('negSwitch').checked;
-            const negPrompt = isNeg ? "\nNegative Prompt: low quality, blurry, distorted, watermark, signature, bad hands, deformed, text." : "";
+            const negPrompt = isNeg ? "\nNegative: low quality, blurry, watermark, signature, text." : "";
             
-            const spec = styleSpecs[style] ? styleSpecs[style].spec : "High quality, high resolution.";
-            const fullPrompt = `/imagine prompt: A ${style} style ${selectedType} about '${content}'. \n- ${spec} \n- Aspect ratio 9:16${negPrompt} --v 6.0`;
+            const spec = styleSpecs[style] ? styleSpecs[style].spec : "High detailed, cinematic lighting.";
+            const fullPrompt = `/imagine prompt: A ${style} style ${selectedType} about '${content}'. \n- ${spec} \n- AR 9:16${negPrompt} --v 6.0`;
 
             document.getElementById('finalPrompt').innerText = fullPrompt;
             document.getElementById('resultBox').classList.remove('hidden');
@@ -211,8 +250,7 @@
         }
 
         function saveToHistory(style, content, prompt) {
-            const newItem = { style, content, prompt, time: new Date().toLocaleTimeString() };
-            history.unshift(newItem);
+            history.unshift({ style, content, prompt });
             if (history.length > 5) history.pop();
             localStorage.setItem('prompt_history', JSON.stringify(history));
         }
@@ -220,12 +258,12 @@
         function renderHistory() {
             const list = document.getElementById('historyList');
             list.innerHTML = history.map((item, index) => `
-                <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 flex justify-between items-center animate-in fade-in slide-in-from-left-2 shadow-sm" onclick="loadFromHistory(${index})">
-                    <div class="overflow-hidden">
+                <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 flex justify-between items-center shadow-sm" onclick="loadFromHistory(${index})">
+                    <div>
                         <p class="text-[10px] font-bold text-indigo-500">${item.style}</p>
-                        <p class="text-[11px] text-gray-600 dark:text-slate-400 truncate w-48">${item.content}</p>
+                        <p class="text-[11px] text-gray-600 dark:text-slate-400 truncate w-40">${item.content}</p>
                     </div>
-                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                    <i class="fas fa-magic text-[10px] text-indigo-300"></i>
                 </div>
             `).join('');
         }
@@ -238,28 +276,11 @@
             document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function clearHistory() {
-            history = [];
-            localStorage.removeItem('prompt_history');
-            renderHistory();
-        }
-
-        function copyText() {
-            navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText);
-            alert('指令已複製到剪貼簿！');
-        }
-
-        function shareLine() {
-            const text = encodeURIComponent("這是我用 ICS Lab 生成的 AI 指令：\n\n" + document.getElementById('finalPrompt').innerText);
-            window.open(`https://line.me/R/msg/text/?${text}`);
-        }
-
-        function shareFB() {
-            const text = encodeURIComponent(document.getElementById('finalPrompt').innerText);
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}&quote=${text}`);
-        }
-
-        // 初始化
+        function clearHistory() { history = []; localStorage.removeItem('prompt_history'); renderHistory(); }
+        function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('已複製！'); }
+        function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
+        function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
+        
         renderHistory();
     </script>
 </body>
