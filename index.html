@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Lab Pro - V7.4 Ultimate Integration</title>
+    <title>ICS Lab Pro - V7.5 Text Fix</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -26,7 +26,7 @@
             <h1 class="text-3xl font-black italic flex items-center gap-3 relative z-10">
                 <i class="fas fa-camera text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V7.4 Ultimate System</p>
+            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V7.5 Text Interference Fix</p>
             <button onclick="randomStyleOnly()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white"></i>
             </button>
@@ -47,7 +47,7 @@
 
             <section>
                 <label class="text-[10px] font-black text-indigo-500 mb-3 block tracking-[0.2em] uppercase">Step 02. 內容主題</label>
-                <textarea id="content" rows="2" placeholder="你想呈現什麼內容？" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-sm"></textarea>
+                <textarea id="content" rows="2" placeholder="你想呈現什麼內容？(建議描述場景而非標題)" class="w-full p-4 bg-gray-50 dark:bg-slate-900 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-sm"></textarea>
             </section>
 
             <section class="space-y-3">
@@ -127,13 +127,10 @@
     </div>
 
     <script>
-        // --- 完整名稱資料表 ---
+        // --- 完整名稱資料表 (保持不變) ---
         const styleDisplayNames = {
-            // 專業攝影
             "macro lens": "微距鏡頭 Macro", "prime lens": "定焦鏡頭 Prime", "long focal length lens": "望遠鏡頭 Tele", "wide angle lens": "廣角鏡頭 Wide", "fish eye lens": "魚眼鏡頭 Fish-eye", "tilt shift lens": "移軸鏡頭 Tilt-shift", "bokeh": "散景效果 Bokeh", "magic hour": "魔幻時刻 Magic Hour", "golden hour": "黃金時刻 Golden Hour", "blue hour": "藍色時刻 Blue Hour", "lens flare": "鏡頭眩光 Flare", "multiple exposure": "重複曝光 Exposure", "panning": "平移拍攝 Panning", "motion blur": "動態模糊 Motion", "vgnetting": "暈影暗角 Vignette", "ambient light": "環境光 Ambient", "hard light": "硬光打法 Hard", "soft light": "柔光打法 Soft", "back light": "背光剪影 Backlight", "rim light": "輪廓光 Rim", "HDR": "高動態範圍 HDR", "4K HDR": "極致 4K HDR",
-            // 一般攝影
             "Photo": "標準照片 Photo", "life photo": "生活照 Life", "group photo": "團體照 Group", "group selfie photo": "自拍團體 Group Selfie", "selfie photo": "個人自拍 Selfie", "portrait photography": "人像攝影 Portrait", "ports photography": "運動攝影 Sports", "still life photo": "靜物攝影 Still Life", "DSLR style": "單眼風格 DSLR", "Polaroid style": "拍立得 Polaroid", "Fujifilm superia style": "富士底片 Fujifilm", "LOMO style": "LOMO 文青感", "movie style": "電影風 movie", "cinematic photo style": "劇照 cinematic",
-            // 其他分類保持中文化標籤
             "Oil Painting": "古典油畫 Oil", "Watercolor": "透明水彩 Watercolor", "Sketch": "素描草圖 Sketch", "Anime": "日本動漫 Anime", "Logo Design": "標誌設計 Logo", "Isometric 3D": "等距立體 Isometric"
         };
 
@@ -162,12 +159,12 @@
             "high resolution": { spec: "High resolution, sharp crisp edges.", desc: "輔助：高分辨率與銳利度。" },
             "8K": { spec: "8K UHD render, masterpiece quality.", desc: "輔助：8K 超清畫質水準。" },
             "macro lens": { spec: "Macro lens, extreme close-up, microscopic details.", desc: "攝影：捕捉極微小世界的細節。" }
-            // (其餘規格自動適配英文鍵值)
+            // (其餘規格自動適配)
         };
 
         // --- 核心邏輯 ---
         let selectedType = 'general';
-        let history = JSON.parse(localStorage.getItem('prompt_history_v74') || '[]');
+        let history = JSON.parse(localStorage.getItem('prompt_history_v75') || '[]');
 
         function vibrate() { if (navigator.vibrate) navigator.vibrate(15); }
 
@@ -192,7 +189,7 @@
                 if (defaultStyle) detail.value = defaultStyle;
             }
 
-            // 專業攝影輔助解鎖邏輯 (關鍵修復)
+            // 專業攝影輔助解鎖邏輯
             if (cat === "ProPhotography") {
                 assist.disabled = false;
                 assist.options[0].textContent = "3. 專業攝影輔助描述 (選填)...";
@@ -243,7 +240,8 @@
             let finalSpec = (styleSpecs[style]?.spec || style);
             if (assist) finalSpec += ", " + (styleSpecs[assist]?.spec || assist);
             
-            const prompt = `/imagine prompt: A ${style} ${assist || ""} style ${selectedType} of '${content}'. \n- ${finalSpec} \n- Aspect ratio: ${arValue} --ar ${arValue} --v 6.1`;
+            // V7.5 核心修正：移除 content 的單引號，改用 depicting 連接
+            const prompt = `/imagine prompt: A ${style} ${assist || ""} style ${selectedType} depicting ${content}. \n- ${finalSpec} \n- Aspect ratio: ${arValue} --ar ${arValue} --v 6.1`;
             
             document.getElementById('finalPrompt').innerText = prompt;
             document.getElementById('resultBox').classList.remove('hidden');
@@ -253,7 +251,7 @@
         function saveToHistory(s, c, p) {
             history.unshift({ style: s, content: c, prompt: p });
             if (history.length > 5) history.pop();
-            localStorage.setItem('prompt_history_v74', JSON.stringify(history));
+            localStorage.setItem('prompt_history_v75', JSON.stringify(history));
             renderHistory();
         }
 
@@ -274,7 +272,7 @@
             document.getElementById('resultBox').classList.remove('hidden');
         }
 
-        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v74'); renderHistory(); }
+        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v75'); renderHistory(); }
         function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('指令已複製！'); }
         function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
         function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
