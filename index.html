@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Prompt Lab Pro - V6.4 AR Unlocked</title>
+    <title>ICS Prompt Lab Pro - V6.5 Full Integration</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,7 +29,7 @@
             <h1 class="text-3xl font-black flex items-center gap-3 relative z-10">
                 <i class="fas fa-wand-sparkles text-yellow-300"></i> ICS Lab Pro
             </h1>
-            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.4 AR Unlocked</p>
+            <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V6.5 Full Integration</p>
             
             <button onclick="randomStyleOnly()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white group-hover:rotate-12 transition-transform"></i>
@@ -51,7 +51,7 @@
 
             <section>
                 <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 02. 內容主題 (Content)</label>
-                <textarea id="content" rows="2" placeholder="輸入你想呈現的主題..." 
+                <textarea id="content" rows="2" placeholder="輸入主題內容..." 
                        class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-base shadow-inner"></textarea>
             </section>
 
@@ -59,52 +59,57 @@
                 <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (Visual Style)</label>
                 <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-5 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-4 outline-none text-base shadow-sm">
                     <option value="" disabled selected>請選擇風格...</option>
-                    <optgroup label="💼 專業商務">
-                        <option value="McKinsey">顧問風 McKinsey</option>
-                        <option value="Corporate">企業風 Corporate</option>
-                        <option value="Minimalist">極簡風 Minimalist</option>
-                        <option value="Professional">簡報風 Professional</option>
-                        <option value="Framework">圖表風 Framework</option>
+                    
+                    <optgroup label="📸 攝影模式 (Photography 1.png)">
+                        <option value="photo">標準照片 Photo</option>
+                        <option value="life photo">生活照 Life Photo</option>
+                        <option value="group photo">團體照 Group Photo</option>
+                        <option value="group selfie photo">自拍團照 Group Selfie</option>
+                        <option value="portrait photography">人像攝影 Portrait</option>
+                        <option value="ports photography">運動攝影 Sports</option>
+                        <option value="still life photo">靜物攝影 Still Life</option>
                     </optgroup>
-                    <optgroup label="🎨 插畫藝術">
-                        <option value="Watercolor">水彩風 Watercolor</option>
+
+                    <optgroup label="👁️ 鏡頭與焦距 (Oxxo Specs)">
+                        <option value="macro lens">微距鏡頭 Macro (細節)</option>
+                        <option value="wide angle lens">廣角鏡頭 Wide Angle</option>
+                        <option value="fish eye lens">魚眼鏡頭 Fish-eye</option>
+                        <option value="tilt shift lens">移軸鏡頭 Tilt-shift</option>
+                        <option value="telephoto lens">望遠鏡頭 Telephoto</option>
+                    </optgroup>
+
+                    <optgroup label="🎬 攝影風格 (Oxxo Specs)">
+                        <option value="Cinematic">電影劇照 Cinematic</option>
+                        <option value="DSLR style">單眼風格 DSLR</option>
+                        <option value="Polaroid style">拍立得 Polaroid</option>
+                        <option value="GoPro style">GoPro 運動視角</option>
+                        <option value="Fujifilm style">富士底片感 Fujifilm</option>
+                        <option value="LOMO style">LOMO 濾鏡感</option>
+                    </optgroup>
+
+                    <optgroup label="🎨 藝術與媒材 (提示詞.png)">
                         <option value="Oil Painting">油畫風 Oil Painting</option>
+                        <option value="Watercolor">水彩風 Watercolor</option>
                         <option value="Hand-drawn Sketch">素描風 Sketch</option>
-                        <option value="Isometric 3D">等距風 Isometric 3D</option>
-                        <option value="Flat Vector">扁平風 Flat Vector</option>
-                        <option value="Kawaii">可愛風 Kawaii</option>
-                        <option value="Paper Cutout">剪紙風 Paper Cutout</option>
-                    </optgroup>
-                    <optgroup label="🎮 趣味創意">
-                        <option value="Anime">動漫風 Anime</option>
-                        <option value="Comic Book">漫畫風 Comic Book</option>
-                        <option value="Pixel Art">像素風 Pixel Art</option>
-                        <option value="Claymation">黏土風 Claymation</option>
-                        <option value="Origami">摺紙風 Origami</option>
-                        <option value="Graffiti">塗鴉風 Graffiti</option>
-                    </optgroup>
-                    <optgroup label="📜 復古經典">
-                        <option value="Vintage Poster">海報風 Vintage Poster</option>
-                        <option value="Chalkboard">黑板風 Chalkboard</option>
-                        <option value="Analog Film">底片風 Analog Film</option>
-                        <option value="Pop Art">普普風 Pop Art</option>
-                        <option value="Da Vinci">達文西 Da Vinci</option>
-                    </optgroup>
-                    <optgroup label="🔬 技術圖解">
-                        <option value="Blueprint">藍圖風 Blueprint</option>
-                        <option value="Cross-section">剖面圖 Cross-section</option>
-                        <option value="Wireframe">線框圖 Wireframe</option>
-                        <option value="Subway Map">地鐵圖 Subway Map</option>
-                    </optgroup>
-                    <optgroup label="✨ 特殊風格">
-                        <option value="Logo">標誌風 LOGO</option>
                         <option value="Surreal">超現實 Surreal</option>
+                        <option value="Chinese Ink">東方水墨 Ink</option>
+                        <option value="Ukiyo-e">日本浮世繪</option>
+                    </optgroup>
+
+                    <optgroup label="✨ 特色創作 (提示詞.png)">
+                        <option value="Logo">標誌設計 LOGO</option>
+                        <option value="Poster">廣告海報 Poster</option>
+                        <option value="Interior">室內設計 Interior</option>
+                        <option value="Anime">動漫風 Anime</option>
                         <option value="Cyberpunk">賽博龐克 Cyberpunk</option>
-                        <option value="Steampunk">蒸氣龐克 Steampunk</option>
-                        <option value="Quilling">紙雕風 Quilling</option>
-                        <option value="Flat Lay">攝影風 Flat Lay</option>
-                        <option value="Glassmorphism">玻璃風 Glassmorphism</option>
+                    </optgroup>
+
+                    <optgroup label="💼 專業與趣味 (Original 32)">
+                        <option value="McKinsey">顧問風 McKinsey</option>
+                        <option value="Isometric 3D">等距風 Isometric</option>
+                        <option value="Claymation">黏土風 Claymation</option>
                         <option value="Diorama">小屋風 Diorama</option>
+                        <option value="LEGO">樂高風 LEGO</option>
                     </optgroup>
                 </select>
 
@@ -116,14 +121,14 @@
             <section>
                 <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 04. 長寬比例 (Aspect Ratio)</label>
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="setRatio('1:1', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">1:1 (正方形)</button>
-                    <button onclick="setRatio('4:5', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">4:5 (IG直式)</button>
+                    <button onclick="setRatio('1:1', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">1:1 (貼文)</button>
+                    <button onclick="setRatio('4:5', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">4:5 (IG垂直)</button>
                     <button id="defaultRatioBtn" onclick="setRatio('9:16', this)" class="ratio-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all shadow-sm">9:16 (短影音)</button>
-                    <button onclick="setRatio('4:3', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">4:3 (標準橫向)</button>
-                    <button onclick="setRatio('16:9', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">16:9 (影片寬屏)</button>
-                    <button onclick="setRatio('21:9', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">21:9 (Notion封面)</button>
+                    <button onclick="setRatio('16:9', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">16:9 (影片)</button>
+                    <button onclick="setRatio('3:2', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">3:2 (攝影)</button>
+                    <button onclick="setRatio('21:9', this)" class="ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all">21:9 (Notion)</button>
                 </div>
-                <div id="arHint" class="mt-2 text-[9px] text-gray-400 dark:text-slate-500 italic truncate text-center">縱向：適合 Reels、TikTok、Stories 手機全螢幕體驗。</div>
+                <div id="arHint" class="mt-2 text-[9px] text-gray-400 dark:text-slate-500 italic text-center">適用：Reels、TikTok、Stories 手機全螢幕體驗。</div>
             </section>
 
             <button onclick="vibrate(); generate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-xl transition-all active:scale-[0.96] flex justify-center items-center gap-2 text-lg">
@@ -138,3 +143,163 @@
                             <i class="far fa-copy text-lg"></i> 複製
                         </button>
                         <button onclick="vibrate(); shareLine()" class="bg-[#06C755] text-white p-4 rounded-xl text-xs font-black transition active:scale-90 flex flex-col items-center gap-1">
+                            <i class="fab fa-line text-lg"></i> LINE
+                        </button>
+                        <button onclick="vibrate(); shareFB()" class="bg-[#1877F2] text-white p-4 rounded-xl text-xs font-black transition active:scale-90 flex flex-col items-center gap-1">
+                            <i class="fab fa-facebook text-lg"></i> FB
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <section id="historySection" class="pt-6">
+                <div class="flex items-center justify-between mb-4 px-1">
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">歷史紀錄 (5筆)</label>
+                    <button onclick="vibrate(); clearHistory()" class="text-[10px] font-bold text-indigo-500">清除紀錄</button>
+                </div>
+                <div id="historyList" class="space-y-3"></div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // 匯總所有附件的風格描述
+        const styleSpecs = {
+            // 攝影模式 (攝影1.png)
+            "photo": { spec: "Realistic photography style, professional lighting.", desc: "標準攝影：最通用的寫實照片質感。" },
+            "life photo": { spec: "Candid life photo, natural lifestyle, unposed, realistic.", desc: "生活照：自然、不刻意的生活感照片。" },
+            "group photo": { spec: "Group photo, multiple people, clear faces.", desc: "團體照：多人合照，構圖穩定。" },
+            "group selfie photo": { spec: "Group selfie style, person holding phone, dynamic.", desc: "自拍團體照：像是一群人用手機自拍的視角。" },
+            "portrait photography": { spec: "Portrait photography, bokeh background, sharp focus on face.", desc: "人像攝影：專業棚拍或戶外人像，背景虛化。" },
+            "ports photography": { spec: "Sports photography, fast shutter speed, motion blur, dynamic action.", desc: "運動攝影：捕捉動態瞬間的高速攝影。" },
+            "still life photo": { spec: "Still life photography, controlled studio lighting, artistic arrangement.", desc: "靜物攝影：產品或靜物的精緻打光拍攝。" },
+
+            // 鏡頭與焦距 (Oxxo Specs)
+            "macro lens": { spec: "Macro lens photography, extreme close-up, hyper-detailed texture.", desc: "微距鏡頭：捕捉極細微的紋理與細節。" },
+            "wide angle lens": { spec: "Wide angle lens, expansive view, architectural perspective.", desc: "廣角鏡頭：適合拍風景、建築，視野遼闊。" },
+            "fish eye lens": { spec: "Fish eye lens, panoramic distortion, ultra-wide circular view.", desc: "魚眼鏡頭：誇張的球形扭曲，視覺張力大。" },
+            "tilt shift lens": { spec: "Tilt shift lens, miniature effect, selective focus.", desc: "移軸鏡頭：讓真實世界看起來像模型小人國。" },
+
+            // 攝影風格 (Oxxo Specs)
+            "Cinematic": { spec: "Cinematic movie style, dramatic lighting, anamorphic look.", desc: "電影劇照：充滿故事感與戲劇化的光影。" },
+            "DSLR style": { spec: "Digital DSLR photography style, high resolution, crisp details.", desc: "單眼風格：專業數位單眼相機質感。" },
+            "Polaroid style": { spec: "Polaroid instant film style, vintage colors, white border.", desc: "拍立得：復古、帶有即拍即得的底片感。" },
+            "Fujifilm style": { spec: "Fujifilm superia style, film grain, iconic color science.", desc: "富士底片：獨特的色彩科學與顆粒感。" },
+
+            // 提示詞.png 風格
+            "Oil Painting": { spec: "Oil painting style, rich brushstrokes, canvas texture.", desc: "油畫風：濃郁的顏料質感與藝術筆觸。" },
+            "Watercolor": { spec: "Watercolor painting, soft color wash, flowing ink.", desc: "水彩風：輕透的色塊與流動的藝術感。" },
+            "Hand-drawn Sketch": { spec: "Hand-drawn pencil sketch, rough lines, charcoal texture.", desc: "素描風：手繪線條感與炭筆陰影。" },
+            "Surreal": { spec: "Surrealism art style, dreamlike elements, bizarre logic.", desc: "超現實：如夢境般的場景與奇幻元素。" },
+            "Logo": { spec: "Minimalist vector logo, flat icon design, isolated on white.", desc: "標誌設計：適合創作簡約、專業的 LOGO。" },
+            "Poster": { spec: "Advertising poster design, graphic layout, vibrant colors.", desc: "海報設計：具備平面設計感的商業排版。" },
+            "Interior": { spec: "Interior design rendering, modern architecture, soft lighting.", desc: "室內設計：空間構圖與現代裝修美感。" },
+            "Anime": { spec: "High-quality anime art style, cel-shaded, vibrant.", desc: "動漫風：高飽和色彩的 2D 動漫質感。" },
+
+            // 原始 32 風格精選
+            "McKinsey": { spec: "Professional business framework, corporate blue.", desc: "顧問風：強調專業邏輯與商務藍調。" },
+            "Isometric 3D": { spec: "30-degree isometric perspective, 3D cubic shapes.", desc: "等距風：立體方塊堆疊，適合呈現架構。" },
+            "Claymation": { spec: "3D clay texture, visible fingerprints, handmade feel.", desc: "黏土風：如定格動畫般的捏製質感。" },
+            "Diorama": { spec: "Miniature diorama, tilt-shift effect, tiny world.", desc: "小屋風：精緻的微縮景觀模型。" }
+        };
+
+        const ratioSpecs = {
+            "1:1": { ar: "--ar 1:1", desc: "適合 Instagram 貼文、頭像、電商產品圖。" },
+            "4:5": { ar: "--ar 4:5", desc: "Instagram 最佳化垂直貼文，佔據更多手機版面。" },
+            "9:16": { ar: "--ar 9:16", desc: "適用：Reels、TikTok、Stories 手機全螢幕體驗。" },
+            "16:9": { ar: "--ar 16:9", desc: "適合 YouTube 影片、電腦螢幕桌布、電影視角。" },
+            "3:2": { ar: "--ar 3:2", desc: "專業攝影相片沖印常用比例。" },
+            "21:9": { ar: "--ar 21:9", desc: "超寬比例，最適合 Notion 封面與電影感視覺。" }
+        };
+
+        let selectedType = 'general';
+        let selectedRatio = '9:16';
+        let history = JSON.parse(localStorage.getItem('prompt_history_v65') || '[]');
+
+        function vibrate() { if (navigator.vibrate) navigator.vibrate(15); }
+
+        function setType(type, btn) {
+            selectedType = type;
+            document.querySelectorAll('.type-btn').forEach(b => {
+                b.className = 'type-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all';
+            });
+            btn.className = 'type-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all shadow-sm';
+        }
+
+        function setRatio(ratio, btn) {
+            vibrate();
+            selectedRatio = ratio;
+            document.querySelectorAll('.ratio-btn').forEach(b => {
+                b.className = 'ratio-btn border border-gray-100 dark:border-slate-700 p-3 rounded-xl text-gray-500 dark:text-slate-400 text-[10px] font-medium transition-all';
+            });
+            btn.className = 'ratio-btn ring-2 ring-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 p-3 rounded-xl text-indigo-700 dark:text-indigo-300 text-[10px] font-bold transition-all shadow-sm';
+            document.getElementById('arHint').innerText = "適用：" + ratioSpecs[ratio].desc;
+        }
+
+        function randomStyleOnly() {
+            vibrate();
+            const icon = document.getElementById('diceIcon');
+            icon.classList.add('rolling');
+            setTimeout(() => icon.classList.remove('rolling'), 500);
+            const styleSelect = document.getElementById('style');
+            const options = Array.from(styleSelect.querySelectorAll('option')).filter(o => o.value !== "");
+            styleSelect.value = options[Math.floor(Math.random() * options.length)].value;
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const style = document.getElementById('style').value;
+            const card = document.getElementById('previewCard');
+            if(styleSpecs[style]) {
+                document.getElementById('previewText').innerText = "💡 " + styleSpecs[style].desc;
+                card.classList.remove('hidden');
+            }
+        }
+
+        function generate() {
+            const content = document.getElementById('content').value.trim() || "Amazing AI Art";
+            const style = document.getElementById('style').value;
+            if(!style) return alert('請先選擇風格喔！');
+            
+            const typeLabel = (selectedType === 'general') ? "image" : selectedType;
+            const prompt = `/imagine prompt: A ${style} style ${typeLabel} about '${content}'. \n- ${styleSpecs[style].spec} \n- Aspect ratio: ${selectedRatio} ${ratioSpecs[selectedRatio].ar} --v 6.0`;
+            
+            document.getElementById('finalPrompt').innerText = prompt;
+            document.getElementById('resultBox').classList.remove('hidden');
+            saveToHistory(style, content, prompt);
+        }
+
+        function saveToHistory(s, c, p) {
+            history.unshift({ style: s, content: c, prompt: p });
+            if (history.length > 5) history.pop();
+            localStorage.setItem('prompt_history_v65', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = history.map((item, index) => `
+                <div class="p-4 bg-gray-50 dark:bg-slate-900 rounded-2xl border flex justify-between items-center shadow-sm active:scale-95 transition-all" onclick="loadFromHistory(${index})">
+                    <div class="overflow-hidden">
+                        <p class="text-[9px] font-black text-indigo-500 uppercase">${item.style}</p>
+                        <p class="text-[12px] text-gray-700 dark:text-slate-300 font-bold truncate w-48">${item.content}</p>
+                    </div>
+                    <i class="fas fa-magic text-[10px] text-indigo-300"></i>
+                </div>`).join('');
+        }
+
+        function loadFromHistory(i) {
+            vibrate();
+            document.getElementById('finalPrompt').innerText = history[i].prompt;
+            document.getElementById('resultBox').classList.remove('hidden');
+        }
+
+        function clearHistory() { history = []; localStorage.removeItem('prompt_history_v65'); renderHistory(); }
+        function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('指令已複製！'); }
+        function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
+        function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
+
+        renderHistory();
+    </script>
+</body>
+</html>
