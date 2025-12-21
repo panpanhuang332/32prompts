@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ICS Lab Pro - V5.5 All-in-One</title>
+    <title>ICS Prompt Lab Pro - V5.6 Full</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -38,9 +38,9 @@
         <div id="genTab" class="tab-content active">
             <div class="p-8 gradient-header text-white relative">
                 <h1 class="text-3xl font-black flex items-center gap-3 relative z-10">
-                    <i class="fas fa-brain text-yellow-300"></i> ICS PRO GEN
+                    <i class="fas fa-magic text-yellow-300"></i> ICS Lab
                 </h1>
-                <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">V5.5 Smart Logic</p>
+                <p class="text-indigo-100 text-[10px] mt-2 font-bold tracking-[0.3em] opacity-90 uppercase relative z-10">32 Styles Full Edition</p>
                 <button onclick="randomSurprise()" class="absolute bottom-6 right-6 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3 rounded-2xl border border-white/30 transition-all active:scale-90 group">
                     <i id="diceIcon" class="fas fa-dice text-2xl text-white group-hover:rotate-12 transition-transform"></i>
                 </button>
@@ -59,14 +59,13 @@
 
                 <section>
                     <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 02. 內容主題</label>
-                    <textarea id="content" rows="2" placeholder="你想呈現什麼內容？" 
-                           class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-sm"></textarea>
+                    <textarea id="content" rows="2" placeholder="你想呈現什麼內容？" class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-700 dark:text-slate-200 transition-all text-sm"></textarea>
                 </section>
 
                 <section>
-                    <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 03. 視覺風格</label>
+                    <label class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 mb-3 block tracking-[0.2em] uppercase">Step 03. 視覺風格 (32種)</label>
                     <select id="style" onchange="vibrate(); updatePreview()" class="w-full p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-slate-700 rounded-2xl font-bold text-gray-700 dark:text-slate-200 mb-3 outline-none text-sm appearance-none shadow-sm">
-                        <option value="" disabled selected>請選擇風格 (32種)...</option>
+                        <option value="" disabled selected>挑選一個風格...</option>
                         <optgroup label="💼 專業商務">
                             <option value="McKinsey">01 顧問風 McKinsey</option>
                             <option value="Corporate">02 企業風 Corporate</option>
@@ -143,7 +142,7 @@
                     </div>
                 </div>
 
-                <section id="historySection" class="pt-4">
+                <section id="historySection" class="pt-4 pb-10">
                     <div class="flex items-center justify-between mb-3 px-1">
                         <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">最近生成 (5筆)</label>
                         <button onclick="vibrate(); clearHistory()" class="text-[10px] font-bold text-indigo-500">清除</button>
@@ -155,3 +154,32 @@
 
         <div id="repairTab" class="tab-content">
             <div class="p-8 bg-slate-800 text-white">
+                <h1 class="text-2xl font-black italic text-indigo-400 uppercase">Repair Master</h1>
+                <p class="text-[10px] tracking-widest opacity-60 uppercase mt-1">手動字體匹配修復引擎</p>
+            </div>
+            <div class="p-6 space-y-6">
+                <div id="uploadArea" class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-3xl p-10 text-center" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-file-image text-4xl text-indigo-500 mb-3"></i>
+                    <p class="text-xs font-bold text-gray-500">上傳損壞的圖檔</p>
+                    <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="loadImage(this)">
+                </div>
+                <div id="editorArea" class="hidden space-y-4 animate-in fade-in">
+                    <div class="rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-700 shadow-inner">
+                        <canvas id="mainCanvas"></canvas>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 p-4 bg-gray-50 dark:bg-slate-900 rounded-2xl">
+                        <div class="col-span-1">
+                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">字體大小: <span id="sizeVal">28</span>px</label>
+                            <input type="range" id="fontSize" min="10" max="100" value="28" oninput="document.getElementById('sizeVal').innerText=this.value" class="w-full h-2 bg-gray-200 rounded-lg appearance-none">
+                        </div>
+                        <div class="col-span-1">
+                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1">字體選擇</label>
+                            <select id="fontFamily" class="w-full text-xs p-1.5 rounded-lg bg-white border border-gray-200 outline-none">
+                                <option value="sans-serif">標準黑體</option>
+                                <option value="serif">經典宋體</option>
+                                <option value="'Microsoft JhengHei', sans-serif">微軟正黑</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-1 text-center">文字顏色</label>
+                            <input type="color" id="textColor" value="#333333" class="w
