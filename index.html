@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICS Prompt Lab - Full 32 Styles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f3f4f6; }
+        .app-card { border-radius: 28px; }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    </style>
+</head>
+<body class="p-4 flex justify-center items-start min-h-screen">
+
+    <div class="w-full max-w-md bg-white app-card shadow-2xl overflow-hidden border border-gray-100 mb-10">
+        <div class="p-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+            <h1 class="text-2xl font-bold flex items-center gap-2">
+                <i class="fas fa-bolt text-yellow-300"></i> ICS Prompt Lab
+            </h1>
+            <p class="text-blue-100 text-sm opacity-90 mt-1">32 種視覺風格完整收錄</p>
+        </div>
+
+        <div class="p-6 space-y-6">
+            <div>
+                <label class="block text-xs font-black text-gray-400 mb-3 uppercase tracking-widest">I - Image Type 圖片類型</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="setType('infographic', this)" class="type-btn border-2 border-indigo-600 bg-indigo-50 p-2 rounded-xl text-indigo-700 text-sm font-bold transition-all">資訊圖表</button>
+                    <button onclick="setType('diagram', this)" class="type-btn border-2 border-gray-100 p-2 rounded-xl text-gray-500 text-sm font-medium transition-all">圖解</button>
+                    <button onclick="setType('flowchart', this)" class="type-btn border-2 border-gray-100 p-2 rounded-xl text-gray-500 text-sm font-medium transition-all">流程圖</button>
+                    <button onclick="setType('timeline', this)" class="type-btn border-2 border-gray-100 p-2 rounded-xl text-gray-500 text-sm font-medium transition-all">時間軸</button>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-black text-gray-400 mb-2 uppercase tracking-widest">C - Content 內容主題</label>
+                <textarea id="content" rows="2" placeholder="例如：居家收納技巧、AI 運作原理..." 
+                       class="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-gray-700"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-xs font-black text-gray-400 mb-2 uppercase tracking-widest">S - Visual Style 視覺風格</label>
+                <select id="style" class="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold text-gray-700">
+                    <option value="" disabled selected>選擇風格...</option>
+                    <optgroup label="💼 專業商務">
+                        <option value="McKinsey">01 顧問風 McKinsey</option>
+                        <option value="Corporate">02 企業風 Corporate</option>
+                        <option value="Minimalist">03 極簡風 Minimalist</option>
+                        <option value="Professional">04 簡報風 Professional</option>
+                        <option value="Framework">05 圖表風 Framework</option>
+                    </optgroup>
+                    <optgroup label="🎨 插畫藝術">
+                        <option value="Watercolor">06 水彩風 Watercolor</option>
+                        <option value="Isometric 3D">07 等距風 Isometric 3D</option>
+                        <option value="Flat Vector">08 扁平風 Flat Vector</option>
+                        <option value="Kawaii">09 可愛風 Kawaii</option>
+                        <option value="Hand-drawn Sketch">10 手繪風 Hand-drawn</option>
+                        <option value="Paper Cutout">11 剪紙風 Paper Cutout</option>
+                    </optgroup>
+                    <optgroup label="🎮 趣味創意">
+                        <option value="Anime">12 動漫風 Anime</option>
+                        <option value="Comic Book">13 漫畫風 Comic Book</option>
+                        <option value="Pixel Art">14 像素風 Pixel Art</option>
+                        <option value="Claymation">15 黏土風 Claymation</option>
+                        <option value="Origami">16 摺紙風 Origami</option>
+                        <option value="Graffiti">17 塗鴉風 Graffiti</option>
+                    </optgroup>
+                    <optgroup label="📜 復古經典">
+                        <option value="Vintage Poster">18 海報風 Vintage</option>
+                        <option value="Chalkboard">19 黑板風 Chalkboard</option>
+                        <option value="Analog Film">20 底片風 Analog Film</option>
+                        <option value="Pop Art">21 普普風 Pop Art</option>
+                        <option value="Da Vinci">22 達文西 Da Vinci</option>
+                    </optgroup>
+                    <optgroup label="🔬 技術圖解">
+                        <option value="Blueprint">23 藍圖風 Blueprint</option>
+                        <option value="Cross-section">24 剖面圖 Cross-section</option>
+                        <option value="Wireframe">25 線框圖 Wireframe</option>
+                        <option value="Subway Map">26 地鐵圖 Subway Map</option>
+                    </optgroup>
+                    <optgroup label="✨ 特殊風格">
+                        <option value="Cyberpunk">27 賽博龐克 Cyberpunk</option>
+                        <option value="Steampunk">28 蒸氣龐克 Steampunk</option>
+                        <option value="Quilling">29 紙雕風 Quilling</option>
+                        <option value="Flat Lay">30 攝影風 Flat Lay</option>
+                        <option value="Glassmorphism">31 玻璃風 Glassmorphism</option>
+                        <option value="Diorama">32 小屋風 Diorama</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <button onclick="generate()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl shadow-xl shadow-indigo-100 transition-all active:scale-95 flex justify-center items-center gap-2 text-lg">
+                生成懶人指令 <i class="fas fa-magic"></i>
+            </button>
+
+            <div id="resultBox" class="hidden animate-in slide-in-from-bottom-4 duration-300">
+                <div class="bg-gray-900 rounded-3xl p-6 relative border border-gray-800 shadow-inner">
+                    <p id="finalPrompt" class="text-indigo-300 text-sm font-mono whitespace-pre-line leading-relaxed"></p>
+                    <button onclick="copyText()" class="mt-4 w-full bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2">
+                        <i class="far fa-copy"></i> 複製提示詞
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedType = 'infographic';
+
+        const styleSpecs = {
+            // 專業商務
+            "McKinsey": "Professional business framework, corporate blue palette, clean data visualization, structured layout.",
+            "Corporate": "Modern office aesthetic, clean lines, professional photography, high-end corporate branding feel.",
+            "Minimalist": "Clean white space, simple geometric shapes, high contrast, limited color palette, airy feel.",
+            "Professional": "Clean presentation slide design, balanced typography, professional business aesthetics.",
+            "Framework": "Logical flow diagrams, structured blocks, systematic arrangement, clear information hierarchy.",
+            // 插畫藝術
+            "Watercolor": "Soft watercolor wash, hand-painted texture, artistic bleeding edges, gentle pastel tones.",
+            "Isometric 3D": "30-degree isometric perspective, stacked cubic and geometric shapes, clear shadow layers for depth.",
+            "Flat Vector": "2D flat design, no gradients, clean edges, bold and modern web illustration style.",
+            "Kawaii": "Cute characters, pastel colors, soft rounded edges, cheerful and friendly Japanese aesthetic.",
+            "Hand-drawn Sketch": "Pencil line texture, organic irregular shapes, rough sketch edges, notebook paper background.",
+            "Paper Cutout": "Layered paper texture, subtle drop shadows for depth, tactile craft aesthetic, colorful paper.",
+            // 趣味創意
+            "Anime": "High-quality anime art style, vibrant colors, expressive characters, cel-shaded details.",
+            "Comic Book": "Bold ink lines, halftone dots, action-oriented composition, vintage comic book aesthetic.",
+            "Pixel Art": "16-bit retro game style, visible pixel grid, limited color palette, nostalgic digital art.",
+            "Claymation": "3D clay texture, visible fingerprints on surface, soft plasticine lighting, stop-motion animation aesthetic.",
+            "Origami": "Folded paper texture, sharp geometric creases, minimalist paper craft look, clean shadows.",
+            "Graffiti": "Street art style, spray paint texture, vibrant dripping paint, urban aesthetic, bold typography.",
+            // 復古經典
+            "Vintage Poster": "Retro poster aesthetic, weathered paper texture, muted colors, classic typography, nostalgic feel.",
+            "Chalkboard": "Chalk texture on black background, hand-drawn elements, classroom educational aesthetic.",
+            "Analog Film": "Grainy texture, light leaks, vintage color grading, 35mm film photography look.",
+            "Pop Art": "High contrast, Ben-Day dots, vibrant primary colors, Andy Warhol inspired bold aesthetic.",
+            "Da Vinci": "Renaissance sketch style, aged parchment, sepia ink, anatomical or technical study look.",
+            // 技術圖解
+            "Blueprint": "Technical architectural drawing, white lines on cyan background, precise measurements and grid.",
+            "Cross-section": "Cutaway view, internal details, technical labels, structural analysis, informative depth.",
+            "Wireframe": "3D mesh structure, transparent lines, digital prototyping look, minimalist tech-focused.",
+            "Subway Map": "Geographic simplification, colorful intersecting lines, transit system aesthetic, clean nodes.",
+            // 特殊風格
+            "Cyberpunk": "Neon lights, futuristic urban setting, high contrast blue and magenta, high-tech grit.",
+            "Steampunk": "Victorian machinery, brass and copper textures, steam-powered tech, intricate gears and cogs.",
+            "Quilling": "Rolled paper art, intricate paper scrolls, colorful 3D paper crafts, highly textured.",
+            "Flat Lay": "Top-down bird's eye view, arranged real objects, clean light background, organized DIY aesthetic.",
+            "Glassmorphism": "Frosted glass effect, blurred background, semi-transparent layers, modern digital UI aesthetic.",
+            "Diorama": "Miniature model scene, shallow depth of field, tilt-shift effect, tiny detailed world look."
+        };
+
+        function setType(type, btn) {
+            selectedType = type;
+            document.querySelectorAll('.type-btn').forEach(b => {
+                b.classList.remove('border-indigo-600', 'bg-indigo-50', 'text-indigo-700', 'font-bold');
+                b.classList.add('border-gray-100', 'text-gray-500', 'font-medium');
+            });
+            btn.classList.remove('border-gray-100', 'text-gray-500', 'font-medium');
+            btn.classList.add('border-indigo-600', 'bg-indigo-50', 'text-indigo-700', 'font-bold');
+        }
+
+        function generate() {
+            const content = document.getElementById('content').value || "[Your Topic Here]";
+            const style = document.getElementById('style').value;
+            if(!style) return alert('請先選擇一個風格！');
+
+            const spec = styleSpecs[style];
+            const prompt = `Create a ${style} style ${selectedType} about '${content}'. \n\nStyle specifications:\n- ${spec}\n- Organized and visually pleasing layout.\n- Aspect ratio: 9:16 vertical`;
+            
+            document.getElementById('finalPrompt').innerText = prompt;
+            document.getElementById('resultBox').classList.remove('hidden');
+            document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyText() {
+            const text = document.getElementById('finalPrompt').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> 已複製';
+                setTimeout(() => btn.innerHTML = originalText, 2000);
+            });
+        }
+    </script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
+</body>
+</html>
