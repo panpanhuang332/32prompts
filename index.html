@@ -4,164 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>第一次AI生圖就上手 - 9527</title>
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>tailwind.config = { darkMode: 'media' }</script>
     <style>
-        /* 強化繁體中文支援與視覺質感 */
         body {
             -webkit-tap-highlight-color: transparent;
-            font-family: 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
             background: linear-gradient(135deg, #f0f4ff 0%, #e5e7eb 100%);
-            transition: background-color 0.4s ease;
         }
         @media (prefers-color-scheme: dark) {
             body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
         }
-
-        .app-card {
-            border-radius: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-        }
-        @media (prefers-color-scheme: dark) {
-            .app-card { border-color: rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        }
-
-        .gradient-header {
-            background: linear-gradient(120deg, #6366f1, #8b5cf6, #d946ef);
-            background-size: 200% 200%;
-            animation: gradientBG 6s ease infinite;
-        }
+        .app-card { border-radius: 40px; backdrop-filter: blur(20px); }
+        .gradient-header { background: linear-gradient(120deg, #6366f1, #8b5cf6, #d946ef); background-size: 200% 200%; animation: gradientBG 6s ease infinite; }
         @keyframes gradientBG { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
-
-        .input-premium {
-            border: 2px solid transparent;
-            background-color: #f8fafc;
-            transition: all 0.3s ease;
-        }
-        .input-premium:focus {
-            border-color: #8b5cf6;
-            background-color: #fff;
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
-        }
-        @media (prefers-color-scheme: dark) {
-            .input-premium { background-color: #1e293b; color: #e2e8f0; }
-            .input-premium:focus { background-color: #0f172a; }
-        }
-
-        .btn-generate {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.5);
-        }
-
-        select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a855f7' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1.2rem center; background-repeat: no-repeat; background-size: 1.2em; }
-        select:disabled { opacity: 0.5; cursor: not-allowed; background-color: #f1f5f9; color: #94a3b8; }
-        @media (prefers-color-scheme: dark) { select:disabled { background-color: #334155; color: #64748b; } }
-
-        @keyframes dice-roll { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.2); } 100% { transform: rotate(360deg) scale(1); } }
+        .input-premium { background-color: #f8fafc; transition: all 0.3s ease; }
+        @media (prefers-color-scheme: dark) { .input-premium { background-color: #1e293b; color: #e2e8f0; } }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a855f7' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1rem center; background-repeat: no-repeat; background-size: 1.1em; }
+        select:disabled { opacity: 0.4; cursor: not-allowed; }
+        @keyframes dice-roll { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .rolling { animation: dice-roll 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
     </style>
 </head>
 <body class="p-4 min-h-screen pb-10 flex justify-center items-start py-8">
 
-    <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card overflow-hidden relative">
+    <div class="w-full max-w-md bg-white dark:bg-slate-800 app-card shadow-2xl overflow-hidden relative">
         <div class="p-10 gradient-header text-white relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.8) 1px, transparent 0); background-size: 24px 24px;"></div>
-            
             <div class="relative z-10">
                 <h1 class="text-3xl font-black italic tracking-tighter">第一次AI生圖就上手</h1>
-                <p class="text-purple-100 text-xl mt-2 font-black tracking-[0.4em] opacity-90">9527</p>
+                <p class="text-purple-100 text-xl mt-2 font-black tracking-[0.4em]">9527</p>
             </div>
-            
-            <button onclick="randomStyleOnly()" class="absolute bottom-8 right-8 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3.5 rounded-2xl border border-white/40 transition-all active:scale-90 group shadow-lg">
+            <button onclick="randomStyleOnly()" class="absolute bottom-8 right-8 bg-white/20 hover:bg-white/30 backdrop-blur-md p-3.5 rounded-2xl border border-white/40 active:scale-90 shadow-lg">
                 <i id="diceIcon" class="fas fa-dice text-2xl text-white"></i>
             </button>
         </div>
 
         <div class="p-8 space-y-9">
             <section>
-                <label class="text-xs font-black text-purple-600 dark:text-purple-400 mb-4 block tracking-widest uppercase pl-1">Step 01. 圖片類型</label>
+                <label class="text-xs font-black text-purple-600 dark:text-purple-400 mb-4 block tracking-widest uppercase">Step 01. 圖片類型</label>
                 <div class="grid grid-cols-3 gap-3">
-                    <button id="type-general" onclick="vibrate(); setType('general', this)" class="type-btn ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-900/30 p-3 rounded-2xl text-purple-700 dark:text-purple-300 text-xs font-bold transition-all shadow-sm">通用圖像</button>
-                    <button id="type-infographic" onclick="vibrate(); setType('infographic', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">資訊圖表</button>
-                    <button id="type-diagram" onclick="vibrate(); setType('diagram', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">功能圖解</button>
-                    <button id="type-flowchart" onclick="vibrate(); setType('flowchart', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">流程圖</button>
-                    <button id="type-portrait" onclick="vibrate(); setType('portrait', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">人像攝影</button>
-                    <button id="type-landscape" onclick="vibrate(); setType('landscape', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">壯闊風景</button>
+                    <button onclick="setType('general', this)" class="type-btn ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-900/30 p-3 rounded-2xl text-purple-700 dark:text-purple-300 text-xs font-bold transition-all">通用圖像</button>
+                    <button onclick="setType('infographic', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">資訊圖表</button>
+                    <button onclick="setType('portrait', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">人像攝影</button>
+                    <button onclick="setType('landscape', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">壯闊風景</button>
+                    <button onclick="setType('diagram', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">功能圖解</button>
+                    <button onclick="setType('flowchart', this)" class="type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all">流程圖</button>
                 </div>
             </section>
 
             <section>
-                <label class="text-xs font-black text-purple-600 dark:text-purple-400 mb-4 block tracking-widest uppercase pl-1">Step 02. 內容主題</label>
-                <textarea id="content" rows="2" placeholder="你想呈現什麼內容？" class="input-premium w-full p-4 rounded-2xl outline-none text-gray-700 text-sm transition-all"></textarea>
+                <label class="text-xs font-black text-purple-600 dark:text-purple-400 mb-4 block tracking-widest uppercase">Step 02. 內容主題</label>
+                <textarea id="content" rows="2" placeholder="你想呈現什麼內容？" class="input-premium w-full p-4 rounded-2xl outline-none text-gray-700 text-sm"></textarea>
             </section>
 
             <section class="space-y-4">
-                <label class="text-xs font-black text-purple-600 dark:text-purple-400 block tracking-widest uppercase pl-1">Step 03. 視覺風格與進階參數</label>
-                
-                <select id="styleCategory" onchange="vibrate(); updateTieredUI()" class="input-premium w-full p-4 rounded-2xl font-black text-purple-600 dark:text-purple-400 outline-none text-sm">
+                <label class="text-xs font-black text-purple-600 dark:text-purple-400 block tracking-widest uppercase">Step 03. 視覺風格與參數</label>
+                <select id="styleCategory" onchange="vibrate(); updateTieredUI()" class="input-premium w-full p-4 rounded-2xl font-black text-purple-600 outline-none text-sm">
                     <option value="" disabled selected>1. 選擇風格分類...</option>
-                    <option id="opt-pro-photo" value="ProPhotography">📸 專業攝影與參數 (可啟用輔助)</option>
+                    <option id="opt-pro-photo" value="ProPhotography">📸 專業攝影與參數</option>
                     <option value="Photography">📷 一般攝影與照片風格</option>
                     <option value="Painting">🖌️ 繪畫媒材與質感</option>
-                    <option value="ArtMovements">🏛️ 藝術流派與流派</option>
-                    <option value="FamousArtists">🎨 知名藝術家大師</option>
                     <option value="AnimeComics">🎬 動畫與漫畫</option>
-                    <option value="DesignSpecial">✨ 特殊與設計風格</option>
                 </select>
-
                 <select id="styleDetail" onchange="vibrate(); updatePreview()" class="input-premium w-full p-4 rounded-2xl font-bold text-gray-700 outline-none text-sm" disabled>
                     <option value="">2. 再選擇具體風格...</option>
                 </select>
-
                 <select id="proAssist" onchange="vibrate(); updatePreview()" class="input-premium w-full p-4 rounded-2xl font-bold text-gray-700 outline-none text-sm" disabled>
                     <option value="" selected>3. 專業攝影輔助 (鎖定中)...</option>
                     <option value="bright">環境較明亮 Bright</option>
                     <option value="dark">環境較暗 Dark</option>
                     <option value="realistic">逼真的 Realistic</option>
-                    <option value="b/w">黑白照片 B/W</option>
-                    <option value="very realistic">非常逼真的 (強調紋理)</option>
-                    <option value="very detailed">豐富細節 (增加物件)</option>
-                    <option value="high resolution">高分辨率 Resolution</option>
-                    <option value="8K">8K 頂級畫質 8K</option>
+                    <option value="very realistic">極致逼真 Very Realistic</option>
+                    <option value="8K">8K 頂級畫質</option>
                 </select>
-
-                <div id="previewCard" class="hidden p-4 rounded-2xl bg-purple-50 dark:bg-slate-900/50 border-2 border-purple-100 dark:border-purple-900/30 animate-in fade-in">
-                    <p id="previewText" class="text-xs text-purple-700 dark:text-purple-300 leading-relaxed font-bold"></p>
-                </div>
             </section>
 
             <section class="space-y-4">
-                <label class="text-xs font-black text-purple-600 dark:text-purple-400 block tracking-widest uppercase pl-1">Step 04. 長寬比例</label>
+                <label class="text-xs font-black text-purple-600 dark:text-purple-400 block tracking-widest uppercase">Step 04. 長寬比例</label>
                 <select id="ratioSelect" onchange="vibrate(); handleRatioChange()" class="input-premium w-full p-4 rounded-2xl font-bold text-gray-700 outline-none text-sm">
                     <option value="1:1">1:1 (正方形)</option>
-                    <option value="4:5">4:5 (IG 垂直)</option>
-                    <option value="9:16" selected>9:16 (手機全螢幕)</option>
-                    <option value="16:9">16:9 (電腦/影片)</option>
-                    <option value="3:2">3:2 (專業攝影)</option>
-                    <option value="21:9">21:9 (Notion 封面)</option>
-                    <option value="custom">✍️ 自訂比例 (Custom)</option>
+                    <option value="9:16" selected>9:16 (手機短影音)</option>
+                    <option value="16:9">16:9 (電腦寬屏)</option>
+                    <option value="custom">✍️ 自訂比例</option>
                 </select>
-                <div id="customRatioBox" class="hidden animate-in slide-in-from-top-2">
-                    <input type="text" id="customRatioInput" placeholder="例如 2.35:1" class="input-premium w-full p-4 rounded-2xl text-sm font-mono outline-none text-purple-600">
-                </div>
             </section>
 
-            <button onclick="vibrate(); generate()" class="btn-generate w-full text-white font-black py-5 rounded-[20px] text-lg transition-all flex justify-center items-center gap-3 tracking-wider">
+            <button onclick="vibrate(); generate()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black py-5 rounded-[20px] text-lg active:scale-[0.96] transition-all">
                 生成大師指令 <i class="fas fa-wand-magic-sparkles"></i>
             </button>
 
-            <div id="resultBox" class="hidden animate-in zoom-in-95 duration-300 pb-2">
-                <div class="bg-slate-900 rounded-[2.5rem] p-8 border-2 border-slate-700/50 shadow-2xl relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-500/10 to-blue-500/10 pointer-events-none"></div>
-                    <p id="finalPrompt" class="text-purple-200 text-xs font-mono whitespace-pre-line leading-relaxed bg-slate-950/80 p-6 rounded-3xl border border-white/10 shadow-inner mb-7 relative z-10 select-all"></p>
-                    <div class="grid grid-cols-3 gap-3 relative z-10">
-                        <button onclick="vibrate(); copyText()" class="bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-2xl flex items-center justify-center transition-colors"><i class="far fa-copy text-lg"></i></button>
-                        <button onclick="vibrate(); shareLine()" class="bg-[#06C755] hover:bg-[#05b34c] text-white p-4 rounded-2xl flex items-center justify-center transition-colors"><i class="fab fa-line text-xl"></i></button>
-                        <button onclick="vibrate(); shareFB()" class="bg-[#1877F2] hover:bg-[#166fe5] text-white p-4 rounded-2xl flex items-center justify-center transition-colors"><i class="fab fa-facebook text-xl"></i></button>
+            <div id="resultBox" class="hidden animate-in zoom-in-95 duration-300">
+                <div class="bg-slate-900 rounded-[2.5rem] p-7 border-2 border-slate-700/50 relative overflow-hidden">
+                    <p id="finalPrompt" class="text-purple-200 text-xs font-mono bg-slate-950/80 p-5 rounded-3xl mb-6 select-all"></p>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="vibrate(); copyText()" class="bg-purple-600 text-white p-4 rounded-2xl flex items-center justify-center"><i class="far fa-copy text-lg"></i></button>
+                        <button onclick="vibrate(); shareLine()" class="bg-[#06C755] text-white p-4 rounded-2xl flex items-center justify-center"><i class="fab fa-line text-xl"></i></button>
+                        <button onclick="vibrate(); shareFB()" class="bg-[#1877F2] text-white p-4 rounded-2xl flex items-center justify-center"><i class="fab fa-facebook text-lg"></i></button>
                     </div>
                 </div>
             </div>
@@ -169,63 +113,40 @@
     </div>
 
     <script>
-        const styleDisplayNames = {
-            "macro lens": "微距鏡頭 Macro", "prime lens": "定焦鏡頭 Prime", "long focal length lens": "望遠鏡頭 Tele", "wide angle lens": "廣角鏡頭 Wide", "fish eye lens": "魚眼鏡頭 Fish-eye", "tilt shift lens": "移軸鏡頭 Tilt-shift", "bokeh": "散景效果 Bokeh", "magic hour": "魔幻時刻 Magic Hour", "golden hour": "黃金時刻 Golden Hour", "blue hour": "藍色時刻 Blue Hour", "lens flare": "鏡頭眩光 Flare", "multiple exposure": "重複曝光 Exposure", "panning": "平移拍攝 Panning", "motion blur": "動態模糊 Motion", "vgnetting": "暈影暗角 Vignette", "ambient light": "環境光 Ambient", "hard light": "硬光 Hard", "soft light": "柔光 Soft", "back light": "逆光 Backlight", "rim light": "輪廓光 Rim", "HDR": "高動態範圍 HDR", "4K HDR": "極致 4K HDR",
-            "Photo": "標準照片 Photo", "life photo": "生活照 Life", "group photo": "團體照 Group", "group selfie photo": "自拍團體 Group Selfie", "selfie photo": "個人自拍 Selfie", "portrait photography": "人像攝影 Portrait", "ports photography": "運動攝影 Sports", "still life photo": "靜物攝影 Still Life", "DSLR style": "單眼風格 DSLR", "Polaroid style": "拍立得 Polaroid", "Fujifilm": "富士底片 Fujifilm", "LOMO style": "LOMO 相機風格", "Oil Painting": "古典油畫 Oil", "Watercolor": "透明水彩 Watercolor", "Sketch": "素描草圖 Sketch", "Anime": "日本動漫 Anime", "Logo Design": "標誌設計 Logo", "McKinsey": "顧問簡報 McKinsey"
-        };
-        const proAssistNames = { "bright": "環境較明亮 Bright", "dark": "環境較暗 Dark", "realistic": "逼真的 Realistic", "b/w": "黑白照片 B/W", "very realistic": "非常逼真 (強調紋理)", "very detailed": "豐富細節 (增加物件)", "high resolution": "高分辨率 Resolution", "8K": "8K 頂級畫質" };
-        const categoryMap = {
-            "ProPhotography": ["macro lens", "prime lens", "long focal length lens", "wide angle lens", "fish eye lens", "tilt shift lens", "bokeh", "magic hour", "golden hour", "blue hour", "lens flare", "multiple exposure", "panning", "motion blur", "vgnetting", "ambient light", "hard light", "soft light", "back light", "rim light", "HDR", "4K HDR"],
-            "Photography": ["Photo", "life photo", "group photo", "group selfie photo", "selfie photo", "portrait photography", "ports photography", "still life photo", "DSLR style", "Polaroid style", "Fujifilm", "LOMO style"],
-            "Painting": ["Oil Painting", "Watercolor", "Sketch"],
-            "ArtMovements": ["Renaissance", "Baroque", "Impressionism", "Surrealism", "Pop Art", "Minimalism", "Cyberpunk"],
-            "FamousArtists": ["Da Vinci", "Van Gogh", "Picasso", "Dali", "Monet", "Kusama Yayoi"],
-            "AnimeComics": ["Disney Animation", "Pixar Animation", "Studio Ghibli", "Anime", "Manga", "American Comic", "Claymation"],
-            "DesignSpecial": ["Logo Design", "Flat Design", "Infographic", "Blueprint", "Origami", "Pixel Art", "Isometric 3D", "Low Poly", "3D Render", "LEGO"],
-            "BusinessPro": ["McKinsey", "Corporate", "Professional"]
-        };
-        const styleSpecs = {
-            "bright": { spec: "Bright lighting, high key, well-lit.", desc: "讓畫面明亮通透。" },
-            "dark": { spec: "Dark atmosphere, low key lighting, moody shadows.", desc: "呈現幽暗神秘的環境質感。" },
-            "realistic": { spec: "Realistic texture, lifelike rendering.", desc: "逼真的影像呈現。" },
-            "b/w": { spec: "Black and white monochrome, classic grayscale.", desc: "經典黑白照片質感。" },
-            "very realistic": { spec: "Ultra-realistic, 8k resolution, extreme focus on details and textures.", desc: "極致逼真，特別強調毛髮與紋路細節。" },
-            "very detailed": { spec: "Intricate details, extra background objects, high density elements.", desc: "豐富細節，畫面背景不再單調。" },
-            "high resolution": { spec: "High resolution, sharp crisp edges, clear focus.", desc: "清晰銳利的高分辨率。" },
-            "8K": { spec: "8K UHD render, masterpiece quality.", desc: "8K 超清畫質水準。" }
-        };
-
-        let selectedType = 'general';
-        function vibrate() { if (navigator.vibrate) navigator.vibrate(10); }
-
-        function handleRatioChange() {
-            const s = document.getElementById('ratioSelect');
-            document.getElementById('customRatioBox').className = s.value === 'custom' ? 'block animate-in slide-in-from-top-2' : 'hidden';
+        // PWA 註冊腳本
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js');
+            });
         }
+
+        const categoryMap = {
+            "ProPhotography": ["macro lens", "prime lens", "wide angle lens", "bokeh", "magic hour", "HDR"],
+            "Photography": ["Photo", "life photo", "portrait photography", "DSLR style", "Polaroid style"],
+            "Painting": ["Oil Painting", "Watercolor", "Sketch"],
+            "AnimeComics": ["Anime", "Manga", "Studio Ghibli"]
+        };
+
+        const styleDisplayNames = { "macro lens": "微距鏡頭 Macro", "Photo": "標準照片 Photo", "Anime": "日本動漫 Anime" };
+        let selectedType = 'general';
+
+        function vibrate() { if (navigator.vibrate) navigator.vibrate(10); }
 
         function setType(type, btn) {
             selectedType = type;
-            document.querySelectorAll('.type-btn').forEach(b => b.className = 'type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium transition-all');
-            btn.className = 'type-btn ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-900/30 p-3 rounded-2xl text-purple-700 dark:text-purple-300 text-xs font-bold transition-all shadow-sm';
-
-            const proOption = document.getElementById('opt-pro-photo');
+            document.querySelectorAll('.type-btn').forEach(b => b.className = 'type-btn border-2 border-gray-100 dark:border-slate-700 p-3 rounded-2xl text-gray-500 dark:text-slate-400 text-xs font-medium');
+            btn.className = 'type-btn ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-900/30 p-3 rounded-2xl text-purple-700 dark:text-purple-300 text-xs font-bold';
+            
+            const pro = document.getElementById('opt-pro-photo');
             const allowed = ['general', 'landscape', 'portrait'];
-            if (allowed.includes(type)) { proOption.disabled = false; proOption.text = "📸 專業攝影與參數 (可啟用輔助)"; }
-            else { 
-                proOption.disabled = true; proOption.text = "📸 專業攝影 (僅限攝影類型)";
-                if (document.getElementById('styleCategory').value === "ProPhotography") {
-                    document.getElementById('styleCategory').value = "";
-                    updateTieredUI();
-                }
-            }
+            pro.disabled = !allowed.includes(type);
         }
 
-        function updateTieredUI(defaultStyle = "") {
+        function updateTieredUI() {
             const cat = document.getElementById('styleCategory').value;
             const detail = document.getElementById('styleDetail');
             const assist = document.getElementById('proAssist');
-
-            detail.innerHTML = '<option value="">2. 再選擇具體風格...</option>';
+            detail.innerHTML = '<option value="">2. 再選擇具體規格...</option>';
             detail.disabled = !cat;
             if (cat && categoryMap[cat]) {
                 categoryMap[cat].forEach(k => {
@@ -233,56 +154,22 @@
                     opt.value = k; opt.textContent = styleDisplayNames[k] || k;
                     detail.appendChild(opt);
                 });
-                if (defaultStyle) detail.value = defaultStyle;
             }
-
-            if (cat === "ProPhotography") {
-                assist.disabled = false;
-                assist.options[0].textContent = "3. 專業攝影輔助描述 (選填)...";
-            } else {
-                assist.disabled = true; assist.value = "";
-                assist.options[0].textContent = "3. 專業攝影輔助 (鎖定中)...";
-            }
-            updatePreview();
-        }
-
-        function randomStyleOnly() {
-            vibrate();
-            const icon = document.getElementById('diceIcon');
-            icon.classList.add('rolling'); setTimeout(() => icon.classList.remove('rolling'), 600);
-            const allowed = ['general', 'landscape', 'portrait'];
-            let cats = Object.keys(categoryMap);
-            if (!allowed.includes(selectedType)) cats = cats.filter(c => c !== "ProPhotography");
-            const randomCat = cats[Math.floor(Math.random() * cats.length)];
-            document.getElementById('styleCategory').value = randomCat;
-            updateTieredUI(categoryMap[randomCat][Math.floor(Math.random() * categoryMap[randomCat].length)]);
-        }
-
-        function updatePreview() {
-            const d = document.getElementById('styleDetail').value;
-            const a = document.getElementById('proAssist').value;
-            const card = document.getElementById('previewCard');
-            if (d || a) { document.getElementById('previewText').innerText = "💡 已鎖定風格，準備生成大師指令。"; card.classList.remove('hidden'); }
-            else { card.classList.add('hidden'); }
+            assist.disabled = (cat !== "ProPhotography");
         }
 
         function generate() {
             const content = document.getElementById('content').value.trim() || "Masterpiece";
             const style = document.getElementById('styleDetail').value;
             const assist = document.getElementById('proAssist').value;
-            if(!style) return alert('請選擇視覺風格！');
-            
-            const ratioSelect = document.getElementById('ratioSelect').value;
-            let arValue = ratioSelect === 'custom' ? (document.getElementById('customRatioInput').value || "1:1") : ratioSelect;
-            
-            // 強力去文字指令
-            const prompt = `/imagine prompt: A ${style} ${assist || ""} style ${selectedType} showcasing ${content} --ar ${arValue} --no text, words, letters, font, watermark, logo, signature --v 6.1`;
-            
+            if(!style) return alert('請選取視覺風格！');
+            const ratio = document.getElementById('ratioSelect').value;
+            const prompt = `/imagine prompt: A ${style} ${assist || ""} style ${selectedType} showcasing ${content} --ar ${ratio} --no text, words, letters, font, watermark, logo, signature --v 6.1`;
             document.getElementById('finalPrompt').innerText = prompt;
             document.getElementById('resultBox').classList.remove('hidden');
         }
 
-        function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('指令已複製！'); }
+        function copyText() { navigator.clipboard.writeText(document.getElementById('finalPrompt').innerText); alert('已複製！'); }
         function shareLine() { window.open(`https://line.me/R/msg/text/?${encodeURIComponent(document.getElementById('finalPrompt').innerText)}`); }
         function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`); }
     </script>
