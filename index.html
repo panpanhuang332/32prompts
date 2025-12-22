@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI 全能工具箱 (終極完整版)</title>
+    <title>AI 全能工具箱 (含文字插入)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -28,11 +28,12 @@
         .category-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: opacity 0.3s; }
         .category-card.disabled-card { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
         .category-title { font-size: 0.9rem; font-weight: bold; color: #343a40; margin-bottom: 8px; display: block; border-left: 4px solid #4285f4; padding-left: 8px; }
-        
+        .form-label { font-weight: bold; color: #555; }
+
         /* 底部 */
         .app-footer { background: white; padding: 10px 15px; border-top: 1px solid #dee2e6; flex-shrink: 0; z-index: 20; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
         .loading-text { font-size: 0.8em; color: #4285f4; margin-top: 5px; display: none; }
-        .form-select { background-color: #f8f9fa; border: 1px solid #e9ecef; }
+        .form-select, .form-control { background-color: #f8f9fa; border: 1px solid #e9ecef; }
         .locked-badge { display: none; font-size: 0.7rem; background: #dc3545; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
 
         /* 預覽與按鈕 */
@@ -58,7 +59,7 @@
 <body>
 
     <div class="app-header">
-        <h6 class="mb-2 fw-bold text-dark">🎨 AI 全能工具箱 (終極完整版)</h6>
+        <h6 class="mb-2 fw-bold text-dark">🎨 AI 全能工具箱 (含文字插入)</h6>
         
         <div class="mode-switch-container">
             <button class="mode-btn active" onclick="setMode('create')" id="mode-create">✨ 繪圖指令</button>
@@ -95,6 +96,7 @@
 
         <div class="nav nav-tabs" id="myTab" role="tablist">
             <button class="nav-link active" onclick="switchTab(this, 'page-settings')">⚙️ 設定</button>
+            <button class="nav-link" onclick="switchTab(this, 'page-text')">🔤 文字</button>
             <button class="nav-link" onclick="switchTab(this, 'page-char')">👤 人物</button>
             <button class="nav-link" onclick="switchTab(this, 'page-scene')">🏞️ 場景</button>
             <button class="nav-link" onclick="switchTab(this, 'page-photo')">📸 攝影</button>
@@ -109,7 +111,7 @@
         <div id="page-settings" class="tab-content-area active">
             <div class="category-card">
                 <label class="category-title">📐 圖片比例 (Aspect Ratio)</label>
-                <select class="form-select" id="aspectRatio">
+                <select class="form-select category-select" id="aspectRatio">
                     <option value="" selected>1:1 (預設正方形)</option>
                     <optgroup label="橫向">
                         <option value="16:9">16:9 (寬螢幕/YT)</option>
@@ -126,7 +128,7 @@
 
             <div class="category-card">
                 <label class="category-title">💎 解析度 (Resolution)</label>
-                <select class="form-select" id="pixelResolution">
+                <select class="form-select category-select" id="pixelResolution">
                     <option value="" selected>預設</option>
                     <optgroup label="社群/螢幕">
                         <option value="1080x1080 px, high quality">IG 正方形 (1080p)</option>
@@ -137,6 +139,25 @@
                         <option value="6000x4000 px, 24MP">2400 萬像素</option>
                     </optgroup>
                 </select>
+            </div>
+        </div>
+
+        <div id="page-text" class="tab-content-area">
+            <div class="category-card">
+                <label class="category-title">🔤 插入文字 (Insert Text)</label>
+                <div class="mb-3">
+                    <label for="textContent" class="form-label small">文字內容 (Content)</label>
+                    <input type="text" class="form-control" id="textContent" placeholder="例如: Happy Birthday">
+                </div>
+                <div class="mb-3">
+                    <label for="textPosition" class="form-label small">位置說明 (Position)</label>
+                    <input type="text" class="form-control" id="textPosition" placeholder="例如: 在左上角，浮在空中">
+                </div>
+                 <div class="mb-3">
+                    <label for="textFont" class="form-label small">字體風格 (Font Style)</label>
+                    <select class="form-select category-select" id="textFont">
+                        </select>
+                </div>
             </div>
         </div>
 
@@ -154,7 +175,7 @@
             </button>
         </div>
         <div class="input-group input-group-sm">
-            <textarea class="form-control" id="outputPrompt" rows="3" readonly placeholder="提示詞將顯示於此" style="resize: none; font-size: 0.85rem;"></textarea>
+            <textarea class="form-control" id="outputPrompt" rows="4" readonly placeholder="提示詞將顯示於此" style="resize: none; font-size: 0.85rem;"></textarea>
             <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard()">複製</button>
         </div>
     </div>
@@ -162,9 +183,20 @@
 <script>
     let currentMode = 'create';
 
-    // --- 資料庫 (終極完整版) ---
+    // --- 資料庫 ---
+    const fontData = [
+        {val: "Bold sans-serif", label: "粗體無襯線 (Bold sans-serif)"},
+        {val: "Elegant serif", label: "優雅襯線 (Elegant serif)"},
+        {val: "Handwritten script", label: "手寫草書 (Handwritten script)"},
+        {val: "Cyberpunk neon style", label: "賽博龐克霓虹 (Cyberpunk neon)"},
+        {val: "Vintage retro style", label: "復古風格 (Vintage retro)"},
+        {val: "Graffiti style", label: "塗鴉風格 (Graffiti style)"},
+        {val: "Calligraphy brush stroke", label: "書法毛筆 (Calligraphy brush)"},
+        {val: "Pixel art style", label: "像素風格 (Pixel art style)"}
+    ];
+
     const categorizedData = {
-        "char": { // 人物 (User Requested)
+        "char": { 
             "服裝穿搭": [{val: "T-shirt and jeans", label: "T恤牛仔褲"}, {val: "Suit and tie", label: "西裝"}, {val: "Evening gown", label: "晚禮服"}, {val: "Cyberpunk techwear", label: "機能風"}, {val: "Kimono", label: "和服"}, {val: "School uniform", label: "制服"}, {val: "Maid outfit", label: "女僕裝"}, {val: "Sportswear", label: "運動服"}, {val: "Hoodie", label: "連帽衫"}, {val: "Armor", label: "盔甲"}],
             "髮型髮色": [{val: "Long straight black hair", label: "黑長直"}, {val: "Short bob cut", label: "鮑伯頭"}, {val: "Blonde ponytail", label: "金髮馬尾"}, {val: "Silver twin tails", label: "銀髮雙馬尾"}, {val: "Pink hair", label: "粉髮"}, {val: "Messy hair", label: "凌亂髮"}, {val: "Bald", label: "光頭"}, {val: "Curly hair", label: "捲髮"}],
             "五官特點": [{val: "Blue eyes", label: "藍眼"}, {val: "Red eyes", label: "紅眼"}, {val: "Heterochromia", label: "異色瞳"}, {val: "Cat eyes", label: "貓眼"}, {val: "Wearing glasses", label: "眼鏡"}, {val: "Freckles", label: "雀斑"}, {val: "Scar on face", label: "刀疤"}, {val: "Makeup", label: "化妝"}],
@@ -172,42 +204,39 @@
             "肢體動作": [{val: "Standing", label: "站立"}, {val: "Sitting", label: "坐著"}, {val: "Lying", label: "躺著"}, {val: "Running", label: "奔跑"}, {val: "Jumping", label: "跳躍"}, {val: "Fighting stance", label: "戰鬥姿勢"}, {val: "Peace sign", label: "比YA"}, {val: "Looking back", label: "回眸"}],
             "體型": [{val: "Slim", label: "苗條"}, {val: "Muscular", label: "肌肉"}, {val: "Curvy", label: "曲線"}, {val: "Chubby", label: "肉感"}, {val: "Tall", label: "高挑"}, {val: "Petite", label: "嬌小"}]
         },
-        "scene": { // 場景 (User Requested)
+        "scene": { 
             "環境設定": [{val: "Indoor", label: "室內"}, {val: "Outdoor", label: "室外"}, {val: "Primitive Forest", label: "原始森林"}, {val: "Underwater", label: "海底"}, {val: "Outer Space", label: "太空"}, {val: "Concert Stage", label: "演唱會"}, {val: "Future City", label: "未來城市"}],
             "特定地點": [{val: "News Anchor Desk", label: "主播台"}, {val: "Church", label: "教堂"}, {val: "Rooftop style of Infernal Affairs", label: "無間道天台"}, {val: "Prison Cell", label: "監獄"}, {val: "Courtroom", label: "法院"}, {val: "Classroom", label: "教室"}, {val: "Cyberpunk Street", label: "賽博街道"}, {val: "Ancient Temple", label: "古廟"}],
             "背景處理": [{val: "White Background", label: "白背景"}, {val: "Simple Background", label: "簡單背景"}, {val: "No Background", label: "無背景/去背"}, {val: "Green Screen", label: "綠幕"}]
         },
-        "photo": { // 攝影 (OXXO Full)
-            "攝影類型": [
-                {id: "photo_type", val: "photo", label: "照片"}, {id: "photo_type", val: "portrait photography", label: "人像"}, {id: "photo_type", val: "life photo", label: "生活照"}, {id: "photo_type", val: "sports photography", label: "運動"}, {id: "photo_type", val: "still life photo", label: "靜物"}, {id: "photo_type", val: "selfie photo", label: "自拍"}
-            ],
-            "光圈(攝影限定)": [{id:"photo_aperture", val:"f/1.4", label:"f/1.4"}, {id:"photo_aperture", val:"f/2.8", label:"f/2.8"}, {id:"photo_aperture", val:"f/8", label:"f/8"}, {id:"photo_aperture", val:"f/16", label:"f/16"}, {id:"photo_aperture", val:"f/32", label:"f/32"}],
-            "焦距(攝影限定)": [{id:"photo_focal", val:"20mm", label:"20mm (超廣)"}, {id:"photo_focal", val:"35mm", label:"35mm (人文)"}, {id:"photo_focal", val:"85mm", label:"85mm (人像)"}, {id:"photo_focal", val:"200mm", label:"200mm (望遠)"}, {id:"photo_focal", val:"macro lens", label:"微距鏡頭"}, {id:"photo_focal", val:"fish eye lens", label:"魚眼"}],
+        "photo": { 
+            "攝影類型": [{id: "photo_type", val: "photo", label: "照片"}, {id: "photo_type", val: "portrait photography", label: "人像"}, {id: "photo_type", val: "life photo", label: "生活照"}, {id: "photo_type", val: "sports photography", label: "運動"}, {id: "photo_type", val: "still life photo", label: "靜物"}, {id: "photo_type", val: "selfie photo", label: "自拍"}],
+            "光圈": [{id:"photo_aperture", val:"f/1.4", label:"f/1.4"}, {id:"photo_aperture", val:"f/2.8", label:"f/2.8"}, {id:"photo_aperture", val:"f/8", label:"f/8"}, {id:"photo_aperture", val:"f/16", label:"f/16"}, {id:"photo_aperture", val:"f/32", label:"f/32"}],
+            "焦距": [{id:"photo_focal", val:"20mm", label:"20mm (超廣)"}, {id:"photo_focal", val:"35mm", label:"35mm (人文)"}, {id:"photo_focal", val:"85mm", label:"85mm (人像)"}, {id:"photo_focal", val:"200mm", label:"200mm (望遠)"}, {id:"photo_focal", val:"macro lens", label:"微距鏡頭"}, {id:"photo_focal", val:"fish eye lens", label:"魚眼"}],
             "風格": [{val:"DSLR style", label:"數位單眼"}, {val:"Polaroid style", label:"拍立得"}, {val:"gopro style", label:"GoPro"}, {val:"Fujifilm superia style", label:"富士底片"}, {val:"LOMO style", label:"LOMO"}, {val:"movie style", label:"電影風"}, {val:"cinematic photo style", label:"劇照"}, {val:"vintage photo style", label:"復古"}, {val:"Holga photography", label:"Holga"}, {val:"Anthotype print", label:"植物感光"}],
             "光影與效果": [{val:"bokeh", label:"散景"}, {val:"lens flare", label:"鏡頭眩光"}, {val:"magic hour", label:"魔幻時刻"}, {val:"golden hour", label:"黃金時刻"}, {val:"blue hour", label:"藍色時刻"}, {val:"ambient light", label:"環境光"}, {val:"hard light", label:"硬光"}, {val:"soft light", label:"柔光"}, {val:"back light", label:"背光"}, {val:"HDR", label:"HDR"}, {val:"double exposure", label:"重複曝光"}, {val:"motion blur", label:"動態模糊"}],
             "畫面角度": [{val:"face close-up", label:"臉部特寫"}, {val:"full body shot", label:"全身照"}, {val:"low angle view", label:"低角度"}, {val:"high angle view", label:"高角度"}, {val:"bird view", label:"鳥瞰"}, {val:"knolling", label:"開箱照/平鋪"}, {val:"product view", label:"產品特寫"}, {val:"360 degrees photo", label:"360度"}, {val:"X-ray view", label:"X光片"}]
         },
-        "art": { // 藝術 (OXXO Full)
+        "art": { 
             "繪畫媒材": [{val:"illustration", label:"插畫"}, {val:"pencil", label:"鉛筆"}, {val:"charcoal", label:"炭筆"}, {val:"color pencil", label:"色鉛筆"}, {val:"acrylic painting", label:"壓克力"}, {val:"watercolor painting", label:"水彩"}, {val:"oil painting", label:"油畫"}, {val:"ink drawing", label:"水墨"}, {val:"Woodcut", label:"版畫"}, {val:"vector art", label:"向量圖"}],
             "材質": [{val:"paper art", label:"紙雕"}, {val:"origami art", label:"摺紙"}, {val:"stained glass", label:"彩繪玻璃"}, {val:"mosaic", label:"馬賽克"}, {val:"pixel art", label:"像素畫"}, {val:"Low poly", label:"低多邊形"}, {val:"wood carving", label:"木雕"}, {val:"lego", label:"樂高"}, {val:"felt doll", label:"羊毛氈"}, {val:"neon light", label:"霓虹燈"}],
             "流派": [{val:"Impressionnisme", label:"印象派"}, {val:"Surrealism", label:"超現實"}, {val:"Cubism", label:"立體主義"}, {val:"Pop Art", label:"普普"}, {val:"Minimalism", label:"極簡"}, {val:"Cyber Art", label:"賽博藝術"}, {val:"Steampunk", label:"蒸氣龐克"}, {val:"Ukiyo-e", label:"浮世繪"}, {val:"Baroque art", label:"巴洛克"}],
             "藝術家": [{val:"Vincent van Gogh", label:"梵谷"}, {val:"Leonardo da Vinci", label:"達文西"}, {val:"Picasso", label:"畢卡索"}, {val:"Dali", label:"達利"}, {val:"Monet", label:"莫內"}, {val:"Mucha", label:"慕夏"}, {val:"Andy Warhol", label:"安迪沃荷"}, {val:"Hayao Miyazaki", label:"宮崎駿"}, {val:"Makoto Shinkai", label:"新海誠"}, {val:"Yayoi Kusama", label:"草間彌生"}]
         },
-        "anime": { // 動漫 (OXXO + User Requested)
-            "作品": [
-                {val: "One Piece style", label: "航海王"}, {val: "Detective Conan style", label: "名偵探柯南"},
-                {val: "Naruto style", label: "火影忍者"}, {val: "Slam Dunk style", label: "灌籃高手"},
-                {val: "style of Mitsuru Adachi", label: "安達充風格"}, {val: "Fist of the North Star style", label: "北斗神拳"},
-                {val: "Saint Seiya style", label: "聖鬥士星矢"}, {val: "A Certain Scientific Railgun style", label: "某科學的超電磁砲"},
-                {val: "Studio Ghibli style", label: "吉卜力"}, {val: "Dragon ball style", label: "七龍珠"},
-                {val: "Sailor Moon style", label: "美少女戰士"}, {val: "JoJo style", label: "JoJo"}
-            ],
+        "anime": { 
+            "作品": [{val: "One Piece style", label: "航海王"}, {val: "Detective Conan style", label: "名偵探柯南"}, {val: "Naruto style", label: "火影忍者"}, {val: "Slam Dunk style", label: "灌籃高手"}, {val: "style of Mitsuru Adachi", label: "安達充風格"}, {val: "Fist of the North Star style", label: "北斗神拳"}, {val: "Saint Seiya style", label: "聖鬥士星矢"}, {val: "A Certain Scientific Railgun style", label: "某科學的超電磁砲"}, {val: "Studio Ghibli style", label: "吉卜力"}, {val: "Dragon ball style", label: "七龍珠"}, {val: "Sailor Moon style", label: "美少女戰士"}, {val: "JoJo style", label: "JoJo"}],
             "類型與公司": [{val:"2D cartoon", label:"2D 卡通"}, {val:"3D cartoon", label:"3D 卡通"}, {val:"American comic book", label:"美式漫畫"}, {val:"Manga", label:"日式漫畫"}, {val:"Pixar Animation", label:"皮克斯"}, {val:"Disney Animation", label:"迪士尼"}, {val:"Kyoto Animation", label:"京都動畫"}, {val:"Marvel Animation", label:"漫威"}],
             "設計": [{val:"mascot logo", label:"吉祥物 Logo"}, {val:"UI design", label:"UI 介面"}, {val:"3D Model Exploded View", label:"3D 分解圖"}, {val:"2D floor plan", label:"2D 平面圖"}, {val:"character toy", label:"公仔玩具"}]
         }
     };
 
     function init() {
+        // 初始化文字分頁的字體下拉選單
+        const fontSelect = document.getElementById('textFont');
+        fontSelect.appendChild(new Option("不指定", ""));
+        fontData.forEach(item => fontSelect.appendChild(new Option(item.label, item.val)));
+
+        // 初始化其他分頁的下拉選單
         for (const [tabKey, categories] of Object.entries(categorizedData)) {
             const container = document.getElementById(`container-${tabKey}`);
             if (!container) continue;
@@ -259,7 +288,6 @@
         document.getElementById('mode-create').classList.toggle('active', !isReverse);
         document.getElementById('mode-reverse').classList.toggle('active', isReverse);
         
-        // 反推模式：隱藏輸入區、隨機、分頁，顯示提示
         els.forEach(id => {
             const el = document.getElementById(id);
             if(el) el.style.display = isReverse ? 'none' : (id === 'inputRow' || id === 'myTab' ? 'flex' : 'block');
@@ -287,9 +315,9 @@
         let activeTabId = document.querySelector('.tab-content-area.active').id;
         let targetContainer = "";
         
-        if (activeTabId === 'page-settings') {
-            // 在設定頁按隨機，預設跳去「場景」
-            switchTab(document.querySelectorAll('.nav-link')[2], 'page-scene'); 
+        // 如果在設定或文字頁按隨機，跳去場景
+        if (activeTabId === 'page-settings' || activeTabId === 'page-text') {
+            switchTab(document.querySelectorAll('.nav-link')[3], 'page-scene'); 
             targetContainer = 'container-scene';
         } else {
             targetContainer = activeTabId.replace('page-', 'container-');
@@ -299,7 +327,8 @@
         if (!container) return;
         
         let changedCount = 0;
-        container.querySelectorAll('select').forEach(select => {
+        // 隨機選擇下拉選單
+        container.querySelectorAll('select.category-select').forEach(select => {
             if (select.disabled) return;
             const options = select.options;
             if (options.length > 1) {
@@ -308,6 +337,16 @@
                 changedCount++;
             }
         });
+
+        // 如果在文字頁，隨機填入一些範例文字 (選填)
+        if (activeTabId === 'page-text') {
+             const sampleTexts = ["Hello World", "Gemini AI", "Creative Mode", "保持好奇", "早安"];
+             const samplePositions = ["Top left", "Bottom right, glowing", "Centered, floating"];
+             document.getElementById('textContent').value = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
+             document.getElementById('textPosition').value = samplePositions[Math.floor(Math.random() * samplePositions.length)];
+             changedCount++;
+        }
+
         if (changedCount > 0) {
             generatePrompt();
             const btn = document.getElementById('btnRandom');
@@ -346,6 +385,12 @@
         const aspectRatio = document.getElementById('aspectRatio').value;
         const pixelRes = document.getElementById('pixelResolution').value;
         const hasPhoto = document.getElementById('finalImage').getAttribute('src') !== "";
+        
+        // 取得文字插入的數值
+        const txtContent = document.getElementById('textContent').value.trim();
+        const txtPosition = document.getElementById('textPosition').value.trim();
+        const txtFont = document.getElementById('textFont').value;
+
         let parts = [];
 
         if (currentMode === 'reverse') {
@@ -381,9 +426,19 @@
                 if (mainSubject) parts.push(`Subject: ${mainSubject}.`);
             }
 
+            // 處理文字插入指令
+            if (txtContent) {
+                 parts.push(`INSTRUCTION: Insert text into the image.`);
+                 parts.push(`Text Content: "${txtContent}".`);
+                 if (txtPosition) parts.push(`Text Position: ${txtPosition}.`);
+                 if (txtFont) parts.push(`Font Style: ${txtFont}.`);
+            }
+
             let details = [];
             document.querySelectorAll('.category-select').forEach(select => {
-                if (select.value && !select.disabled) details.push(select.value);
+                if (select.value && !select.disabled && select.id !== 'aspectRatio' && select.id !== 'pixelResolution' && select.id !== 'textFont') {
+                    details.push(select.value);
+                }
             });
 
             if (details.length > 0) parts.push(`Details, Scene & Style: ${details.join(', ')}.`);
@@ -423,4 +478,3 @@
 </script>
 </body>
 </html>
-
