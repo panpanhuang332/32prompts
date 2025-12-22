@@ -65,7 +65,7 @@
         // --- AI 思考與自動產圖核心 ---
         window.generateImage = async () => {
             const content = document.getElementById('userInput').value.trim();
-            if (!content) return alert("請輸入想畫的主題，例如：森林裡的獨角獸");
+            if (!content) return alert("請輸入想畫的主題");
             
             const btn = document.getElementById('generateBtn');
             const loading = document.getElementById('loadingBox');
@@ -73,27 +73,37 @@
             const resultImg = document.getElementById('resultImg');
             const finalPrompt = document.getElementById('finalPrompt');
 
-            // 啟動載入狀態
             btn.disabled = true;
             loading.classList.remove('hidden');
             resultBox.classList.add('hidden');
 
             try {
-                // 1. 呼叫 Gemini 2.0 Thinking 優化指令
-                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-thinking-preview:generateContent?key=${GEMINI_API_KEY}`;
+                // 使用更穩定的 1.5-flash 模型進行測試，避免 404 錯誤
+                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+                
                 const response = await fetch(geminiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: `你是一位專業的繪圖提示詞工程師。請將以下中文主題思考後，擴充成一段細膩、高品質的英文繪圖指令：${content}。只需要輸出英文指令，不要有任何解釋文字。` }] }]
+                        contents: [{ parts: [{ text: `你是一位專業的繪圖提示詞工程師。請將以下中文主題擴充成一段高品質英文繪圖指令：${content}。只需要輸出英文指令，不要解釋。` }] }]
                     })
                 });
 
                 const data = await response.json();
+                
+                // 檢查 Google 是否回傳了具體的錯誤訊息
+                if (data.error) {
+                    throw new Error(`Google API 報錯: ${data.error.message}`);
+                }
+
+                if (!data.candidates || !data.candidates[0]) {
+                    throw new Error("AI 沒有回傳結果，請確認 API Key 權限或服務是否已啟用。");
+                }
+
                 const optimizedPrompt = data.candidates[0].content.parts[0].text;
                 finalPrompt.innerText = optimizedPrompt;
 
-                // 2. 使用產圖模型生成圖片 (透過高效能 Proxy)
+                // 產圖部分
                 const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(optimizedPrompt)}?width=1024&height=1024&seed=${Math.floor(Math.random()*99999)}&model=flux`;
                 
                 resultImg.src = imageUrl;
@@ -104,8 +114,8 @@
                 };
 
             } catch (error) {
-                console.error("AI 處理錯誤:", error);
-                alert("AI 思考過程中發生錯誤，請檢查網路或 API Key。");
+                console.error("AI 處理詳細錯誤:", error);
+                alert("生圖失敗原因：" + error.message);
                 loading.classList.add('hidden');
                 btn.disabled = false;
             }
@@ -173,5 +183,6 @@
 
 </body>
 </html>
+
 
 
