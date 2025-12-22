@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI 全能工具箱 (Google登入版)</title>
+    <title>AI 全能工具箱 (會員權限版)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,11 +19,11 @@
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .app-title { margin: 0; font-weight: bold; color: #343a40; font-size: 1.1rem; }
         
-        /* Google 登入按鈕樣式 */
+        /* Google 登入按鈕 */
         .btn-google-login {
             font-size: 0.8rem; padding: 5px 10px; border-radius: 20px;
             background-color: white; border: 1px solid #dadce0; color: #3c4043;
-            display: flex; align-items: center; gap: 5px; transition: all 0.2s;
+            display: flex; align-items: center; gap: 5px; transition: all 0.2s; cursor: pointer;
         }
         .btn-google-login:hover { background-color: #f8f9fa; border-color: #d2e3fc; }
         .user-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid #4285f4; }
@@ -31,9 +31,14 @@
         
         /* 分頁導航 */
         .nav-tabs { border-bottom: none; flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; gap: 5px; padding-bottom: 5px; }
-        .nav-tabs .nav-link { border: none; color: #6c757d; font-size: 0.95rem; padding: 8px 12px; border-radius: 20px; background-color: #f8f9fa; transition: all 0.2s; white-space: nowrap; }
+        .nav-tabs .nav-link { border: none; color: #6c757d; font-size: 0.95rem; padding: 8px 12px; border-radius: 20px; background-color: #f8f9fa; transition: all 0.2s; white-space: nowrap; position: relative; }
         .nav-tabs .nav-link.active { color: white; background-color: #4285f4; font-weight: bold; }
-        .nav-tabs .nav-link.disabled-tab { opacity: 0.5; pointer-events: none; background-color: #e9ecef; }
+        
+        /* 禁用狀態 (通用) */
+        .nav-tabs .nav-link.disabled-tab { opacity: 0.6; cursor: not-allowed; background-color: #e9ecef; color: #adb5bd; }
+        
+        /* 會員限制徽章 (紅色 限) */
+        .limit-badge { color: #dc3545; font-weight: bold; font-size: 0.8em; margin-left: 2px; vertical-align: top; }
         
         /* 內容區 */
         .app-content { flex-grow: 1; overflow-y: auto; padding: 15px; background-color: #f0f2f5; scroll-behavior: smooth; }
@@ -41,7 +46,6 @@
         .tab-content-area.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 卡片樣式 */
         .category-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: opacity 0.3s; }
         .category-card.disabled-card { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
         .category-title { font-size: 0.9rem; font-weight: bold; color: #343a40; margin-bottom: 8px; display: block; border-left: 4px solid #4285f4; padding-left: 8px; }
@@ -50,12 +54,11 @@
         .app-footer { background: white; padding: 10px 15px; border-top: 1px solid #dee2e6; flex-shrink: 0; z-index: 20; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
         .loading-text { font-size: 0.8em; color: #4285f4; margin-top: 5px; display: none; }
         .form-select, .form-control { background-color: #f8f9fa; border: 1px solid #e9ecef; }
-        .locked-badge { display: none; font-size: 0.7rem; background: #dc3545; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+        
+        /* 互斥鎖定徽章 (原本的灰色鎖定) */
+        .locked-badge { display: none; font-size: 0.7rem; background: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
 
-        /* 預覽與按鈕 */
-        .camera-preview-box {
-            position: relative; width: 60px; height: 60px; background: #e9ecef; border-radius: 8px; overflow: hidden; display: none; border: 2px solid #4285f4; margin-right: 10px; flex-shrink: 0;
-        }
+        .camera-preview-box { position: relative; width: 60px; height: 60px; background: #e9ecef; border-radius: 8px; overflow: hidden; display: none; border: 2px solid #4285f4; margin-right: 10px; flex-shrink: 0; }
         .captured-image { width: 100%; height: 100%; object-fit: cover; }
         .btn-clear-img { position: absolute; top: 0; right: 0; background: rgba(220, 53, 69, 0.9); color: white; border: none; width: 20px; height: 20px; font-size: 14px; line-height: 20px; text-align: center; cursor: pointer; z-index: 5; }
 
@@ -79,7 +82,7 @@
             <h6 class="app-title">🎨 AI 全能工具箱</h6>
             
             <button id="loginBtn" class="btn-google-login" onclick="googleLogin()">
-                <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
                 登入
             </button>
 
@@ -97,28 +100,18 @@
         <div class="mb-2">
             <div class="input-group mb-2" id="inputRow">
                 <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" onchange="handleImageSelect(this)">
-
                 <div id="previewBox" class="camera-preview-box">
                     <img id="finalImage" class="captured-image">
                     <button class="btn-clear-img" onclick="clearPhoto()">×</button>
                 </div>
-
                 <input type="text" class="form-control" id="mainSubject" placeholder="輸入關鍵字 (如: 貓)...">
-                
-                <button class="btn btn-outline-primary" type="button" id="translateBtn" onclick="translateInput()">
-                    中翻英
-                </button>
+                <button class="btn btn-outline-primary" type="button" id="translateBtn" onclick="translateInput()">中翻英</button>
             </div>
             
             <div class="action-bar">
-                <button class="btn-action btn-upload" type="button" onclick="triggerNativeCamera()">
-                    📸 上傳圖片
-                </button>
-                <button class="btn-action btn-random" id="btnRandom" type="button" onclick="autoRandomize()">
-                    🎲 隨機產生
-                </button>
+                <button class="btn-action btn-upload" type="button" onclick="triggerNativeCamera()">📸 上傳圖片</button>
+                <button class="btn-action btn-random" id="btnRandom" type="button" onclick="autoRandomize()">🎲 隨機產生</button>
             </div>
-            
             <div id="translationStatus" class="loading-text">正在翻譯中...</div>
         </div>
 
@@ -127,9 +120,10 @@
             <button class="nav-link" onclick="switchTab(this, 'page-text')">🔤 文字</button>
             <button class="nav-link" onclick="switchTab(this, 'page-char')">👤 人物</button>
             <button class="nav-link" onclick="switchTab(this, 'page-scene')">🏞️ 場景</button>
-            <button class="nav-link" onclick="switchTab(this, 'page-photo')">📸 攝影</button>
-            <button class="nav-link" id="btn-art" onclick="switchTab(this, 'page-art')">🖌️ 藝術 <span class="locked-badge">鎖定</span></button>
-            <button class="nav-link" id="btn-anime" onclick="switchTab(this, 'page-anime')">🧸 動漫 <span class="locked-badge">鎖定</span></button>
+            
+            <button class="nav-link disabled-tab" id="btn-photo" onclick="switchTab(this, 'page-photo')">📸 攝影 <span class="limit-badge">限</span></button>
+            <button class="nav-link disabled-tab" id="btn-art" onclick="switchTab(this, 'page-art')">🖌️ 藝術 <span class="limit-badge">限</span> <span class="locked-badge">鎖</span></button>
+            <button class="nav-link disabled-tab" id="btn-anime" onclick="switchTab(this, 'page-anime')">🧸 動漫 <span class="limit-badge">限</span> <span class="locked-badge">鎖</span></button>
         </div>
     </div>
 
@@ -138,7 +132,7 @@
 
         <div id="page-settings" class="tab-content-area active">
             <div class="category-card">
-                <label class="category-title">📐 圖片比例 (Aspect Ratio)</label>
+                <label class="category-title">📐 圖片比例</label>
                 <select class="form-select category-select" id="aspectRatio">
                     <option value="" selected>1:1 (預設正方形)</option>
                     <optgroup label="橫向">
@@ -153,9 +147,8 @@
                     </optgroup>
                 </select>
             </div>
-
             <div class="category-card">
-                <label class="category-title">💎 解析度 (Resolution)</label>
+                <label class="category-title">💎 解析度</label>
                 <select class="form-select category-select" id="pixelResolution">
                     <option value="" selected>預設</option>
                     <optgroup label="社群/螢幕">
@@ -172,17 +165,17 @@
 
         <div id="page-text" class="tab-content-area">
             <div class="category-card">
-                <label class="category-title">🔤 插入文字 (Insert Text)</label>
+                <label class="category-title">🔤 插入文字</label>
                 <div class="mb-3">
-                    <label for="textContent" class="form-label small">文字內容</label>
+                    <label class="form-label small">文字內容</label>
                     <input type="text" class="form-control" id="textContent" placeholder="例如: Hello World">
                 </div>
                 <div class="mb-3">
-                    <label for="textPosition" class="form-label small">位置說明</label>
+                    <label class="form-label small">位置說明</label>
                     <input type="text" class="form-control" id="textPosition" placeholder="例如: 左上角, 浮在空中">
                 </div>
                  <div class="mb-3">
-                    <label for="textFont" class="form-label small">字體風格</label>
+                    <label class="form-label small">字體風格</label>
                     <select class="form-select category-select" id="textFont"></select>
                 </div>
             </div>
@@ -209,75 +202,98 @@
 
 <script>
     // ==========================================
-    // ⚠️ 這裡填入您的 Firebase 設定 (從 Firebase Console 取得)
+    // ⚠️ 填入您的 Firebase 設定
     // ==========================================
     const firebaseConfig = {
-        apiKey: "AIzaSyBHwTNxIIQ0dZVI6beyZa4K5S3y8Brh96g",
-        authDomain: "ntu-test-54b93.firebaseapp.com",
-        projectId: "ntu-test-54b93",
-        storageBucket: "ntu-test-54b93.firebasestorage.app",
-        messagingSenderId: "953553108630",
-        appId: "1:953553108630:web:6081f44a95a0baf71e4cb7"
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
     };
 
     // 初始化 Firebase
+    let isLoggedIn = false;
     try {
         firebase.initializeApp(firebaseConfig);
-    } catch(e) {
-        console.error("Firebase 初始化失敗，請檢查 firebaseConfig", e);
-    }
+    } catch(e) { console.error("Firebase Init Error", e); }
 
-    // Google 登入功能
+    // Google Login/Logout Logic
     function googleLogin() {
-        if (!firebase.apps.length) return alert("請先設定 Firebase Config！");
+        if (!firebase.apps.length) return alert("請先設定程式碼中的 Firebase Config！");
         const provider = new firebase.auth.GoogleAuthProvider();
-        firebase.auth().signInWithPopup(provider)
-            .then((result) => {
-                console.log("登入成功", result.user);
-            }).catch((error) => {
-                console.error("登入失敗", error);
-                alert("登入失敗: " + error.message);
-            });
+        firebase.auth().signInWithPopup(provider).catch((error) => alert("登入失敗: " + error.message));
     }
 
-    // Google 登出功能
     function googleLogout() {
-        const confirmLogout = confirm("確定要登出嗎？");
-        if (confirmLogout) {
-            firebase.auth().signOut().then(() => {
-                console.log("登出成功");
-            });
-        }
+        if(confirm("確定要登出嗎？")) firebase.auth().signOut();
     }
 
-    // 監聽登入狀態改變
+    // 監聽登入狀態並控制權限
     if (firebase.apps.length) {
         firebase.auth().onAuthStateChanged((user) => {
             const loginBtn = document.getElementById('loginBtn');
             const userInfo = document.getElementById('userInfo');
-            const userPhoto = document.getElementById('userPhoto');
-            const userName = document.getElementById('userName');
+            const restrictedTabs = ['btn-photo', 'btn-art', 'btn-anime'];
 
             if (user) {
-                // 已登入
+                // 已登入：解鎖
+                isLoggedIn = true;
                 loginBtn.style.display = 'none';
                 userInfo.style.display = 'flex';
-                userPhoto.src = user.photoURL;
-                userName.textContent = user.displayName;
-                // 這裡可以做更多事，例如解鎖隱藏功能
+                document.getElementById('userPhoto').src = user.photoURL;
+                document.getElementById('userName').textContent = user.displayName;
+
+                // 移除限制
+                restrictedTabs.forEach(id => {
+                    const btn = document.getElementById(id);
+                    btn.classList.remove('disabled-tab');
+                    const limitBadge = btn.querySelector('.limit-badge');
+                    if (limitBadge) limitBadge.remove();
+                });
+                
+                // 恢復「互斥鎖定」邏輯 (檢查攝影類型是否已選)
+                const photoType = document.getElementById('photo_type');
+                if (photoType && photoType.value !== "") {
+                    // 如果已經選了攝影類型，保持藝術/動漫為「互斥鎖定」狀態
+                    toggleLock('container-art', 'btn-art', true);
+                    toggleLock('container-anime', 'btn-anime', true);
+                } else {
+                    // 否則全部解鎖
+                    toggleLock('container-art', 'btn-art', false);
+                    toggleLock('container-anime', 'btn-anime', false);
+                }
+
             } else {
-                // 未登入
+                // 未登入：鎖定
+                isLoggedIn = false;
                 loginBtn.style.display = 'flex';
                 userInfo.style.display = 'none';
+
+                // 加上限制
+                restrictedTabs.forEach(id => {
+                    const btn = document.getElementById(id);
+                    btn.classList.add('disabled-tab');
+                    if (!btn.querySelector('.limit-badge')) {
+                        // 插入 "限" 字
+                        btn.innerHTML = btn.innerHTML.replace(' <span class="limit-badge">限</span>', '') + ' <span class="limit-badge">限</span>';
+                    }
+                });
+
+                // 如果當前在限制分頁，強制跳回設定頁
+                const activeTab = document.querySelector('.nav-link.active');
+                if (restrictedTabs.includes(activeTab.id)) {
+                    switchTab(document.querySelector('.nav-link'), 'page-settings');
+                }
             }
         });
     }
 
     // ==========================================
-    //  以下為原有的程式邏輯 (資料庫、UI、Prompt)
+    //  主程式邏輯
     // ==========================================
     let currentMode = 'create';
-
     const fontData = [{val: "Bold sans-serif", label: "粗體無襯線"}, {val: "Elegant serif", label: "優雅襯線"}, {val: "Handwritten script", label: "手寫草書"}, {val: "Cyberpunk neon style", label: "賽博龐克霓虹"}, {val: "Vintage retro style", label: "復古風格"}, {val: "Graffiti style", label: "塗鴉風格"}, {val: "Calligraphy brush stroke", label: "書法毛筆"}, {val: "Pixel art style", label: "像素風格"}];
 
     const categorizedData = {
@@ -336,9 +352,12 @@
             }
         }
         
+        // 攝影互斥邏輯
         const photoType = document.getElementById('photo_type');
         if (photoType) {
             photoType.addEventListener('change', function() {
+                if (!isLoggedIn) return; // 未登入不處理，因為本來就鎖住了
+                
                 const isPhoto = this.value !== "";
                 ['photo_aperture', 'photo_focal'].forEach(id => {
                     const el = document.getElementById(id);
@@ -354,13 +373,41 @@
     }
 
     function toggleLock(cid, bid, lock) {
+        // 這個函式現在主要用於「攝影互斥」，權限鎖定由 Firebase Auth Listener 控制
+        if (!isLoggedIn) return; // 如果沒登入，全部交給 Auth Listener 控制
+
         const c = document.getElementById(cid), b = document.getElementById(bid);
         c.querySelectorAll('select').forEach(s => { s.disabled = lock; if(lock) s.value=""; });
-        b.classList.toggle('disabled-tab', lock);
-        c.querySelectorAll('.category-card').forEach(card => card.classList.toggle('disabled-card', lock));
+        
+        // 只有在互斥邏輯下，才顯示「鎖」字，不影響「限」字
         b.querySelector('.locked-badge').style.display = lock ? 'inline-block' : 'none';
+        
+        // 視覺變灰，但不影響登入限制的紅色「限」
+        b.classList.toggle('disabled-tab', lock); 
+        c.querySelectorAll('.category-card').forEach(card => card.classList.toggle('disabled-card', lock));
     }
 
+    // --- 權限判斷點選 ---
+    function switchTab(btn, targetId) {
+        // 如果是按到了被權限鎖住(limit-badge)的按鈕，或者是被互斥鎖住(locked-badge)的按鈕
+        if (btn.classList.contains('disabled-tab')) {
+            if (btn.querySelector('.limit-badge')) {
+                alert("🔒 會員限定功能\n\n請點選右上角「登入」Google 帳號以解鎖此功能！");
+            } else if (btn.querySelector('.locked-badge') && btn.querySelector('.locked-badge').style.display !== 'none') {
+                alert("⚠️ 模式衝突\n\n您已選擇「攝影類型」，因此無法同時選擇藝術/動漫風格。\n請先將攝影類型設為「不指定」即可解鎖。");
+            }
+            return;
+        }
+
+        document.querySelectorAll('.nav-link').forEach(b => {
+            b.classList.remove('active'); b.style.backgroundColor='#f8f9fa'; b.style.color='#6c757d';
+        });
+        btn.classList.add('active'); btn.style.backgroundColor='#4285f4'; btn.style.color='white';
+        document.querySelectorAll('.tab-content-area').forEach(div => div.classList.remove('active'));
+        document.getElementById(targetId).classList.add('active');
+    }
+
+    // (其餘功能函式保持不變)
     function setMode(mode) {
         currentMode = mode;
         const els = ['inputRow', 'btnRandom', 'myTab'];
@@ -390,10 +437,20 @@
     function autoRandomize() {
         if (currentMode === 'reverse') return;
         let activeTabId = document.querySelector('.tab-content-area.active').id;
+        
+        // 檢查隨機目標是否被鎖定
+        if (['page-photo', 'page-art', 'page-anime'].includes(activeTabId)) {
+             const currentBtn = document.querySelector(`.nav-link[onclick*='${activeTabId}']`);
+             if (currentBtn && currentBtn.classList.contains('disabled-tab')) {
+                 alert("此區域尚未解鎖，無法隨機產生喔！");
+                 return;
+             }
+        }
+
         let targetContainer = "";
         if (activeTabId === 'page-settings' || activeTabId === 'page-text') {
-            switchTab(document.querySelectorAll('.nav-link')[3], 'page-scene'); 
-            targetContainer = 'container-scene';
+            switchTab(document.querySelectorAll('.nav-link')[3], 'page-char'); // 改跳人物
+            targetContainer = 'container-char';
         } else {
             targetContainer = activeTabId.replace('page-', 'container-');
         }
@@ -464,7 +521,6 @@
             parts.push("You are an expert Prompt Engineer.");
             parts.push("Please analyze the attached image in extreme detail.");
             parts.push("Provide a comprehensive text prompt that could generate this exact image.");
-            parts.push("Include descriptions of: 1. Subject & Appearance 2. Pose & Expression 3. Scene & Lighting 4. Art Style.");
             parts.push("Output format: A single, high-quality descriptive paragraph in English.");
         } else {
             let mainSubject = document.getElementById('mainSubject').value.trim();
@@ -516,16 +572,6 @@
             const data = await res.json();
             return data.responseData?.translatedText;
         } catch (e) { return text; }
-    }
-
-    function switchTab(btn, targetId) {
-        if (btn.classList.contains('disabled-tab')) return;
-        document.querySelectorAll('.nav-link').forEach(b => {
-            b.classList.remove('active'); b.style.backgroundColor='#f8f9fa'; b.style.color='#6c757d';
-        });
-        btn.classList.add('active'); btn.style.backgroundColor='#4285f4'; btn.style.color='white';
-        document.querySelectorAll('.tab-content-area').forEach(div => div.classList.remove('active'));
-        document.getElementById(targetId).classList.add('active');
     }
 
     function copyToClipboard() {
