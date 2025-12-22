@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MJ 提示詞產生器 (動漫擴充版)</title>
+    <title>AI 繪圖提示詞工具 (教育版)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,7 +13,7 @@
         .app-header { background: white; padding: 15px 15px 0 15px; box-shadow: 0 1px 5px rgba(0,0,0,0.05); z-index: 10; flex-shrink: 0; }
         .nav-tabs { border-bottom: none; flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; gap: 5px; padding-bottom: 5px; }
         .nav-tabs .nav-link { border: none; color: #6c757d; font-size: 0.95rem; padding: 8px 12px; border-radius: 20px; background-color: #f8f9fa; transition: all 0.2s; }
-        .nav-tabs .nav-link.active { color: white; background-color: #0d6efd; font-weight: bold; }
+        .nav-tabs .nav-link.active { color: white; background-color: #4285f4; font-weight: bold; } /* Google Blue */
         .nav-tabs .nav-link.disabled-tab { opacity: 0.5; pointer-events: none; background-color: #e9ecef; }
         
         .app-content { flex-grow: 1; overflow-y: auto; padding: 15px; background-color: #f0f2f5; scroll-behavior: smooth; }
@@ -24,30 +24,63 @@
         .category-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: opacity 0.3s; }
         .category-card.disabled-card { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
 
-        .category-title { font-size: 0.9rem; font-weight: bold; color: #343a40; margin-bottom: 8px; display: block; border-left: 4px solid #0d6efd; padding-left: 8px; }
+        .category-title { font-size: 0.9rem; font-weight: bold; color: #343a40; margin-bottom: 8px; display: block; border-left: 4px solid #4285f4; padding-left: 8px; }
         .app-footer { background: white; padding: 10px 15px; border-top: 1px solid #dee2e6; flex-shrink: 0; z-index: 20; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
         
-        .loading-text { font-size: 0.8em; color: #0d6efd; margin-top: 5px; display: none; }
+        .loading-text { font-size: 0.8em; color: #4285f4; margin-top: 5px; display: none; }
         .form-select { background-color: #f8f9fa; border: 1px solid #e9ecef; }
         .form-select:disabled { background-color: #e9ecef; color: #adb5bd; cursor: not-allowed; }
         .nav-tabs::-webkit-scrollbar { display: none; }
-        
         .locked-badge { display: none; font-size: 0.7rem; background: #dc3545; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+
+        .img-preview-container { position: relative; width: 60px; height: 60px; margin-right: 10px; display: none; }
+        .img-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid #4285f4; }
+        .btn-remove-img { position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; line-height: 18px; text-align: center; cursor: pointer; border: none; }
+        
+        /* 模型切換按鈕樣式 */
+        .model-switch { display: flex; gap: 5px; margin-bottom: 10px; background: #f0f2f5; padding: 4px; border-radius: 8px; }
+        .model-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 0.9rem; border-radius: 6px; color: #666; font-weight: bold; transition: all 0.2s; }
+        .model-btn.active { background: white; color: #4285f4; box-shadow: 0 2px 4px rgba(0,0,0,0.1); } /* Google Blue */
+        
+        /* Gemini 模式下隱藏上傳狀態，因為不需要圖床 */
+        .gemini-mode .upload-related { display: none !important; } 
     </style>
 </head>
 <body>
 
     <div class="app-header">
-        <h6 class="mb-2 fw-bold text-dark">🎨 MJ 提示詞產生器 (Anime+)</h6>
+        <h6 class="mb-2 fw-bold text-dark">🎨 AI 繪圖提示詞工具 (EDU)</h6>
         
+        <div class="model-switch">
+            <button class="model-btn active" onclick="setModel('gemini')" id="btn-gemini">✨ Gemini 模式</button>
+            <button class="model-btn" onclick="setModel('mj')" id="btn-mj">Midjourney 模式</button>
+        </div>
+
         <div class="mb-2">
-            <div class="input-group">
+            <div class="input-group mb-2">
+                <input type="file" id="cameraInput" accept="image/*" capture="user" style="display: none;" onchange="handleImageSelect(this)">
+                
+                <div id="previewContainer" class="img-preview-container">
+                    <img id="imgPreview" class="img-preview" src="">
+                    <button class="btn-remove-img" onclick="removeImage()">×</button>
+                </div>
+
                 <input type="text" class="form-control" id="mainSubject" placeholder="描述畫面主體 (支援中文)...">
+                
+                <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('cameraInput').click()">
+                    📸
+                </button>
+                
                 <button class="btn btn-outline-primary" type="button" id="translateBtn" onclick="translateInput()">
                     中翻英
                 </button>
             </div>
-            <div id="translationStatus" class="loading-text">正在翻譯中...</div>
+            
+            <div class="d-flex justify-content-between align-items-center">
+                <div id="translationStatus" class="loading-text">正在翻譯中...</div>
+                <div id="uploadStatus" class="upload-status text-end small text-muted upload-related" style="display:none;"></div>
+            </div>
+            <input type="hidden" id="uploadedImageUrl" value="">
         </div>
 
         <div class="nav nav-tabs" id="myTab" role="tablist">
@@ -59,22 +92,20 @@
     </div>
 
     <div class="app-content">
-        
         <div id="page-settings" class="tab-content-area active">
             <div class="category-card">
                 <label class="category-title">📐 圖片比例 (Aspect Ratio)</label>
                 <select class="form-select" id="aspectRatio">
                     <option value="" selected>1:1 (預設正方形)</option>
                     <optgroup label="橫向">
-                        <option value="--ar 16:9">16:9 (寬螢幕/YT)</option>
-                        <option value="--ar 21:9">21:9 (Notion封面)</option>
-                        <option value="--ar 4:3">4:3 (標準照片)</option>
-                        <option value="--ar 3:2">3:2 (底片)</option>
+                        <option value="16:9">16:9 (寬螢幕/YT)</option>
+                        <option value="21:9">21:9 (Notion封面)</option>
+                        <option value="4:3">4:3 (標準照片)</option>
                     </optgroup>
                     <optgroup label="直向">
-                        <option value="--ar 4:5">4:5 (IG 貼文)</option>
-                        <option value="--ar 3:4">3:4 (直式照片)</option>
-                        <option value="--ar 9:16">9:16 (限動/Reels)</option>
+                        <option value="4:5">4:5 (IG 貼文)</option>
+                        <option value="3:4">3:4 (直式照片)</option>
+                        <option value="9:16">9:16 (限動/Reels)</option>
                     </optgroup>
                 </select>
             </div>
@@ -85,7 +116,6 @@
                     <option value="" selected>預設</option>
                     <optgroup label="社群/螢幕">
                         <option value="1080x1080 px, high quality">IG 正方形 (1080p)</option>
-                        <option value="1080x1920 px, full screen">IG 限動 (Full HD)</option>
                         <option value="3840x2160 px, 4K UHD">4K 超高畫質</option>
                     </optgroup>
                     <optgroup label="印刷/攝影">
@@ -95,57 +125,221 @@
                 </select>
             </div>
             
-            <div class="text-center text-muted small mt-4 p-3">
-                <p>💡 提示：<br>若選擇了「攝影類型」，<br>藝術與動漫選項將會自動鎖定。</p>
-            </div>
+            <div class="text-center text-muted small mt-4 p-3" id="hintText">
+                </div>
         </div>
 
-        <div id="page-photo" class="tab-content-area">
-            <div id="container-photo"></div>
-        </div>
-
-        <div id="page-art" class="tab-content-area">
-            <div id="container-art"></div>
-        </div>
-
-        <div id="page-anime" class="tab-content-area">
-            <div id="container-anime"></div>
-        </div>
-
+        <div id="page-photo" class="tab-content-area"><div id="container-photo"></div></div>
+        <div id="page-art" class="tab-content-area"><div id="container-art"></div></div>
+        <div id="page-anime" class="tab-content-area"><div id="container-anime"></div></div>
     </div>
 
     <div class="app-footer">
         <div class="d-grid gap-2 mb-2">
-            <button class="btn btn-primary fw-bold" onclick="generatePrompt()">
+            <button class="btn btn-primary fw-bold" onclick="generatePrompt()" style="background-color: #4285f4; border-color: #4285f4;">
                 ✨ 產出提示詞
             </button>
         </div>
         <div class="input-group input-group-sm">
-            <textarea class="form-control" id="outputPrompt" rows="1" readonly placeholder="提示詞將顯示於此" style="resize: none;"></textarea>
+            <textarea class="form-control" id="outputPrompt" rows="2" readonly placeholder="提示詞將顯示於此" style="resize: none; font-size: 0.85rem;"></textarea>
             <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard()">複製</button>
         </div>
     </div>
 
 <script>
-    // --- 1. 分頁切換邏輯 ---
-    function switchTab(btn, targetId) {
-        if (btn.classList.contains('disabled-tab')) return;
+    // Imgur Client ID (僅在 MJ 模式下需要)
+    const IMGUR_CLIENT_ID = 'e290885e3477163'; 
+    let currentModel = 'gemini'; // 預設改為 Gemini 模式 (更符合您的需求)
 
-        document.querySelectorAll('.nav-link').forEach(b => {
-            b.classList.remove('active');
-            b.style.backgroundColor = '#f8f9fa';
-            b.style.color = '#6c757d';
-        });
-        btn.classList.add('active');
-        btn.style.backgroundColor = '#0d6efd';
-        btn.style.color = 'white';
+    // --- 1. 模型切換邏輯 ---
+    function setModel(model) {
+        currentModel = model;
+        
+        // 更新按鈕樣式
+        document.getElementById('btn-mj').classList.toggle('active', model === 'mj');
+        document.getElementById('btn-gemini').classList.toggle('active', model === 'gemini');
 
-        document.querySelectorAll('.tab-content-area').forEach(div => div.classList.remove('active'));
-        const targetDiv = document.getElementById(targetId);
-        if (targetDiv) targetDiv.classList.add('active');
+        // 更新介面顯示
+        const body = document.body;
+        const hintText = document.getElementById('hintText');
+        const uploadStatus = document.getElementById('uploadStatus');
+
+        if (model === 'gemini') {
+            body.classList.add('gemini-mode');
+            hintText.innerHTML = `
+                <div style="background: #e8f0fe; padding: 10px; border-radius: 8px; color: #1967d2;">
+                    <strong>🎓 Gemini 教育版模式</strong><br>
+                    1. 用上方 📸 拍照 (僅預覽，不上傳)。<br>
+                    2. 按「產出提示詞」並複製。<br>
+                    3. 到 Gemini 貼上文字，並<b>直接上傳照片</b>。
+                </div>`;
+            uploadStatus.style.display = 'none';
+        } else {
+            body.classList.remove('gemini-mode');
+            hintText.innerHTML = `
+                <div style="background: #f1f3f4; padding: 10px; border-radius: 8px; color: #5f6368;">
+                    <strong>Midjourney 模式</strong><br>
+                    拍照後會自動上傳至圖床轉成網址，適合 MJ 或 Discord 使用。
+                </div>`;
+            if(document.getElementById('imgPreview').src) {
+                uploadStatus.style.display = 'block';
+            }
+        }
     }
 
-    // --- 2. 資料庫 ---
+    // --- 2. 圖片處理 (整合邏輯) ---
+    async function handleImageSelect(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+
+        // 顯示本地預覽 (雙模式都要)
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('imgPreview').src = e.target.result;
+            document.getElementById('previewContainer').style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+
+        // 如果是 MJ 模式，才執行上傳
+        if (currentModel === 'mj') {
+            const statusEl = document.getElementById('uploadStatus');
+            const urlInput = document.getElementById('uploadedImageUrl');
+            
+            statusEl.style.display = 'block';
+            statusEl.style.color = '#0d6efd';
+            statusEl.innerHTML = '☁️ 轉網址中...';
+            
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const response = await fetch('https://api.imgur.com/3/image', {
+                    method: 'POST',
+                    headers: { Authorization: `Client-ID ${IMGUR_CLIENT_ID}` },
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    urlInput.value = data.data.link;
+                    statusEl.innerHTML = '✅ 網址已就緒';
+                    statusEl.style.color = 'green';
+                } else { throw new Error('Upload failed'); }
+            } catch (error) {
+                console.error(error);
+                statusEl.innerHTML = '❌ 上傳失敗';
+                statusEl.style.color = 'red';
+            }
+        }
+    }
+
+    function removeImage() {
+        document.getElementById('cameraInput').value = "";
+        document.getElementById('uploadedImageUrl').value = "";
+        document.getElementById('previewContainer').style.display = 'none';
+        document.getElementById('uploadStatus').style.display = 'none';
+        document.getElementById('imgPreview').src = "";
+    }
+
+    // --- 3. 產出提示詞 (核心差異) ---
+    async function generatePrompt() {
+        let mainSubject = document.getElementById('mainSubject').value.trim();
+        const aspectRatio = document.getElementById('aspectRatio').value;
+        const pixelRes = document.getElementById('pixelResolution').value;
+        const uploadedImageUrl = document.getElementById('uploadedImageUrl').value;
+        // 檢查是否有選擇圖片 (cameraInput 有檔案 或 預覽圖有 src)
+        const hasLocalImage = document.getElementById('cameraInput').files.length > 0 || document.getElementById('imgPreview').getAttribute('src') !== "";
+        const btn = document.querySelector('.btn-primary');
+
+        if (/[\u4e00-\u9fa5]/.test(mainSubject)) {
+            const originalText = btn.textContent;
+            btn.textContent = "⏳ 翻譯中...";
+            btn.disabled = true;
+            mainSubject = await translateInput() || mainSubject;
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+
+        let parts = [];
+
+        // === Gemini 模式 (針對思考模型優化) ===
+        if (currentModel === 'gemini') {
+            // 結構化 Prompt，引導思考模型
+            if (hasLocalImage) {
+                // 有圖：要求分析圖片
+                parts.push("Step 1: Analyze the attached reference image for pose, composition, and main features.");
+                parts.push("Step 2: Generate a NEW image maintaining that composition, but applying the following styles:");
+            } else {
+                // 無圖：直接生成
+                parts.push("Generate an image with the following description:");
+            }
+            
+            if (mainSubject) parts.push(`Subject: ${mainSubject}.`);
+            
+            // 收集風格
+            let styles = [];
+            collectSelects(styles);
+            if (styles.length > 0) {
+                parts.push(`Art Style & Details: ${styles.join(', ')}.`);
+            }
+
+            if (pixelRes) parts.push(`Quality: ${pixelRes}.`);
+            if (aspectRatio) parts.push(`Aspect Ratio: ${aspectRatio}.`);
+            
+            parts.push("Ensure high aesthetic quality and accurate adherence to the style.");
+        } 
+        
+        // === Midjourney 模式 ===
+        else {
+            if (uploadedImageUrl) parts.push(uploadedImageUrl); 
+            if (mainSubject) parts.push(mainSubject);
+            if (pixelRes) parts.push(pixelRes);
+            collectSelects(parts);
+            parts.push("--v 6.0");
+            if (aspectRatio) parts.push(`--ar ${aspectRatio}`);
+        }
+
+        document.getElementById('outputPrompt').value = parts.join(' ');
+    }
+
+    function collectSelects(array) {
+        document.querySelectorAll('.category-select').forEach(select => {
+            if (select.value && !select.disabled) {
+                array.push(select.value);
+            }
+        });
+    }
+
+    // --- 輔助功能 ---
+    function switchTab(btn, targetId) {
+        if (btn.classList.contains('disabled-tab')) return;
+        document.querySelectorAll('.nav-link').forEach(b => {
+            b.classList.remove('active'); b.style.backgroundColor='#f8f9fa'; b.style.color='#6c757d';
+        });
+        btn.classList.add('active'); btn.style.backgroundColor='#4285f4'; btn.style.color='white';
+        document.querySelectorAll('.tab-content-area').forEach(div => div.classList.remove('active'));
+        document.getElementById(targetId).classList.add('active');
+    }
+
+    async function translateInput() {
+        const text = document.getElementById('mainSubject').value.trim();
+        if (!text || !/[\u4e00-\u9fa5]/.test(text)) return text;
+        try {
+            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=zh-TW|en`);
+            const data = await res.json();
+            if (data.responseData?.translatedText) {
+                document.getElementById('mainSubject').value = data.responseData.translatedText;
+                return data.responseData.translatedText;
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    function copyToClipboard() {
+        const el = document.getElementById("outputPrompt");
+        el.select(); el.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(el.value);
+    }
+
+    // --- 完整資料庫 (全收錄) ---
     const categorizedData = {
         "photo": { 
             "攝影類型 (Types)": [
@@ -159,54 +353,39 @@
                 { id: "photo_type", val: "still life photo", label: "靜物攝影 (still life)"}
             ],
             "光圈 (Aperture)": [
-                { id: "photo_aperture", val: "f/1", label: "f/1 (超大光圈)"}, { id: "photo_aperture", val: "f/1.4", label: "f/1.4"},
-                { id: "photo_aperture", val: "f/2", label: "f/2"}, { id: "photo_aperture", val: "f/2.8", label: "f/2.8"},
-                { id: "photo_aperture", val: "f/4", label: "f/4"}, { id: "photo_aperture", val: "f/5.6", label: "f/5.6"},
-                { id: "photo_aperture", val: "f/8", label: "f/8 (標準風景)"}, { id: "photo_aperture", val: "f/11", label: "f/11"},
-                { id: "photo_aperture", val: "f/16", label: "f/16"}, { id: "photo_aperture", val: "f/22", label: "f/22"},
-                { id: "photo_aperture", val: "f/32", label: "f/32 (深景深)"}
+                { id: "photo_aperture", val: "f/1.4", label: "f/1.4"}, { id: "photo_aperture", val: "f/2.8", label: "f/2.8"},
+                { id: "photo_aperture", val: "f/8", label: "f/8"}, { id: "photo_aperture", val: "f/16", label: "f/16"}
             ],
             "焦距 (Focal Length)": [
-                { id: "photo_focal", val: "20mm", label: "20mm (超廣角)"}, { id: "photo_focal", val: "24mm", label: "24mm (廣角)"},
-                { id: "photo_focal", val: "28mm", label: "28mm"}, { id: "photo_focal", val: "35mm", label: "35mm (人文)"},
-                { id: "photo_focal", val: "85mm", label: "85mm (人像)"}, { id: "photo_focal", val: "105mm", label: "105mm"},
-                { id: "photo_focal", val: "200mm", label: "200mm (望遠)"}, { id: "photo_focal", val: "300mm", label: "300mm"},
-                { id: "photo_focal", val: "400mm", label: "400mm"}, { id: "photo_focal", val: "600mm", label: "600mm (超望遠)"}
+                { id: "photo_focal", val: "24mm", label: "24mm"}, { id: "photo_focal", val: "35mm", label: "35mm"},
+                { id: "photo_focal", val: "85mm", label: "85mm"}, { id: "photo_focal", val: "200mm", label: "200mm"}
             ],
             "環境與畫質輔助 (Auxiliary)": [
-                { val: "bright", label: "環境較明亮 (bright)"}, { val: "dark", label: "環境較暗 (dark)"},
-                { val: "realistic", label: "逼真的 (realistic)"}, { val: "b/w", label: "黑白照片 (b/w)"},
-                { val: "very realistic", label: "非常逼真的 (強調紋理)"}, { val: "very detailed", label: "非常多細節 (增加物件)"},
-                { val: "high resolution", label: "高分辨率"}, { val: "8K", label: "8K 畫質"}
+                { val: "bright", label: "環境較明亮"}, { val: "dark", label: "環境較暗"},
+                { val: "realistic", label: "逼真"}, { val: "b/w", label: "黑白照片"},
+                { val: "very realistic", label: "非常逼真"}, { val: "very detailed", label: "高細節"},
+                { val: "8K", label: "8K 畫質"}
             ],
             "攝影風格 (Styles)": [
                 {val: "DSLR style", label: "數位單眼"}, {val: "Polaroid style", label: "拍立得"},
                 {val: "gopro style", label: "GoPro"}, {val: "Fujifilm superia style", label: "富士底片"},
                 {val: "LOMO style", label: "LOMO"}, {val: "movie style", label: "電影風"},
                 {val: "cinematic photo style", label: "劇照"}, {val: "vintage photo style", label: "復古"},
-                {val: "antique photo style", label: "仿古"}, {val: "Calotype print", label: "紙基負片"},
                 {val: "Holga photography", label: "Holga 相機"}, {val: "Anthotype print", label: "植物感光"}
             ],
             "鏡頭與光影 (Lens/Light)": [
-                {val: "macro lens", label: "微距鏡頭"}, {val: "prime lens", label: "定焦鏡頭"},
-                {val: "wide angle lens", label: "廣角鏡頭"}, {val: "fish eye lens", label: "魚眼鏡頭"},
-                {val: "tilt shift lens", label: "移軸鏡頭"}, {val: "long focal length lens", label: "望遠鏡頭"},
-                {val: "bokeh", label: "散景/景深"}, {val: "lens flare", label: "鏡頭眩光"},
-                {val: "magic hour", label: "魔幻時刻"}, {val: "golden hour", label: "黃金時刻"},
-                {val: "blue hour", label: "藍色時刻"}, {val: "ambient light", label: "環境光"},
-                {val: "hard light", label: "硬光"}, {val: "soft light", label: "柔光"},
-                {val: "back light", label: "背光"}, {val: "rim light", label: "輪廓光"},
-                {val: "multiple exposure", label: "重複曝光"}, {val: "motion blur", label: "動態模糊"},
-                {val: "HDR", label: "HDR"}
+                {val: "macro lens", label: "微距鏡頭"}, {val: "wide angle lens", label: "廣角鏡頭"},
+                {val: "fish eye lens", label: "魚眼鏡頭"}, {val: "bokeh", label: "散景/景深"},
+                {val: "lens flare", label: "鏡頭眩光"}, {val: "golden hour", label: "黃金時刻"},
+                {val: "ambient light", label: "環境光"}, {val: "hard light", label: "硬光"},
+                {val: "soft light", label: "柔光"}, {val: "rim light", label: "輪廓光"},
+                {val: "multiple exposure", label: "重複曝光"}, {val: "HDR", label: "HDR"}
             ],
             "畫面角度 (Angles)": [
                 {val: "face close-up", label: "臉部特寫"}, {val: "full body shot", label: "全身照"},
-                {val: "front view", label: "正面照"}, {val: "side view", label: "側面照"},
                 {val: "low angle view", label: "低角度"}, {val: "high angle view", label: "高角度"},
-                {val: "bird view", label: "鳥瞰"}, {val: "satellite view", label: "衛星視角"},
-                {val: "the first person view", label: "第一人稱"}, {val: "knolling", label: "開箱照"},
-                {val: "product view", label: "產品特寫"}, {val: "microscope view", label: "顯微鏡視角"},
-                {val: "360 degrees photo", label: "360度照片"}
+                {val: "bird view", label: "鳥瞰"}, {val: "knolling", label: "開箱照"},
+                {val: "product view", label: "產品特寫"}, {val: "360 degrees photo", label: "360度照片"}
             ]
         },
         "art": { 
@@ -218,10 +397,9 @@
                 {val: "Woodcut", label: "木刻版畫"}, {val: "vector art", label: "向量圖"}
             ],
             "特殊材質 (Materials)": [
-                {val: "paper art", label: "紙雕"}, {val: "pop-up book", label: "立體書"},
-                {val: "origami art", label: "摺紙"}, {val: "stained glass", label: "彩繪玻璃"},
-                {val: "pixel art", label: "像素畫"}, {val: "Low poly", label: "低多邊形"},
-                {val: "wood carving", label: "木雕"}, {val: "stone carving", label: "石雕"},
+                {val: "paper art", label: "紙雕"}, {val: "origami art", label: "摺紙"},
+                {val: "stained glass", label: "彩繪玻璃"}, {val: "pixel art", label: "像素畫"},
+                {val: "Low poly", label: "低多邊形"}, {val: "wood carving", label: "木雕"},
                 {val: "lego", label: "樂高"}, {val: "felt doll", label: "羊毛氈"},
                 {val: "neon light", label: "霓虹燈"}, {val: "ASCII art", label: "ASCII 代碼"}
             ],
@@ -250,14 +428,14 @@
                 {val: "Kyoto Animation", label: "京都動畫"}, {val: "Marvel Animation", label: "漫威"}
             ],
             "動漫作品 (Series)": [
-                {val: "One Piece", label: "航海王 (One Piece)"}, 
-                {val: "Detective Conan", label: "名偵探柯南 (Detective Conan)"},
-                {val: "Naruto", label: "火影忍者 (Naruto)"},
-                {val: "Slam Dunk", label: "灌籃高手 (Slam Dunk)"},
-                {val: "style of Mitsuru Adachi", label: "安達充風格 (Adachi Mitsuru)"},
-                {val: "Fist of the North Star", label: "北斗神拳 (Fist of the North Star)"},
-                {val: "Saint Seiya", label: "聖鬥士星矢 (Saint Seiya)"},
-                {val: "A Certain Scientific Railgun", label: "某科學的超電磁砲 (Scientific Railgun)"},
+                {val: "One Piece", label: "航海王"}, 
+                {val: "Detective Conan", label: "名偵探柯南"},
+                {val: "Naruto", label: "火影忍者"},
+                {val: "Slam Dunk", label: "灌籃高手"},
+                {val: "style of Mitsuru Adachi", label: "安達充風格"},
+                {val: "Fist of the North Star", label: "北斗神拳"},
+                {val: "Saint Seiya", label: "聖鬥士星矢"},
+                {val: "A Certain Scientific Railgun", label: "某科學的超電磁砲"},
                 {val: "SpongeBob", label: "海綿寶寶"}, 
                 {val: "Mickey Mouse", label: "米老鼠"},
                 {val: "The Simpsons", label: "辛普森家族"}, 
@@ -275,162 +453,53 @@
         }
     };
 
-    // --- 3. 初始化介面與邏輯 ---
     function init() {
         for (const [tabKey, categories] of Object.entries(categorizedData)) {
             const container = document.getElementById(`container-${tabKey}`);
             if (!container) continue;
-            
             for (const [catName, items] of Object.entries(categories)) {
-                const card = document.createElement('div');
-                card.className = 'category-card';
-                
-                const label = document.createElement('label');
-                label.className = 'category-title';
-                label.textContent = catName;
+                const card = document.createElement('div'); card.className = 'category-card';
+                const label = document.createElement('label'); label.className = 'category-title'; label.textContent = catName;
                 card.appendChild(label);
-                
-                const select = document.createElement('select');
-                select.className = 'form-select category-select';
-                
-                if (items.length > 0 && items[0].id) {
-                    select.id = items[0].id;
-                }
-                
-                const defaultOpt = document.createElement('option');
-                defaultOpt.value = "";
-                defaultOpt.textContent = "不指定";
-                select.appendChild(defaultOpt);
-                
-                items.forEach(item => {
-                    const opt = document.createElement('option');
-                    opt.value = item.val;
-                    opt.textContent = item.label;
-                    select.appendChild(opt);
-                });
-                
+                const select = document.createElement('select'); select.className = 'form-select category-select';
+                if (items.length > 0 && items[0].id) select.id = items[0].id;
+                select.appendChild(new Option("不指定", ""));
+                items.forEach(item => select.appendChild(new Option(item.label, item.val)));
                 card.appendChild(select);
                 container.appendChild(card);
             }
         }
         
-        // --- 綁定排他邏輯 ---
-        const photoTypeSelect = document.getElementById('photo_type');
-        const apertureSelect = document.getElementById('photo_aperture');
-        const focalSelect = document.getElementById('photo_focal');
-        
-        if(apertureSelect) apertureSelect.disabled = true;
-        if(focalSelect) focalSelect.disabled = true;
-
-        if (photoTypeSelect) {
-            photoTypeSelect.addEventListener('change', function() {
-                const isPhotoSelected = this.value !== "";
-                
-                if(apertureSelect) {
-                    apertureSelect.disabled = !isPhotoSelected;
-                    if(!isPhotoSelected) apertureSelect.value = "";
-                }
-                if(focalSelect) {
-                    focalSelect.disabled = !isPhotoSelected;
-                    if(!isPhotoSelected) focalSelect.value = "";
-                }
-
-                toggleTabLock('container-art', 'btn-art', isPhotoSelected);
-                toggleTabLock('container-anime', 'btn-anime', isPhotoSelected);
+        // 綁定排他邏輯
+        const photoType = document.getElementById('photo_type');
+        if (photoType) {
+            photoType.addEventListener('change', function() {
+                const isPhoto = this.value !== "";
+                ['photo_aperture', 'photo_focal'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) { el.disabled = !isPhoto; if(!isPhoto) el.value=""; }
+                });
+                toggleLock('container-art', 'btn-art', isPhoto);
+                toggleLock('container-anime', 'btn-anime', isPhoto);
             });
         }
-    }
-
-    function toggleTabLock(containerId, btnId, shouldLock) {
-        const container = document.getElementById(containerId);
-        const btn = document.getElementById(btnId);
+        // 初始狀態鎖定
+        ['photo_aperture', 'photo_focal'].forEach(id => { const el = document.getElementById(id); if(el) el.disabled = true; });
         
-        const selects = container.querySelectorAll('select');
-        selects.forEach(s => {
-            s.disabled = shouldLock;
-            if(shouldLock) s.value = ""; 
-        });
-
-        if (shouldLock) {
-            btn.classList.add('disabled-tab');
-            container.querySelectorAll('.category-card').forEach(c => c.classList.add('disabled-card'));
-            btn.querySelector('.locked-badge').style.display = 'inline-block';
-        } else {
-            btn.classList.remove('disabled-tab');
-            container.querySelectorAll('.category-card').forEach(c => c.classList.remove('disabled-card'));
-            btn.querySelector('.locked-badge').style.display = 'none';
-        }
+        // 初始化預設為 Gemini
+        setModel('gemini');
     }
 
-    // --- 4. 翻譯與產出 ---
-    async function translateInput() {
-        const inputEl = document.getElementById('mainSubject');
-        const statusEl = document.getElementById('translationStatus');
-        const text = inputEl.value.trim();
-        if (!text) return;
-        if (!/[\u4e00-\u9fa5]/.test(text)) return text;
-
-        statusEl.style.display = 'block';
-        document.getElementById('translateBtn').disabled = true;
-
-        try {
-            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=zh-TW|en`);
-            const data = await response.json();
-            if (data.responseData?.translatedText) {
-                inputEl.value = data.responseData.translatedText;
-                statusEl.style.display = 'none';
-                return data.responseData.translatedText;
-            }
-        } catch (e) { console.error(e); } 
-        finally { 
-            document.getElementById('translateBtn').disabled = false;
-            statusEl.style.display = 'none';
-        }
-    }
-
-    async function generatePrompt() {
-        let mainSubject = document.getElementById('mainSubject').value.trim();
-        const aspectRatio = document.getElementById('aspectRatio').value;
-        const pixelRes = document.getElementById('pixelResolution').value;
-        const btn = document.querySelector('.btn-primary');
-
-        if (/[\u4e00-\u9fa5]/.test(mainSubject)) {
-            const originalText = btn.textContent;
-            btn.textContent = "⏳ 翻譯中...";
-            btn.disabled = true;
-            mainSubject = await translateInput() || mainSubject;
-            btn.textContent = originalText;
-            btn.disabled = false;
-        }
-
-        let parts = [];
-        if (mainSubject) parts.push(mainSubject);
-        if (pixelRes) parts.push(pixelRes);
-
-        document.querySelectorAll('.category-select').forEach(select => {
-            if (select.value && !select.disabled) {
-                parts.push(select.value);
-            }
-        });
-
-        parts.push("--v 6.0");
-        if (aspectRatio) parts.push(aspectRatio);
-
-        document.getElementById('outputPrompt').value = parts.join(', ');
-    }
-
-    function copyToClipboard() {
-        const el = document.getElementById("outputPrompt");
-        el.select();
-        el.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(el.value);
+    function toggleLock(cid, bid, lock) {
+        const c = document.getElementById(cid), b = document.getElementById(bid);
+        c.querySelectorAll('select').forEach(s => { s.disabled = lock; if(lock) s.value=""; });
+        b.classList.toggle('disabled-tab', lock);
+        c.querySelectorAll('.category-card').forEach(card => card.classList.toggle('disabled-card', lock));
+        b.querySelector('.locked-badge').style.display = lock ? 'inline-block' : 'none';
     }
 
     init();
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
-    }
+    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
 </script>
 </body>
 </html>
