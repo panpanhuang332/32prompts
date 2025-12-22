@@ -285,33 +285,38 @@
     const fontData = [{val: "Bold sans-serif", label: "粗體無襯線"}, {val: "Elegant serif", label: "優雅襯線"}, {val: "Handwritten script", label: "手寫草書"}, {val: "Cyberpunk neon style", label: "賽博龐克霓虹"}, {val: "Vintage retro style", label: "復古風格"}, {val: "Graffiti style", label: "塗鴉風格"}, {val: "Calligraphy brush stroke", label: "書法毛筆"}, {val: "Pixel art style", label: "像素風格"}];
 
     // 資料結構：修正分類邏輯
-    const categorizedData = {
+const categorizedData = {
         "char": { 
-            "服裝": [{val: "T-shirt and jeans", label: "T恤牛仔褲"}, {val: "Suit", label: "西裝"}, {val: "Evening gown", label: "晚禮服"}, {val: "Cyberpunk techwear", label: "機能風"}, {val: "Kimono", label: "和服"}, {val: "School uniform", label: "制服"}, {val: "Maid outfit", label: "女僕裝"}, {val: "Sportswear", label: "運動服"}],
-            "髮型": [{val: "Long straight black hair", label: "黑長直"}, {val: "Short bob cut", label: "鮑伯頭"}, {val: "Blonde ponytail", label: "金髮馬尾"}, {val: "Silver twin tails", label: "銀髮雙馬尾"}, {val: "Pink hair", label: "粉髮"}, {val: "Bald", label: "光頭"}],
-            "五官": [{val: "Blue eyes", label: "藍眼"}, {val: "Red eyes", label: "紅眼"}, {val: "Heterochromia", label: "異色瞳"}, {val: "Cat eyes", label: "貓眼"}, {val: "Wearing glasses", label: "眼鏡"}, {val: "Freckles", label: "雀斑"}],
-            "表情": [{val: "Smile", label: "微笑"}, {val: "Laughing", label: "大笑"}, {val: "Crying", label: "哭泣"}, {val: "Angry", label: "生氣"}, {val: "Seductive", label: "誘惑"}, {val: "Surprised", label: "驚訝"}],
-            "動作": [{val: "Standing", label: "站立"}, {val: "Sitting", label: "坐著"}, {val: "Running", label: "奔跑"}, {val: "Fighting stance", label: "戰鬥姿勢"}, {val: "Peace sign", label: "比YA"}, {val: "Looking back", label: "回眸"}]
+            "服裝穿搭": [{val: "T-shirt and jeans", label: "T恤牛仔褲"}, {val: "Suit and tie", label: "西裝"}, {val: "Evening gown", label: "晚禮服"}, {val: "Cyberpunk techwear", label: "機能風"}, {val: "Kimono", label: "和服"}, {val: "School uniform", label: "制服"}, {val: "Maid outfit", label: "女僕裝"}, {val: "Sportswear", label: "運動服"}, {val: "Hoodie", label: "連帽衫"}, {val: "Armor", label: "盔甲"}],
+            "髮型髮色": [{val: "Long straight black hair", label: "黑長直"}, {val: "Short bob cut", label: "鮑伯頭"}, {val: "Blonde ponytail", label: "金髮馬尾"}, {val: "Silver twin tails", label: "銀髮雙馬尾"}, {val: "Pink hair", label: "粉髮"}, {val: "Messy hair", label: "凌亂髮"}, {val: "Bald", label: "光頭"}, {val: "Curly hair", label: "捲髮"}],
+            "五官特點": [{val: "Blue eyes", label: "藍眼"}, {val: "Red eyes", label: "紅眼"}, {val: "Heterochromia", label: "異色瞳"}, {val: "Cat eyes", label: "貓眼"}, {val: "Wearing glasses", label: "眼鏡"}, {val: "Freckles", label: "雀斑"}, {val: "Scar on face", label: "刀疤"}, {val: "Makeup", label: "化妝"}],
+            "表情": [{val: "Smile", label: "微笑"}, {val: "Laughing", label: "大笑"}, {val: "Crying", label: "哭泣"}, {val: "Angry", label: "生氣"}, {val: "Expressionless", label: "無表情"}, {val: "Seductive", label: "誘惑"}, {val: "Surprised", label: "驚訝"}, {val: "Winking", label: "眨眼"}],
+            "肢體動作": [{val: "Standing", label: "站立"}, {val: "Sitting", label: "坐著"}, {val: "Lying", label: "躺著"}, {val: "Running", label: "奔跑"}, {val: "Jumping", label: "跳躍"}, {val: "Fighting stance", label: "戰鬥姿勢"}, {val: "Peace sign", label: "比YA"}, {val: "Looking back", label: "回眸"}],
+            "體型": [{val: "Slim", label: "苗條"}, {val: "Muscular", label: "肌肉"}, {val: "Curvy", label: "曲線"}, {val: "Chubby", label: "肉感"}, {val: "Tall", label: "高挑"}, {val: "Petite", label: "嬌小"}]
         },
         "scene": { 
-            "環境": [{val: "Indoor", label: "室內"}, {val: "Outdoor", label: "室外"}, {val: "Forest", label: "森林"}, {val: "Underwater", label: "海底"}, {val: "Outer Space", label: "太空"}, {val: "Cyberpunk City", label: "賽博城市"}],
-            "地點": [{val: "Bedroom", label: "臥室"}, {val: "Classroom", label: "教室"}, {val: "Rooftop", label: "天台"}, {val: "Street", label: "街道"}, {val: "Beach", label: "海灘"}, {val: "Cafe", label: "咖啡廳"}],
-            "光線": [{val: "Daylight", label: "日光"}, {val: "Night", label: "夜晚"}, {val: "Sunset", label: "日落"}, {val: "Cinematic lighting", label: "電影光"}, {val: "Neon lights", label: "霓虹燈"}]
+            "環境設定": [{val: "Indoor", label: "室內"}, {val: "Outdoor", label: "室外"}, {val: "Primitive Forest", label: "原始森林"}, {val: "Underwater", label: "海底"}, {val: "Outer Space", label: "太空"}, {val: "Concert Stage", label: "演唱會"}, {val: "Future City", label: "未來城市"}],
+            "特定地點": [{val: "News Anchor Desk", label: "主播台"}, {val: "Church", label: "教堂"}, {val: "Rooftop style of Infernal Affairs", label: "無間道天台"}, {val: "Prison Cell", label: "監獄"}, {val: "Courtroom", label: "法院"}, {val: "Classroom", label: "教室"}, {val: "Cyberpunk Street", label: "賽博街道"}, {val: "Ancient Temple", label: "古廟"}],
+            "背景處理": [{val: "White Background", label: "白背景"}, {val: "Simple Background", label: "簡單背景"}, {val: "No Background", label: "無背景/去背"}, {val: "Green Screen", label: "綠幕"}]
         },
         "photo": { 
-            "類型 (Type)": [{id: "photo_type", val: "photo", label: "一般照片"}, {id: "photo_type", val: "portrait photography", label: "人像攝影"}, {id: "photo_type", val: "street photography", label: "街頭攝影"}, {id: "photo_type", val: "macro photography", label: "微距攝影"}],
-            "鏡頭 (Lens)": [{id:"photo_focal", val:"20mm", label:"20mm 超廣角"}, {id:"photo_focal", val:"35mm", label:"35mm 人文"}, {id:"photo_focal", val:"85mm", label:"85mm 人像"}, {id:"photo_focal", val:"200mm", label:"200mm 望遠"}],
-            "光圈 (Aperture)": [{id:"photo_aperture", val:"f/1.4", label:"f/1.4 (大光圈虛化)"}, {id:"photo_aperture", val:"f/2.8", label:"f/2.8"}, {id:"photo_aperture", val:"f/8", label:"f/8 (風景清晰)"}, {id:"photo_aperture", val:"f/16", label:"f/16"}],
-            "底片/風格": [{val:"Fujifilm color", label:"富士色彩"}, {val:"Kodak Portra 400", label:"柯達 Portra"}, {val:"Polaroid", label:"拍立得"}, {val:"Monochrome", label:"黑白"}]
+            "攝影類型": [{id: "photo_type", val: "photo", label: "照片"}, {id: "photo_type", val: "portrait photography", label: "人像"}, {id: "photo_type", val: "life photo", label: "生活照"}, {id: "photo_type", val: "sports photography", label: "運動"}, {id: "photo_type", val: "still life photo", label: "靜物"}, {id: "photo_type", val: "selfie photo", label: "自拍"}],
+            "光圈": [{id:"photo_aperture", val:"f/1.4", label:"f/1.4"}, {id:"photo_aperture", val:"f/2.8", label:"f/2.8"}, {id:"photo_aperture", val:"f/8", label:"f/8"}, {id:"photo_aperture", val:"f/16", label:"f/16"}, {id:"photo_aperture", val:"f/32", label:"f/32"}],
+            "焦距": [{id:"photo_focal", val:"20mm", label:"20mm (超廣)"}, {id:"photo_focal", val:"35mm", label:"35mm (人文)"}, {id:"photo_focal", val:"85mm", label:"85mm (人像)"}, {id:"photo_focal", val:"200mm", label:"200mm (望遠)"}, {id:"photo_focal", val:"macro lens", label:"微距鏡頭"}, {id:"photo_focal", val:"fish eye lens", label:"魚眼"}],
+            "風格": [{val:"DSLR style", label:"數位單眼"}, {val:"Polaroid style", label:"拍立得"}, {val:"gopro style", label:"GoPro"}, {val:"Fujifilm superia style", label:"富士底片"}, {val:"LOMO style", label:"LOMO"}, {val:"movie style", label:"電影風"}, {val:"cinematic photo style", label:"劇照"}, {val:"vintage photo style", label:"復古"}, {val:"Holga photography", label:"Holga"}, {val:"Anthotype print", label:"植物感光"}],
+            "光影與效果": [{val:"bokeh", label:"散景"}, {val:"lens flare", label:"鏡頭眩光"}, {val:"magic hour", label:"魔幻時刻"}, {val:"golden hour", label:"黃金時刻"}, {val:"blue hour", label:"藍色時刻"}, {val:"ambient light", label:"環境光"}, {val:"hard light", label:"硬光"}, {val:"soft light", label:"柔光"}, {val:"back light", label:"背光"}, {val:"HDR", label:"HDR"}, {val:"double exposure", label:"重複曝光"}, {val:"motion blur", label:"動態模糊"}],
+            "畫面角度": [{val:"face close-up", label:"臉部特寫"}, {val:"full body shot", label:"全身照"}, {val:"low angle view", label:"低角度"}, {val:"high angle view", label:"高角度"}, {val:"bird view", label:"鳥瞰"}, {val:"knolling", label:"開箱照/平鋪"}, {val:"product view", label:"產品特寫"}, {val:"360 degrees photo", label:"360度"}, {val:"X-ray view", label:"X光片"}]
         },
         "art": { 
-            "媒材": [{val:"oil painting", label:"油畫"}, {val:"watercolor", label:"水彩"}, {val:"sketch", label:"素描"}, {val:"ink painting", label:"水墨"}, {val:"vector art", label:"向量圖"}, {val:"3D render", label:"3D 渲染"}],
-            "流派": [{val:"Impressionism", label:"印象派"}, {val:"Surrealism", label:"超現實"}, {val:"Pop Art", label:"普普藝術"}, {val:"Ukiyo-e", label:"浮世繪"}, {val:"Pixel Art", label:"像素畫"}],
-            "藝術家風格": [{val:"by Van Gogh", label:"梵谷"}, {val:"by Makoto Shinkai", label:"新海誠"}, {val:"by Hayao Miyazaki", label:"宮崎駿"}, {val:"by Wes Anderson", label:"魏斯安德森"}]
+            "繪畫媒材": [{val:"illustration", label:"插畫"}, {val:"pencil", label:"鉛筆"}, {val:"charcoal", label:"炭筆"}, {val:"color pencil", label:"色鉛筆"}, {val:"acrylic painting", label:"壓克力"}, {val:"watercolor painting", label:"水彩"}, {val:"oil painting", label:"油畫"}, {val:"ink drawing", label:"水墨"}, {val:"Woodcut", label:"版畫"}, {val:"vector art", label:"向量圖"}],
+            "材質": [{val:"paper art", label:"紙雕"}, {val:"origami art", label:"摺紙"}, {val:"stained glass", label:"彩繪玻璃"}, {val:"mosaic", label:"馬賽克"}, {val:"pixel art", label:"像素畫"}, {val:"Low poly", label:"低多邊形"}, {val:"wood carving", label:"木雕"}, {val:"lego", label:"樂高"}, {val:"felt doll", label:"羊毛氈"}, {val:"neon light", label:"霓虹燈"}],
+            "流派": [{val:"Impressionnisme", label:"印象派"}, {val:"Surrealism", label:"超現實"}, {val:"Cubism", label:"立體主義"}, {val:"Pop Art", label:"普普"}, {val:"Minimalism", label:"極簡"}, {val:"Cyber Art", label:"賽博藝術"}, {val:"Steampunk", label:"蒸氣龐克"}, {val:"Ukiyo-e", label:"浮世繪"}, {val:"Baroque art", label:"巴洛克"}],
+            "藝術家": [{val:"Vincent van Gogh", label:"梵谷"}, {val:"Leonardo da Vinci", label:"達文西"}, {val:"Picasso", label:"畢卡索"}, {val:"Dali", label:"達利"}, {val:"Monet", label:"莫內"}, {val:"Mucha", label:"慕夏"}, {val:"Andy Warhol", label:"安迪沃荷"}, {val:"Hayao Miyazaki", label:"宮崎駿"}, {val:"Makoto Shinkai", label:"新海誠"}, {val:"Yayoi Kusama", label:"草間彌生"}]
         },
         "anime": { 
-            "風格": [{val: "Anime style", label: "通用動漫"}, {val: "Ghibli style", label: "吉卜力"}, {val: "Makoto Shinkai style", label: "新海誠"}, {val: "Kyoto Animation style", label: "京阿尼"}, {val: "90s anime style", label: "90年代復古"}],
-            "類型": [{val:"Chibi", label:"Q版"}, {val:"Mecha", label:"機甲"}, {val:"Magical Girl", label:"魔法少女"}, {val:"Shonen", label:"少年漫畫"}]
+            "作品": [{val: "One Piece style", label: "航海王"}, {val: "Detective Conan style", label: "名偵探柯南"}, {val: "Naruto style", label: "火影忍者"}, {val: "Slam Dunk style", label: "灌籃高手"}, {val: "style of Mitsuru Adachi", label: "安達充風格"}, {val: "Fist of the North Star style", label: "北斗神拳"}, {val: "Saint Seiya style", label: "聖鬥士星矢"}, {val: "A Certain Scientific Railgun style", label: "某科學的超電磁砲"}, {val: "Studio Ghibli style", label: "吉卜力"}, {val: "Dragon ball style", label: "七龍珠"}, {val: "Sailor Moon style", label: "美少女戰士"}, {val: "JoJo style", label: "JoJo"}],
+            "類型與公司": [{val:"2D cartoon", label:"2D 卡通"}, {val:"3D cartoon", label:"3D 卡通"}, {val:"American comic book", label:"美式漫畫"}, {val:"Manga", label:"日式漫畫"}, {val:"Pixar Animation", label:"皮克斯"}, {val:"Disney Animation", label:"迪士尼"}, {val:"Kyoto Animation", label:"京都動畫"}, {val:"Marvel Animation", label:"漫威"}],
+            "設計": [{val:"mascot logo", label:"吉祥物 Logo"}, {val:"UI design", label:"UI 介面"}, {val:"3D Model Exploded View", label:"3D 分解圖"}, {val:"2D floor plan", label:"2D 平面圖"}, {val:"character toy", label:"公仔玩具"}]
         }
     };
 
@@ -578,4 +583,5 @@
 </script>
 </body>
 </html>
+
 
