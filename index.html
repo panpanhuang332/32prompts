@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MJ 提示詞產生器 (Mobile Fix)</title>
+    <title>MJ 提示詞產生器 (完整版)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,7 +14,7 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* 禁止網頁整體捲動 */
+            overflow: hidden;
         }
 
         /* 1. 頂部區域 */
@@ -32,7 +32,7 @@
             flex-wrap: nowrap;
             overflow-x: auto;
             white-space: nowrap;
-            gap: 5px; /* 按鈕間距 */
+            gap: 5px;
             padding-bottom: 5px;
         }
         
@@ -41,19 +41,18 @@
             color: #6c757d;
             font-size: 0.95rem;
             padding: 8px 12px;
-            border-radius: 20px; /* 圓角按鈕 */
+            border-radius: 20px;
             background-color: #f8f9fa;
             transition: all 0.2s;
         }
         
-        /* 選中時的樣式 */
         .nav-tabs .nav-link.active {
             color: white;
-            background-color: #0d6efd; /* 藍底白字 */
+            background-color: #0d6efd;
             font-weight: bold;
         }
 
-        /* 3. 中間內容區域 (可捲動) */
+        /* 3. 中間內容區域 */
         .app-content {
             flex-grow: 1;
             overflow-y: auto;
@@ -62,13 +61,11 @@
             scroll-behavior: smooth;
         }
 
-        /* 隱藏未選中的頁面 */
         .tab-content-area {
             display: none;
             animation: fadeIn 0.3s;
         }
         
-        /* 顯示選中的頁面 */
         .tab-content-area.active {
             display: block;
         }
@@ -78,7 +75,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 卡片樣式 */
         .category-card {
             background: white;
             border-radius: 12px;
@@ -115,7 +111,7 @@
 <body>
 
     <div class="app-header">
-        <h6 class="mb-2 fw-bold text-dark">🎨 MJ 提示詞產生器</h6>
+        <h6 class="mb-2 fw-bold text-dark">🎨 MJ 提示詞產生器 (OXXO 全收錄)</h6>
         
         <div class="mb-2">
             <div class="input-group">
@@ -131,7 +127,7 @@
             <button class="nav-link active" onclick="switchTab(this, 'page-settings')">⚙️ 設定</button>
             <button class="nav-link" onclick="switchTab(this, 'page-photo')">📸 攝影</button>
             <button class="nav-link" onclick="switchTab(this, 'page-art')">🖌️ 藝術</button>
-            <button class="nav-link" onclick="switchTab(this, 'page-anime')">🧸 動漫</button>
+            <button class="nav-link" onclick="switchTab(this, 'page-anime')">🧸 動漫/設計</button>
         </div>
     </div>
 
@@ -173,7 +169,7 @@
             </div>
             
             <div class="text-center text-muted small mt-4 p-3">
-                <p>💡 提示：<br>點選上方標籤切換<br>攝影、藝術或動漫風格選單。</p>
+                <p>資料來源：[steam.oxxostudio.tw] <br>已收錄該網站所有提示詞分類。</p>
             </div>
         </div>
 
@@ -204,91 +200,136 @@
     </div>
 
 <script>
-    // --- 1. 分頁切換邏輯 (原生 JS，不依賴 Bootstrap) ---
+    // --- 1. 分頁切換邏輯 ---
     function switchTab(btn, targetId) {
-        // 移除所有按鈕的 active 狀態
         document.querySelectorAll('.nav-link').forEach(b => {
             b.classList.remove('active');
-            b.style.backgroundColor = '#f8f9fa'; // 恢復灰底
-            b.style.color = '#6c757d'; // 恢復灰字
+            b.style.backgroundColor = '#f8f9fa';
+            b.style.color = '#6c757d';
         });
-
-        // 設定當前按鈕為 active
         btn.classList.add('active');
-        btn.style.backgroundColor = '#0d6efd'; // 藍底
-        btn.style.color = 'white'; // 白字
+        btn.style.backgroundColor = '#0d6efd';
+        btn.style.color = 'white';
 
-        // 隱藏所有頁面內容
         document.querySelectorAll('.tab-content-area').forEach(div => div.classList.remove('active'));
-
-        // 顯示目標頁面
         const targetDiv = document.getElementById(targetId);
-        if (targetDiv) {
-            targetDiv.classList.add('active');
-        }
+        if (targetDiv) targetDiv.classList.add('active');
     }
 
-    // --- 2. 資料庫與內容生成 ---
+    // --- 2. 完整資料庫 (依據 OXXO 網站全收錄) ---
     const categorizedData = {
         "photo": { 
-            "類型 (Types)": [
-                {val: "photo", label: "照片"}, {val: "portrait photography", label: "人像攝影"},
-                {val: "life photo", label: "生活照"}, {val: "cinematic photo style", label: "電影劇照"}
+            "攝影類型 (Types)": [
+                {val: "photo", label: "照片 (photo)"}, {val: "photography", label: "攝影 (photography)"},
+                {val: "life photo", label: "生活照 (life photo)"}, {val: "group photo", label: "團體照 (group photo)"},
+                {val: "selfie photo", label: "自拍照 (selfie photo)"}, {val: "group selfie photo", label: "團體自拍 (group selfie)"},
+                {val: "portrait photography", label: "人像攝影 (portrait)"}, {val: "sports photography", label: "運動攝影 (sports)"},
+                {val: "still life photo", label: "靜物攝影 (still life)"}
             ],
-            "特色 (Features)": [
-                {val: "DSLR style", label: "數位單眼"}, {val: "Polaroid style", label: "拍立得"},
-                {val: "8K", label: "8K 畫質"}, {val: "bokeh", label: "景深/散景"},
-                {val: "golden hour", label: "黃金時刻"}, {val: "lens flare", label: "鏡頭眩光"}
+            "攝影風格 (Styles)": [
+                {val: "DSLR style", label: "數位單眼 (DSLR)"}, {val: "Polaroid style", label: "拍立得 (Polaroid)"},
+                {val: "gopro style", label: "GoPro 風格"}, {val: "Fujifilm superia style", label: "富士底片 (Fujifilm)"},
+                {val: "LOMO style", label: "LOMO 風格"}, {val: "B/W style", label: "黑白照片 (B/W)"},
+                {val: "movie style", label: "電影風 (movie)"}, {val: "cinematic photo style", label: "劇照 (cinematic)"},
+                {val: "vintage photo style", label: "復古照片 (vintage)"}, {val: "antique photo style", label: "仿古照片 (antique)"},
+                {val: "Calotype print", label: "紙基負片 (Calotype)"}, {val: "Holga photography", label: "Holga 相機"},
+                {val: "Albumen print", label: "蛋白映像 (Albumen)"}, {val: "Anthotype print", label: "植物感光 (Anthotype)"}
+            ],
+            "鏡頭與光影 (Lens & Light)": [
+                {val: "macro lens", label: "微距鏡頭 (macro)"}, {val: "prime lens", label: "定焦鏡頭 (prime)"},
+                {val: "wide angle lens", label: "廣角鏡頭 (wide angle)"}, {val: "fish eye lens", label: "魚眼鏡頭 (fish eye)"},
+                {val: "tilt shift lens", label: "移軸鏡頭 (tilt shift)"}, {val: "long focal length lens", label: "望遠鏡頭"},
+                {val: "bokeh", label: "散景/景深 (bokeh)"}, {val: "lens flare", label: "鏡頭眩光 (flare)"},
+                {val: "magic hour", label: "魔幻時刻 (magic hour)"}, {val: "golden hour", label: "黃金時刻 (golden hour)"},
+                {val: "blue hour", label: "藍色時刻 (blue hour)"}, {val: "ambient light", label: "環境光 (ambient)"},
+                {val: "hard light", label: "硬光 (hard light)"}, {val: "soft light", label: "柔光 (soft light)"},
+                {val: "back light", label: "背光 (back light)"}, {val: "rim light", label: "輪廓光 (rim light)"},
+                {val: "multiple exposure", label: "重複曝光"}, {val: "motion blur", label: "動態模糊"},
+                {val: "panning", label: "平移拍攝"}, {val: "HDR", label: "高動態範圍 (HDR)"}
             ],
             "畫面角度 (Angles)": [
-                {val: "face close-up", label: "臉部特寫"}, {val: "full body shot", label: "全身照"},
-                {val: "bird view", label: "鳥瞰視角"}, {val: "low angle view", label: "低角度仰視"},
-                {val: "wide angle lens", label: "廣角鏡頭"}, {val: "macro lens", label: "微距鏡頭"}
-            ],
-            "特殊效果 (Effects)": [
-                {val: "knolling", label: "開箱照/平鋪"}, {val: "product view", label: "產品照"},
-                {val: "double exposure", label: "重複曝光"}, {val: "motion blur", label: "動態模糊"}
+                {val: "facial features extreme close up", label: "五官超特寫"}, {val: "face close-up", label: "臉部特寫"},
+                {val: "face shot", label: "臉部照"}, {val: "chest shot", label: "胸上照"},
+                {val: "full body shot", label: "全身照"}, {val: "far away shot", label: "遠處拍攝"},
+                {val: "front view", label: "正面照"}, {val: "side view", label: "側面照"},
+                {val: "low angle view", label: "低角度/仰視"}, {val: "high angle view", label: "高角度/俯視"},
+                {val: "bird view", label: "鳥瞰視角"}, {val: "satellite view", label: "衛星視角"},
+                {val: "the first person view", label: "第一人稱"}, {val: "knolling", label: "開箱照/平鋪"},
+                {val: "product view", label: "產品特寫"}, {val: "microscope view", label: "顯微鏡視角"},
+                {val: "X-ray view", label: "X光片風格"}, {val: "360 degrees photo", label: "360度照片"}
             ]
         },
         "art": { 
             "繪畫媒材 (Mediums)": [
-                {val: "illustration", label: "插畫"}, {val: "oil painting", label: "油畫"},
-                {val: "watercolor painting", label: "水彩"}, {val: "pencil sketch", label: "素描"},
-                {val: "ink drawing", label: "水墨畫"}, {val: "vector art", label: "向量圖"}
+                {val: "pencil", label: "鉛筆畫"}, {val: "charcoal", label: "炭筆畫"},
+                {val: "color pencil", label: "色鉛筆"}, {val: "rollerball pen", label: "原子筆"},
+                {val: "chalk", label: "粉筆"}, {val: "crayon", label: "蠟筆"},
+                {val: "sketch", label: "草圖"}, {val: "doodle", label: "塗鴉"},
+                {val: "illustration", label: "插畫"}, {val: "marker pen", label: "麥克筆"},
+                {val: "acrylic painting", label: "壓克力畫"}, {val: "watercolor painting", label: "水彩畫"},
+                {val: "oil painting", label: "油畫"}, {val: "ink drawing", label: "水墨畫"},
+                {val: "splashed ink", label: "潑墨畫"}, {val: "Gongbi painting", label: "工筆畫"},
+                {val: "Woodcut", label: "木刻版畫"}, {val: "one line drawing", label: "單線畫"}
             ],
-            "材料材質 (Materials)": [
-                {val: "paper art", label: "紙雕"}, {val: "3D render", label: "3D 渲染"},
-                {val: "stained glass", label: "彩繪玻璃"}, {val: "pixel art", label: "像素畫"},
-                {val: "origami art", label: "摺紙"}, {val: "neon light", label: "霓虹燈"}
+            "特殊材質 (Materials)": [
+                {val: "paper art", label: "紙雕"}, {val: "pop-up book", label: "立體書"},
+                {val: "origami art", label: "摺紙"}, {val: "paper cutting", label: "剪紙"},
+                {val: "stained glass", label: "彩繪玻璃"}, {val: "mosaic", label: "馬賽克"},
+                {val: "pixel art", label: "像素畫"}, {val: "Low poly", label: "低多邊形"},
+                {val: "wood carving", label: "木雕"}, {val: "stone carving", label: "石雕"},
+                {val: "jade material", label: "玉石材質"}, {val: "ceramics meterial", label: "陶瓷"},
+                {val: "metal arts", label: "金屬藝術"}, {val: "sand sculpture", label: "沙雕"},
+                {val: "lego", label: "樂高"}, {val: "Play-Doh clay", label: "培樂多黏土"},
+                {val: "felt doll", label: "羊毛氈"}, {val: "neon light", label: "霓虹燈"},
+                {val: "ASCII art", label: "ASCII 代碼畫"}
             ],
             "藝術流派 (Movements)": [
-                {val: "Impressionism", label: "印象派"}, {val: "Surrealism", label: "超現實主義"},
-                {val: "Cyberpunk", label: "賽博龐克"}, {val: "Steampunk", label: "蒸氣龐克"},
-                {val: "Minimalism", label: "極簡主義"}, {val: "Pop Art", label: "普普藝術"}
+                {val: "Renaissance", label: "文藝復興"}, {val: "Baroque art", label: "巴洛克"},
+                {val: "Impressionnisme", label: "印象派"}, {val: "Surrealism", label: "超現實主義"},
+                {val: "Cubism", label: "立體主義"}, {val: "Pop Art", label: "普普藝術"},
+                {val: "Minimalism", label: "極簡主義"}, {val: "Abstract Expressionism", label: "抽象表現"},
+                {val: "Cyber Art", label: "賽博藝術"}, {val: "Steampunk", label: "蒸氣龐克"},
+                {val: "Ukiyo-e", label: "浮世繪"}, {val: "Yamato-e", label: "大和繪"},
+                {val: "ancient Egyptian Art", label: "古埃及藝術"}, {val: "Lascaux", label: "拉斯科壁畫"}
             ],
             "藝術家 (Artists)": [
-                {val: "Vincent van Gogh", label: "梵谷"}, {val: "Hayao Miyazaki", label: "宮崎駿"},
-                {val: "Makoto Shinkai", label: "新海誠"}, {val: "Wes Anderson", label: "魏斯安德森"},
-                {val: "Leonardo da Vinci", label: "達文西"}, {val: "Andy Warhol", label: "安迪沃荷"}
+                {val: "Vincent van Gogh", label: "梵谷"}, {val: "Leonardo da Vinci", label: "達文西"},
+                {val: "Picasso", label: "畢卡索"}, {val: "Dali", label: "達利"},
+                {val: "Monet", label: "莫內"}, {val: "Mucha", label: "慕夏"},
+                {val: "Andy Warhol", label: "安迪沃荷"}, {val: "Hayao Miyazaki", label: "宮崎駿"},
+                {val: "Makoto Shinkai", label: "新海誠"}, {val: "Katsushika Hokusai", label: "葛飾北齋"},
+                {val: "Yayoi Kusama", label: "草間彌生"}, {val: "Murakami Takashi", label: "村上隆"},
+                {val: "Ninagawa Mika", label: "蜷川實花"}, {val: "Yoshitomo Nara", label: "奈良美智"}
             ]
         },
         "anime": { 
-            "動漫類型 (Anime Type)": [
+            "動漫類型 (Types)": [
                 {val: "2D cartoon", label: "2D 卡通"}, {val: "3D cartoon", label: "3D 卡通"},
-                {val: "Anime style", label: "日系動畫"}, {val: "American comic book", label: "美式漫畫"}
+                {val: "2D animation", label: "2D 動畫"}, {val: "3D animation", label: "3D 動畫"},
+                {val: "American comic book", label: "美式漫畫"}, {val: "Manga", label: "日式漫畫"}
             ],
             "動畫公司 (Studios)": [
-                {val: "Ghibli Studio", label: "吉卜力"}, {val: "Pixar Animation", label: "皮克斯"},
-                {val: "Disney Animation", label: "迪士尼"}, {val: "Kyoto Animation", label: "京都動畫"}
+                {val: "Pixar Animation", label: "皮克斯 (Pixar)"}, {val: "DreamWorks Animation", label: "夢工廠"},
+                {val: "Walt Disney Animation", label: "迪士尼 (Disney)"}, {val: "Ghibli Studio", label: "吉卜力 (Ghibli)"},
+                {val: "Toei Animation", label: "東映動畫"}, {val: "Kyoto Animation", label: "京都動畫"},
+                {val: "Ufotable Animation", label: "Ufotable (鬼滅)"}, {val: "Marvel Animation", label: "漫威 (Marvel)"}
             ],
-            "作品風格 (Series)": [
-                {val: "Demon Slayer", label: "鬼滅之刃"}, {val: "Dragon ball", label: "七龍珠"},
-                {val: "Cyberpunk Edgerunners", label: "邊緣行者"}, {val: "JoJo", label: "JoJo"}
+            "動漫作品 (Series)": [
+                {val: "SpongeBob", label: "海綿寶寶"}, {val: "Mickey Mouse", label: "米老鼠"},
+                {val: "The Simpsons", label: "辛普森家族"}, {val: "Dragon ball", label: "七龍珠"},
+                {val: "Doraemon", label: "哆啦A夢"}, {val: "Sailor Moon", label: "美少女戰士"},
+                {val: "kimetsu no Yaiba", label: "鬼滅之刃"}, {val: "One Piece", label: "海賊王"},
+                {val: "JoJo's Bizarre Adventure", label: "JoJo 冒險"}, {val: "Akira", label: "阿基拉"}
             ],
-            "設計應用 (Design)": [
-                {val: "mascot logo", label: "吉祥物 Logo"}, {val: "UI design", label: "UI 介面"},
-                {val: "2D floor plan", label: "平面室內圖"}, {val: "character toy", label: "公仔玩具"},
-                {val: "Encyclopedia of", label: "百科全書圖解"}
+            "特色與像素 (Pixel & Style)": [
+                {val: "8-bit pixel art", label: "8-bit 像素"}, {val: "16-bit pixel art", label: "16-bit 像素"},
+                {val: "Isometric pixel art", label: "等距像素 (Isometric)"}, {val: "Voxel art", label: "體素藝術"}
+            ],
+            "設計與結構 (Design)": [
+                {val: "mascot logo", label: "吉祥物 Logo"}, {val: "Minimal Line logo", label: "極簡 Logo"},
+                {val: "Encyclopedia of", label: "百科全書圖解"}, {val: "3D Model Exploded View", label: "3D 分解圖"},
+                {val: "diagrammatic drawing", label: "示意圖"}, {val: "2D floor plan", label: "2D 平面圖"},
+                {val: "3D floor plan", label: "3D 室內設計"}, {val: "character toy", label: "公仔玩具"}
             ]
         }
     };
@@ -296,7 +337,7 @@
     function init() {
         for (const [tabKey, categories] of Object.entries(categorizedData)) {
             const container = document.getElementById(`container-${tabKey}`);
-            if (!container) continue; // 安全檢查
+            if (!container) continue;
             
             for (const [catName, items] of Object.entries(categories)) {
                 const card = document.createElement('div');
@@ -328,7 +369,7 @@
         }
     }
 
-    // --- 3. 翻譯與產出功能 ---
+    // --- 3. 翻譯與產出 ---
     async function translateInput() {
         const inputEl = document.getElementById('mainSubject');
         const statusEl = document.getElementById('translationStatus');
@@ -390,10 +431,8 @@
         navigator.clipboard.writeText(el.value);
     }
 
-    // 啟動初始化
     init();
 
-    // 註冊 Service Worker
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
     }
