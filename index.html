@@ -6,40 +6,39 @@
     <title>第一次AI生圖就上手 - 9527</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .option-card { @apply border border-slate-200 rounded-xl p-3 text-center cursor-pointer transition-all hover:bg-indigo-50; }
-        .option-card.active { @apply border-indigo-600 bg-indigo-50 ring-2 ring-indigo-200 font-bold text-indigo-700; }
-        .step-label { @apply text-indigo-600 font-black text-sm mb-3 flex items-center gap-2; }
+        /* 模擬手機 App 質感 */
+        .option-btn { @apply border border-slate-200 rounded-2xl p-4 text-center cursor-pointer transition-all bg-white text-slate-600 shadow-sm; }
+        .option-btn.active { @apply border-purple-600 ring-2 ring-purple-100 text-purple-700 font-bold bg-purple-50; }
+        .step-label { @apply text-purple-700 font-black text-sm mb-4 flex items-center gap-2 tracking-widest; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen pb-10">
+<body class="bg-slate-50 min-h-screen pb-20">
 
-    <div class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white p-10 rounded-b-[3rem] shadow-xl mb-8 text-center relative overflow-hidden">
+    <div class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white p-10 rounded-b-[2.5rem] shadow-xl mb-10 text-center relative overflow-hidden">
         <div class="relative z-10">
             <h1 class="text-3xl font-extrabold tracking-tight">第一次AI生圖就上手</h1>
-            <p class="text-indigo-100 mt-2 text-2xl font-light tracking-[0.3em]">9527</p>
+            <p class="text-indigo-100 mt-2 text-2xl font-light tracking-[0.4em]">9527</p>
         </div>
         <div class="absolute -right-2 top-1/2 -translate-y-1/2 opacity-20 text-8xl rotate-12">🎲</div>
     </div>
 
-    <div class="max-w-md mx-auto px-5 space-y-10">
+    <div class="max-w-md mx-auto px-6 space-y-12">
         
         <section>
             <h2 class="step-label">STEP 01. 圖片類型</h2>
             <div class="grid grid-cols-3 gap-3" id="typeGrid">
-                <div class="option-card active" data-en="General Illustration">通用圖像</div>
-                <div class="option-card" data-en="Infographic, clean design">資訊圖表</div>
-                <div class="option-card" data-en="Portrait photography, 8k">人像攝影</div>
-                <div class="option-card" data-en="Breathtaking landscape">壯闊風景</div>
-                <div class="option-card" data-en="Functional diagram">功能圖解</div>
-                <div class="option-card" data-en="Flowchart, professional">流程圖</div>
+                <div class="option-btn active" data-en="Illustration">通用圖像</div>
+                <div class="option-btn" data-en="Epic landscape">壯闊風景</div> <div class="option-btn" data-en="Portrait photography">人像攝影</div>
+                <div class="option-btn" data-en="Infographic design">資訊圖表</div> <div class="option-btn" data-en="Diagram illustration">功能圖解</div>
+                <div class="option-btn" data-en="Flowchart">流程圖</div>
             </div>
         </section>
 
         <section>
             <h2 class="step-label">STEP 02. 內容主題</h2>
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
                 <textarea id="userInput" rows="4" 
-                    class="w-full p-5 outline-none text-slate-700 resize-none"
+                    class="w-full p-6 outline-none text-slate-700 resize-none placeholder-slate-300"
                     placeholder="你想呈現什麼畫面？"></textarea>
             </div>
         </section>
@@ -47,24 +46,24 @@
         <section>
             <h2 class="step-label">STEP 03. 視覺風格與參數</h2>
             <div class="space-y-4">
-                <select id="styleSelect" class="w-full p-4 bg-white border border-slate-200 rounded-2xl shadow-sm outline-none appearance-none text-slate-500">
+                <select id="styleSelect" class="w-full p-5 bg-white border border-slate-200 rounded-[1.5rem] shadow-sm outline-none appearance-none text-slate-500 font-medium">
                     <option value="">1. 選擇風格類別...</option>
-                    <option value="Cyberpunk, neon lighting, futuristic">賽博龐克 (Cyberpunk)</option>
-                    <option value="Studio Ghibli, anime art style, hand-drawn">吉卜力動畫風</option>
-                    <option value="Oil painting, van gogh style, thick brushstrokes">經典油畫風</option>
-                    <option value="3D render, unreal engine 5, toy-like">可愛 3D 渲染</option>
-                    <option value="Black and white, minimalist, fine art">極簡黑白攝影</option>
+                    <option value="Cyberpunk style, neon lights">賽博龐克 (Cyberpunk)</option>
+                    <option value="Studio Ghibli style, hand-drawn anime">吉卜力動畫風</option>
+                    <option value="Hyper-realistic, 8k, professional photography">極致寫實攝影</option>
+                    <option value="Ukiyo-e Japanese traditional art">傳統浮世繪</option>
+                    <option value="Cute 3D render, Octane render, toy style">可愛 3D 渲染</option>
                 </select>
             </div>
         </section>
 
         <button id="generateBtn" 
-            class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-lg shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all">
+            class="w-full bg-indigo-600 text-white py-5 rounded-[1.5rem] font-black text-lg shadow-lg shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition-all">
             AI 開始自動產圖
         </button>
 
-        <div id="resultArea" class="hidden space-y-4 pb-10">
-            <div class="flex items-center justify-center py-4" id="loadingState">
+        <div id="resultArea" class="hidden space-y-4 pb-20">
+            <div class="flex items-center justify-center py-6" id="loadingState">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
                 <span class="ml-3 text-slate-400 text-sm">正在繪製中...</span>
             </div>
@@ -73,53 +72,54 @@
     </div>
 
     <script>
-        // 類型切換邏輯
-        document.querySelectorAll('.option-card').forEach(card => {
-            card.addEventListener('click', () => {
-                document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
+        // STEP 01 按鈕切換邏輯
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
             });
         });
 
-        const btn = document.getElementById('generateBtn');
+        const genBtn = document.getElementById('generateBtn');
         const resultArea = document.getElementById('resultArea');
         const loading = document.getElementById('loadingState');
         const container = document.getElementById('imgContainer');
 
-        btn.addEventListener('click', () => {
-            const typeEn = document.querySelector('.option-card.active').dataset.en;
+        genBtn.addEventListener('click', () => {
+            const typeEn = document.querySelector('.option-btn.active').dataset.en;
             const subject = document.getElementById('userInput').value.trim();
             const styleEn = document.getElementById('styleSelect').value;
 
-            if (!subject) return alert('請輸入內容主題');
+            if (!subject) return alert('請在 Step 02 輸入你想畫的內容');
 
-            // 進入生圖狀態
-            btn.disabled = true;
-            btn.innerText = '正在思考並畫圖中...';
+            // 1. 介面初始化
+            genBtn.disabled = true;
+            genBtn.innerText = '正在處理中...';
             resultArea.classList.remove('hidden');
             loading.classList.remove('hidden');
             container.innerHTML = '';
 
-            // 組合提示詞：類型 + 主題 + 風格 + 固定高品質標籤
-            // 這個版本不需要 API Key，因為它只是文字拼接
-            const finalPrompt = `${typeEn}, ${subject}, ${styleEn}, highly detailed, masterpiece, 8k resolution`;
+            // 2. 組合提示詞 (零金鑰版：不呼叫 Gemini)
+            const finalPrompt = `${typeEn}, ${subject}, ${styleEn}, high quality, high resolution, detailed`;
             
-            // 直接呼叫生圖網址
-            const imgUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?width=1024&height=1024&seed=${Math.floor(Math.random()*9999)}`;
+            // 3. 生成圖片網址
+            const imgUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?width=1024&height=1024&seed=${Math.floor(Math.random()*10000)}`;
 
-            // 建立圖片元件
+            // 4. 載入圖片並顯示
             const img = new Image();
             img.src = imgUrl;
-            img.className = "w-full rounded-3xl shadow-2xl border-4 border-white mb-4";
+            img.className = "w-full rounded-[2rem] shadow-2xl border-4 border-white mb-6";
             img.onload = () => {
                 loading.classList.add('hidden');
-                btn.disabled = false;
-                btn.innerText = 'AI 開始自動產圖';
+                genBtn.disabled = false;
+                genBtn.innerText = 'AI 開始自動產圖';
                 container.innerHTML = `
                     <div class="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm mb-4">
-                        <p class="text-xs text-slate-400 italic">提示詞：${finalPrompt}</p>
+                        <p class="text-xs text-slate-400 italic text-center leading-relaxed">提示詞：${finalPrompt}</p>
                     </div>
-                    <button onclick="window.open('${imgUrl}')" class="w-full py-2 text-sm text-indigo-600 font-bold border border-indigo-200 rounded-xl mb-4">下載/查看原圖</button>
+                    <button onclick="window.open('${imgUrl}')" class="w-full py-4 text-sm text-indigo-600 font-bold border border-indigo-100 rounded-2xl bg-white shadow-sm">
+                        點擊下載/放大圖片
+                    </button>
                 `;
                 container.prepend(img);
             };
