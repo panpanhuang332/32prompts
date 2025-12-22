@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MJ 提示詞產生器 (專業邏輯版)</title>
+    <title>MJ 提示詞產生器 (動漫擴充版)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,7 +14,7 @@
         .nav-tabs { border-bottom: none; flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; gap: 5px; padding-bottom: 5px; }
         .nav-tabs .nav-link { border: none; color: #6c757d; font-size: 0.95rem; padding: 8px 12px; border-radius: 20px; background-color: #f8f9fa; transition: all 0.2s; }
         .nav-tabs .nav-link.active { color: white; background-color: #0d6efd; font-weight: bold; }
-        .nav-tabs .nav-link.disabled-tab { opacity: 0.5; pointer-events: none; background-color: #e9ecef; } /* 凍結樣式 */
+        .nav-tabs .nav-link.disabled-tab { opacity: 0.5; pointer-events: none; background-color: #e9ecef; }
         
         .app-content { flex-grow: 1; overflow-y: auto; padding: 15px; background-color: #f0f2f5; scroll-behavior: smooth; }
         .tab-content-area { display: none; animation: fadeIn 0.3s; }
@@ -22,24 +22,23 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         .category-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: opacity 0.3s; }
-        .category-card.disabled-card { opacity: 0.5; pointer-events: none; filter: grayscale(100%); } /* 卡片凍結 */
+        .category-card.disabled-card { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
 
         .category-title { font-size: 0.9rem; font-weight: bold; color: #343a40; margin-bottom: 8px; display: block; border-left: 4px solid #0d6efd; padding-left: 8px; }
         .app-footer { background: white; padding: 10px 15px; border-top: 1px solid #dee2e6; flex-shrink: 0; z-index: 20; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
         
         .loading-text { font-size: 0.8em; color: #0d6efd; margin-top: 5px; display: none; }
         .form-select { background-color: #f8f9fa; border: 1px solid #e9ecef; }
-        .form-select:disabled { background-color: #e9ecef; color: #adb5bd; cursor: not-allowed; } /* 禁用樣式 */
+        .form-select:disabled { background-color: #e9ecef; color: #adb5bd; cursor: not-allowed; }
         .nav-tabs::-webkit-scrollbar { display: none; }
         
-        /* 鎖定狀態提示 */
         .locked-badge { display: none; font-size: 0.7rem; background: #dc3545; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
     </style>
 </head>
 <body>
 
     <div class="app-header">
-        <h6 class="mb-2 fw-bold text-dark">🎨 MJ 提示詞產生器 (Pro Logic)</h6>
+        <h6 class="mb-2 fw-bold text-dark">🎨 MJ 提示詞產生器 (Anime+)</h6>
         
         <div class="mb-2">
             <div class="input-group">
@@ -130,7 +129,6 @@
 <script>
     // --- 1. 分頁切換邏輯 ---
     function switchTab(btn, targetId) {
-        // 如果按鈕被鎖定 (disabled-tab)，則不執行
         if (btn.classList.contains('disabled-tab')) return;
 
         document.querySelectorAll('.nav-link').forEach(b => {
@@ -147,8 +145,7 @@
         if (targetDiv) targetDiv.classList.add('active');
     }
 
-    // --- 2. 完整資料庫 ---
-    // 注意：key 必須包含 "id_tag" 以便後續邏輯抓取，例如 "photo_type"
+    // --- 2. 資料庫 ---
     const categorizedData = {
         "photo": { 
             "攝影類型 (Types)": [
@@ -161,7 +158,6 @@
                 { id: "photo_type", val: "sports photography", label: "運動攝影 (sports)"},
                 { id: "photo_type", val: "still life photo", label: "靜物攝影 (still life)"}
             ],
-            // 新增：光圈 (預設禁用)
             "光圈 (Aperture)": [
                 { id: "photo_aperture", val: "f/1", label: "f/1 (超大光圈)"}, { id: "photo_aperture", val: "f/1.4", label: "f/1.4"},
                 { id: "photo_aperture", val: "f/2", label: "f/2"}, { id: "photo_aperture", val: "f/2.8", label: "f/2.8"},
@@ -170,7 +166,6 @@
                 { id: "photo_aperture", val: "f/16", label: "f/16"}, { id: "photo_aperture", val: "f/22", label: "f/22"},
                 { id: "photo_aperture", val: "f/32", label: "f/32 (深景深)"}
             ],
-            // 新增：焦距 (預設禁用)
             "焦距 (Focal Length)": [
                 { id: "photo_focal", val: "20mm", label: "20mm (超廣角)"}, { id: "photo_focal", val: "24mm", label: "24mm (廣角)"},
                 { id: "photo_focal", val: "28mm", label: "28mm"}, { id: "photo_focal", val: "35mm", label: "35mm (人文)"},
@@ -178,7 +173,6 @@
                 { id: "photo_focal", val: "200mm", label: "200mm (望遠)"}, { id: "photo_focal", val: "300mm", label: "300mm"},
                 { id: "photo_focal", val: "400mm", label: "400mm"}, { id: "photo_focal", val: "600mm", label: "600mm (超望遠)"}
             ],
-            // 新增：環境與畫質輔助詞
             "環境與畫質輔助 (Auxiliary)": [
                 { val: "bright", label: "環境較明亮 (bright)"}, { val: "dark", label: "環境較暗 (dark)"},
                 { val: "realistic", label: "逼真的 (realistic)"}, { val: "b/w", label: "黑白照片 (b/w)"},
@@ -256,10 +250,22 @@
                 {val: "Kyoto Animation", label: "京都動畫"}, {val: "Marvel Animation", label: "漫威"}
             ],
             "動漫作品 (Series)": [
-                {val: "SpongeBob", label: "海綿寶寶"}, {val: "Mickey Mouse", label: "米老鼠"},
-                {val: "The Simpsons", label: "辛普森家族"}, {val: "Dragon ball", label: "七龍珠"},
-                {val: "Doraemon", label: "哆啦A夢"}, {val: "Sailor Moon", label: "美少女戰士"},
-                {val: "kimetsu no Yaiba", label: "鬼滅之刃"}, {val: "JoJo", label: "JoJo"}
+                {val: "One Piece", label: "航海王 (One Piece)"}, 
+                {val: "Detective Conan", label: "名偵探柯南 (Detective Conan)"},
+                {val: "Naruto", label: "火影忍者 (Naruto)"},
+                {val: "Slam Dunk", label: "灌籃高手 (Slam Dunk)"},
+                {val: "style of Mitsuru Adachi", label: "安達充風格 (Adachi Mitsuru)"},
+                {val: "Fist of the North Star", label: "北斗神拳 (Fist of the North Star)"},
+                {val: "Saint Seiya", label: "聖鬥士星矢 (Saint Seiya)"},
+                {val: "A Certain Scientific Railgun", label: "某科學的超電磁砲 (Scientific Railgun)"},
+                {val: "SpongeBob", label: "海綿寶寶"}, 
+                {val: "Mickey Mouse", label: "米老鼠"},
+                {val: "The Simpsons", label: "辛普森家族"}, 
+                {val: "Dragon ball", label: "七龍珠"},
+                {val: "Doraemon", label: "哆啦A夢"}, 
+                {val: "Sailor Moon", label: "美少女戰士"},
+                {val: "kimetsu no Yaiba", label: "鬼滅之刃"}, 
+                {val: "JoJo", label: "JoJo"}
             ],
             "設計與結構 (Design)": [
                 {val: "mascot logo", label: "吉祥物 Logo"}, {val: "UI design", label: "UI 介面"},
@@ -287,7 +293,6 @@
                 const select = document.createElement('select');
                 select.className = 'form-select category-select';
                 
-                // 檢查是否有特殊 ID 標記 (用於邏輯控制)
                 if (items.length > 0 && items[0].id) {
                     select.id = items[0].id;
                 }
@@ -309,12 +314,11 @@
             }
         }
         
-        // --- 綁定排他邏輯事件 ---
+        // --- 綁定排他邏輯 ---
         const photoTypeSelect = document.getElementById('photo_type');
         const apertureSelect = document.getElementById('photo_aperture');
         const focalSelect = document.getElementById('photo_focal');
         
-        // 初始狀態：禁用光圈與焦距
         if(apertureSelect) apertureSelect.disabled = true;
         if(focalSelect) focalSelect.disabled = true;
 
@@ -322,38 +326,33 @@
             photoTypeSelect.addEventListener('change', function() {
                 const isPhotoSelected = this.value !== "";
                 
-                // 1. 控制光圈與焦距 (只有選了攝影類型才能選)
                 if(apertureSelect) {
                     apertureSelect.disabled = !isPhotoSelected;
-                    if(!isPhotoSelected) apertureSelect.value = ""; // 重置
+                    if(!isPhotoSelected) apertureSelect.value = "";
                 }
                 if(focalSelect) {
                     focalSelect.disabled = !isPhotoSelected;
-                    if(!isPhotoSelected) focalSelect.value = ""; // 重置
+                    if(!isPhotoSelected) focalSelect.value = "";
                 }
 
-                // 2. 凍結/解凍 藝術與動漫分頁
                 toggleTabLock('container-art', 'btn-art', isPhotoSelected);
                 toggleTabLock('container-anime', 'btn-anime', isPhotoSelected);
             });
         }
     }
 
-    // 鎖定/解鎖功能的輔助函式
     function toggleTabLock(containerId, btnId, shouldLock) {
         const container = document.getElementById(containerId);
         const btn = document.getElementById(btnId);
         
-        // 鎖定內容 (變灰、不可點)
         const selects = container.querySelectorAll('select');
         selects.forEach(s => {
             s.disabled = shouldLock;
-            if(shouldLock) s.value = ""; // 鎖定時清空已選值
+            if(shouldLock) s.value = ""; 
         });
 
-        // 視覺回饋
         if (shouldLock) {
-            btn.classList.add('disabled-tab'); // 分頁按鈕變灰
+            btn.classList.add('disabled-tab');
             container.querySelectorAll('.category-card').forEach(c => c.classList.add('disabled-card'));
             btn.querySelector('.locked-badge').style.display = 'inline-block';
         } else {
@@ -409,7 +408,7 @@
         if (pixelRes) parts.push(pixelRes);
 
         document.querySelectorAll('.category-select').forEach(select => {
-            if (select.value && !select.disabled) { // 只收集未被禁用的選項
+            if (select.value && !select.disabled) {
                 parts.push(select.value);
             }
         });
