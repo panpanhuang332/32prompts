@@ -15,6 +15,7 @@
         textarea { resize: none; }
         .category-group { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h5 { border-left: 5px solid #0d6efd; padding-left: 10px; margin-bottom: 20px; color: #343a40; }
+        .loading-text { font-size: 0.9em; color: #6c757d; display: none; }
     </style>
 </head>
 <body>
@@ -22,14 +23,21 @@
 <div class="container">
     <header class="text-center mb-4">
         <h1>🎨 MJ 提示詞產生器</h1>
-        <p class="text-muted">資料來源：OXXO.STUDIO</p>
+        <p class="text-muted">資料來源：OXXO.STUDIO | 支援自動中翻英</p>
     </header>
 
     <div class="category-group">
         <h5>1. 畫面主體 (必填)</h5>
         <div class="mb-3">
-            <label for="mainSubject" class="form-label">請輸入想要產生的內容 (例如：一隻貓坐在屋頂上)</label>
-            <input type="text" class="form-control" id="mainSubject" placeholder="輸入英文描述效果最佳，例如：A cat sitting on a roof">
+            <label for="mainSubject" class="form-label">請輸入想要產生的內容 (支援中文)</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="mainSubject" placeholder="例如：一隻貓坐在屋頂上">
+                <button class="btn btn-outline-primary" type="button" id="translateBtn" onclick="translateInput()">
+                    🔄 中翻英
+                </button>
+            </div>
+            <div id="translationStatus" class="loading-text mt-1">正在翻譯中...</div>
+            <div class="form-text text-muted">輸入中文後，可點選「中翻英」或直接產出，系統會自動轉換。</div>
         </div>
     </div>
 
@@ -237,9 +245,66 @@
         }
     }
 
+    // 判斷是否包含中文字符
+    function hasChinese(text) {
+        return /[\u4e00-\u9fa5]/.test(text);
+    }
+
+    // 執行翻譯 (使用 MyMemory API)
+    async function translateInput() {
+        const inputEl = document.getElementById('mainSubject');
+        const statusEl = document.getElementById('translationStatus');
+        const text = inputEl.value.trim();
+
+        if (!text) return;
+        
+        // 如果沒有中文，且使用者點擊了，就當作不需要翻譯，但也可以不做動作
+        if (!hasChinese(text)) {
+            // 已經是英文或不需要翻譯
+            return text; 
+        }
+
+        // UI 狀態更新
+        statusEl.style.display = 'block';
+        document.getElementById('translateBtn').disabled = true;
+
+        try {
+            // 呼叫 MyMemory API (免費公開 API)
+            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=zh-TW|en`);
+            const data = await response.json();
+            
+            if (data.responseData && data.responseData.translatedText) {
+                inputEl.value = data.responseData.translatedText;
+                statusEl.style.display = 'none';
+                return data.responseData.translatedText;
+            } else {
+                throw new Error("Translation failed");
+            }
+        } catch (error) {
+            console.error("翻譯失敗:", error);
+            statusEl.textContent = "翻譯服務忙碌中，請稍後再試或直接產出。";
+            setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+            return text; // 失敗時回傳原文
+        } finally {
+            document.getElementById('translateBtn').disabled = false;
+        }
+    }
+
     // 產出提示詞
-    function generatePrompt() {
-        const mainSubject = document.getElementById('mainSubject').value.trim();
+    async function generatePrompt() {
+        let mainSubject = document.getElementById('mainSubject').value.trim();
+        const generateBtn = document.querySelector('.btn-primary');
+        const originalBtnText = generateBtn.textContent;
+
+        // 如果檢測到中文，先嘗試自動翻譯
+        if (hasChinese(mainSubject)) {
+            generateBtn.textContent = "⏳ 翻譯中...";
+            generateBtn.disabled = true;
+            mainSubject = await translateInput();
+            generateBtn.textContent = originalBtnText;
+            generateBtn.disabled = false;
+        }
+
         const selects = document.querySelectorAll('.category-select');
         let promptParts = [];
 
