@@ -3,98 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>一指提示 (修復版)</title>
+    <title>一指提示 (Obsidian)</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#050505">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
     <style>
-        /* --- 核心佈局 --- */
-        body { background-color: #f0f2f5; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        .app-header { background: white; padding: 15px 15px 0 15px; box-shadow: 0 1px 5px rgba(0,0,0,0.05); z-index: 10; flex-shrink: 0; }
-        
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .app-title { margin: 0; font-weight: bold; color: #343a40; font-size: 1.1rem; }
-        
-        .btn-google-login { font-size: 0.8rem; padding: 5px 10px; border-radius: 20px; background-color: white; border: 1px solid #dadce0; color: #3c4043; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-        .user-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid #4285f4; }
-        .user-info { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #5f6368; cursor: pointer; }
-        
-        .nav-tabs { border-bottom: none; flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; gap: 5px; padding-bottom: 5px; }
-        .nav-tabs .nav-link { border: none; color: #6c757d; font-size: 0.95rem; padding: 8px 12px; border-radius: 20px; background-color: #f8f9fa; transition: all 0.2s; white-space: nowrap; }
-        .nav-tabs .nav-link.active { color: white; background-color: #4285f4; font-weight: bold; }
-        .nav-tabs .nav-link.disabled-tab { opacity: 0.6; cursor: not-allowed; background-color: #e9ecef; color: #adb5bd; }
-        
-        .limit-badge { color: #dc3545; font-weight: bold; font-size: 0.8em; margin-left: 2px; vertical-align: top; }
-        
-        .app-content { flex-grow: 1; overflow-y: auto; padding: 15px; background-color: #f0f2f5; scroll-behavior: smooth; }
-        .tab-content-area { display: none; animation: fadeIn 0.3s; }
-        .tab-content-area.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- Project Obsidian Mirror: Core Design System --- */
+        :root {
+            --bg-deep: #050505;          /* 極致墨黑 */
+            --bg-surface: #0e0e0e;       /* 鋼琴黑表面 */
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-highlight: rgba(255, 255, 255, 0.08);
+            --text-main: #E0E0E0;        /* 鏡面銀文字 */
+            --text-sub: #9ca3af;         /* 鉑金灰 */
+            --accent-glow: #3b82f6;      /* 深淵藍光暈 */
+            --shadow-deep: 0 10px 30px rgba(0, 0, 0, 0.9);
+        }
 
-        .category-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .category-card.disabled-card { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
-        .category-title { font-size: 0.9rem; font-weight: bold; color: #343a40; margin-bottom: 8px; display: block; border-left: 4px solid #4285f4; padding-left: 8px; }
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Noto Sans TC', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            /* 背景微細紋理，增加質感 */
+            background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 60%);
+        }
+
+        /* --- Header: 懸浮的黑曜石 --- */
+        .app-header {
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 15px 15px 10px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .app-title { 
+            margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 700; 
+            font-size: 1.1rem; letter-spacing: 1px;
+            background: linear-gradient(90deg, #fff, #999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+
+        /* --- Buttons & Inputs: 鋼琴烤漆質感 --- */
+        /* Google 登入按鈕 */
+        .btn-google-login {
+            font-size: 0.8rem; padding: 6px 14px; border-radius: 50px;
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border: 1px solid var(--glass-border);
+            color: #ccc;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 4px 4px 8px #000, -2px -2px 5px #222; /* Neumorphism Dark */
+            transition: all 0.3s ease;
+        }
+        .btn-google-login:active { box-shadow: inset 3px 3px 6px #000, inset -2px -2px 5px #222; }
         
-        .app-footer { background: white; padding: 10px 15px; border-top: 1px solid #dee2e6; flex-shrink: 0; z-index: 20; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
-        .loading-text { font-size: 0.8em; color: #4285f4; margin-top: 5px; display: none; }
-        .form-select, .form-control { background-color: #f8f9fa; border: 1px solid #e9ecef; }
-        .locked-badge { display: none; font-size: 0.7rem; background: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+        .user-avatar { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); }
+        .user-info { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #bbb; cursor: pointer; }
 
-        .camera-preview-box { position: relative; width: 60px; height: 60px; background: #e9ecef; border-radius: 8px; overflow: hidden; display: none; border: 2px solid #4285f4; margin-right: 10px; flex-shrink: 0; }
-        .captured-image { width: 100%; height: 100%; object-fit: cover; }
-        .btn-clear-img { position: absolute; top: 0; right: 0; background: rgba(220, 53, 69, 0.9); color: white; border: none; width: 20px; height: 20px; font-size: 14px; line-height: 20px; text-align: center; cursor: pointer; z-index: 5; }
+        /* 輸入框 (Input Fields) */
+        .form-control, .form-select {
+            background-color: #080808;
+            border: 1px solid #333;
+            border-top: 1px solid #444; /* 頂光效果 */
+            color: #fff;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.95rem;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.8); /* 內凹深邃感 */
+        }
+        .form-control::placeholder { color: #555; }
+        .form-control:focus, .form-select:focus {
+            background-color: #000;
+            border-color: #666;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.9), 0 0 8px rgba(255,255,255,0.1);
+            color: #fff;
+        }
 
-        .mode-switch-container { display: flex; gap: 5px; margin-bottom: 10px; background: #f1f3f4; padding: 4px; border-radius: 8px; }
-        .mode-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 0.85rem; border-radius: 6px; color: #5f6368; font-weight: bold; transition: all 0.2s; }
-        .mode-btn.active { background: white; color: #1967d2; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .mode-btn.mode-reverse.active { color: #8e24aa; }
+        /* 模式切換按鈕 (Tabs) */
+        .mode-switch-container { 
+            display: flex; gap: 8px; margin-bottom: 15px; 
+            background: rgba(255,255,255,0.03); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .mode-btn { 
+            flex: 1; border: none; background: transparent; padding: 8px; 
+            font-size: 0.85rem; border-radius: 8px; color: #666; 
+            font-weight: 500; transition: all 0.3s; 
+        }
+        .mode-btn.active { 
+            background: linear-gradient(145deg, #222, #111);
+            color: #fff; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .mode-btn.mode-reverse.active { 
+            color: #d1c4e9; border: 1px solid rgba(171, 71, 188, 0.3);
+            background: linear-gradient(145deg, #2a0a2e, #1a051d);
+        }
 
+        /* 功能按鈕區 */
         .action-bar { display: flex; gap: 10px; margin-bottom: 10px; }
-        .btn-action { flex: 1; font-weight: bold; border-radius: 8px; padding: 8px; font-size: 0.9rem; border: 1px solid transparent; }
-        .btn-upload { background-color: #fff0f1; color: #dc3545; border-color: #ffcdd2; }
-        .btn-random { background-color: #fff8e1; color: #f57f17; border-color: #ffecb3; }
-        .nav-tabs::-webkit-scrollbar { display: none; }
+        .btn-action { 
+            flex: 1; border: none; border-radius: 12px; padding: 10px; 
+            font-size: 0.9rem; font-weight: 500; color: #fff;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .btn-action:active { transform: translateY(2px); }
+        
+        /* 鏡面效果：按鈕上的光澤 */
+        .btn-action::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+            pointer-events: none;
+        }
+
+        .btn-upload { background: linear-gradient(135deg, #b71c1c 0%, #7f0000 100%); border: 1px solid #e53935; }
+        .btn-random { background: linear-gradient(135deg, #f57f17 0%, #e65100 100%); border: 1px solid #ffb300; }
+        .btn-translate { 
+            background: #111; color: #bbb; border: 1px solid #444; border-radius: 0 12px 12px 0; 
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.05);
+        }
+
+        /* 分頁導航 (Pills) */
+        .nav-tabs { border: none; gap: 8px; padding-bottom: 0; }
+        .nav-link { 
+            border: 1px solid transparent; border-radius: 20px; 
+            background: rgba(255,255,255,0.05); color: #888; 
+            font-size: 0.85rem; padding: 6px 14px; 
+            transition: all 0.3s;
+        }
+        .nav-link.active { 
+            background: #000; 
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff; 
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+        .nav-link.disabled-tab { opacity: 0.3; cursor: not-allowed; background: transparent; border: 1px solid #333; }
+
+        /* --- Content Cards: 寶石切割感 --- */
+        .app-content { flex-grow: 1; overflow-y: auto; padding: 20px 15px; }
+        
+        .category-card {
+            background: linear-gradient(145deg, #111, #080808); /* 斜向漸層模擬光線 */
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid rgba(255,255,255,0.15); /* 頂部高光邊框 */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        
+        .category-title { 
+            font-size: 0.95rem; color: #fff; margin-bottom: 15px; 
+            border-left: 3px solid var(--accent-glow); padding-left: 10px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); /* 文字微發光 */
+        }
+
+        /* --- Footer: 底部懸浮艙 --- */
+        .app-footer {
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 15px 20px 25px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            z-index: 200;
+        }
+        
+        #generateBtn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* 深海藍 */
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px; padding: 12px;
+            font-size: 1.1rem; letter-spacing: 1px; color: white;
+            box-shadow: 0 0 15px rgba(42, 82, 152, 0.4); /* 藍色光暈 */
+            width: 100%; font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        #generateBtn:active { transform: scale(0.98); box-shadow: 0 0 5px rgba(42, 82, 152, 0.4); }
+
+        #outputPrompt {
+            background-color: #050505; color: #00ff9d; /* 駭客綠文字 */
+            border: 1px solid #333; font-family: monospace; font-size: 0.85rem;
+        }
+
+        /* 其他元件 */
+        .camera-preview-box { width: 60px; height: 60px; border-radius: 10px; border: 1px solid #555; overflow: hidden; display: none; margin-right: 10px; position: relative; box-shadow: 0 2px 5px #000; }
+        .btn-clear-img { background: rgba(0,0,0,0.7); color: #fff; }
+        
+        .limit-badge { color: #ff5252; font-size: 0.7em; margin-left: 3px; vertical-align: top; font-weight: 800; text-shadow: 0 0 5px rgba(255, 82, 82, 0.5); }
+        .locked-badge { display: none; font-size: 0.7rem; background: #333; color: #aaa; padding: 2px 6px; border-radius: 4px; margin-left: 5px; border: 1px solid #555; }
+        .loading-text { color: var(--accent-glow); font-size: 0.8rem; margin-top: 5px; display: none; }
+        
+        /* 滾動條美化 */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
 <body>
 
     <div class="app-header">
         <div class="top-bar">
-            <h6 class="app-title">🎨 一指提示</h6>
+            <h6 class="app-title">✨ 一指提示</h6>
             <button id="loginBtn" class="btn-google-login" onclick="googleLogin()">
-                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
-                登入
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="16" alt="G"> 登入
             </button>
             <div id="userInfo" class="user-info" style="display: none;" onclick="googleLogout()">
-                <span id="userName">User</span>
                 <img id="userPhoto" src="" class="user-avatar">
+                <span id="userName">User</span>
             </div>
         </div>
         
         <div class="mode-switch-container">
-            <button class="mode-btn active" onclick="setMode('create')" id="mode-create">✨ 繪圖指令</button>
+            <button class="mode-btn active" onclick="setMode('create')" id="mode-create">🎨 繪圖指令</button>
             <button class="mode-btn mode-reverse" onclick="setMode('reverse')" id="mode-reverse">🔮 反推提示詞</button>
         </div>
 
         <div class="mb-2">
-            <div class="input-group mb-2" id="inputRow">
+            <div class="d-flex align-items-center mb-2" id="inputRow">
                 <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" onchange="handleImageSelect(this)">
                 <div id="previewBox" class="camera-preview-box">
                     <img id="finalImage" class="captured-image">
-                    <button class="btn-clear-img" onclick="clearPhoto()">×</button>
+                    <button class="btn-clear-img" onclick="clearPhoto()">✕</button>
                 </div>
-                <input type="text" class="form-control" id="mainSubject" placeholder="輸入關鍵字 (如: 貓)...">
-                <button class="btn btn-outline-primary" type="button" id="translateBtn" onclick="translateInput()">中翻英</button>
+                <div class="input-group">
+                    <input type="text" class="form-control border-end-0" id="mainSubject" placeholder="輸入內容 (如: 貓)..." style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                    <button class="btn btn-translate" type="button" id="translateBtn" onclick="translateInput()">中翻英</button>
+                </div>
             </div>
             
             <div class="action-bar">
-                <button class="btn-action btn-upload" type="button" onclick="triggerNativeCamera()">📸 上傳圖片</button>
-                <button class="btn-action btn-random" id="btnRandom" type="button" onclick="autoRandomize()">🎲 隨機產生</button>
+                <button class="btn-action btn-upload" type="button" onclick="triggerNativeCamera()">
+                    📸 上傳圖片
+                </button>
+                <button class="btn-action btn-random" id="btnRandom" type="button" onclick="autoRandomize()">
+                    🎲 隨機靈感
+                </button>
             </div>
-            <div id="translationStatus" class="loading-text">正在翻譯中...</div>
+            
+            <div id="translationStatus" class="loading-text">✨ AI 正在翻譯中...</div>
         </div>
 
         <div class="nav nav-tabs" id="myTab" role="tablist">
@@ -116,12 +280,12 @@
                 <label class="category-title">📐 圖片比例</label>
                 <select class="form-select" id="aspectRatio">
                     <option value="" selected>1:1 (預設正方形)</option>
-                    <optgroup label="橫向">
+                    <optgroup label="橫向 (Landscape)">
                         <option value="16:9">16:9 (寬螢幕/YT)</option>
                         <option value="21:9">21:9 (Notion封面)</option>
                         <option value="4:3">4:3 (標準照片)</option>
                     </optgroup>
-                    <optgroup label="直向">
+                    <optgroup label="直向 (Portrait)">
                         <option value="4:5">4:5 (IG 貼文)</option>
                         <option value="3:4">3:4 (直式照片)</option>
                         <option value="9:16">9:16 (限動/Reels)</option>
@@ -129,7 +293,7 @@
                 </select>
             </div>
             <div class="category-card">
-                <label class="category-title">💎 解析度</label>
+                <label class="category-title">💎 畫質與細節</label>
                 <select class="form-select" id="pixelResolution">
                     <option value="" selected>預設</option>
                     <optgroup label="社群/螢幕">
@@ -148,15 +312,15 @@
             <div class="category-card">
                 <label class="category-title">🔤 插入文字</label>
                 <div class="mb-3">
-                    <label class="form-label small">文字內容</label>
+                    <label class="form-label text-light small">文字內容</label>
                     <input type="text" class="form-control" id="textContent" placeholder="例如: Hello World">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label small">位置說明</label>
+                    <label class="form-label text-light small">位置說明</label>
                     <input type="text" class="form-control" id="textPosition" placeholder="例如: 左上角, 浮在空中">
                 </div>
                  <div class="mb-3">
-                    <label class="form-label small">字體風格</label>
+                    <label class="form-label text-light small">字體風格</label>
                     <select class="form-select category-select" id="textFont"></select>
                 </div>
             </div>
@@ -171,13 +335,13 @@
 
     <div class="app-footer">
         <div class="d-grid gap-2 mb-2">
-            <button class="btn btn-primary fw-bold" id="generateBtn" onclick="generatePrompt()" style="background-color: #4285f4; border-color: #4285f4;">
+            <button class="btn btn-primary fw-bold" id="generateBtn" onclick="generatePrompt()">
                 ✨ 產出指令
             </button>
         </div>
         <div class="input-group input-group-sm">
-            <textarea class="form-control" id="outputPrompt" rows="3" readonly placeholder="提示詞將顯示於此" style="resize: none; font-size: 0.85rem;"></textarea>
-            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard()">複製</button>
+            <textarea class="form-control" id="outputPrompt" rows="3" readonly placeholder="提示詞將顯示於此"></textarea>
+            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard()" style="background: #222; color: #fff; border: 1px solid #444;">複製</button>
         </div>
     </div>
 
@@ -195,9 +359,7 @@
     };
 
     let isLoggedIn = false;
-    try {
-        firebase.initializeApp(firebaseConfig);
-    } catch(e) { console.error("Firebase Init Error", e); }
+    try { firebase.initializeApp(firebaseConfig); } catch(e) { console.error("Firebase Init Error", e); }
 
     function googleLogin() {
         if (!firebase.apps.length) return alert("請先設定程式碼中的 Firebase Config！");
@@ -205,11 +367,8 @@
         firebase.auth().signInWithPopup(provider).catch((error) => alert("登入失敗: " + error.message));
     }
 
-    function googleLogout() {
-        if(confirm("確定要登出嗎？")) firebase.auth().signOut();
-    }
+    function googleLogout() { if(confirm("確定要登出嗎？")) firebase.auth().signOut(); }
 
-    // 監聽登入狀態並控制權限
     if (firebase.apps.length) {
         firebase.auth().onAuthStateChanged((user) => {
             const loginBtn = document.getElementById('loginBtn');
@@ -217,7 +376,6 @@
             const restrictedTabs = ['btn-photo', 'btn-art', 'btn-anime'];
 
             if (user) {
-                // 已登入
                 isLoggedIn = true;
                 loginBtn.style.display = 'none';
                 userInfo.style.display = 'flex';
@@ -239,13 +397,10 @@
                     toggleLock('container-art', 'btn-art', false);
                     toggleLock('container-anime', 'btn-anime', false);
                 }
-
             } else {
-                // 未登入
                 isLoggedIn = false;
                 loginBtn.style.display = 'flex';
                 userInfo.style.display = 'none';
-
                 restrictedTabs.forEach(id => {
                     const btn = document.getElementById(id);
                     btn.classList.add('disabled-tab');
@@ -253,18 +408,12 @@
                         btn.innerHTML = btn.innerHTML.replace(' <span class="limit-badge">限</span>', '') + ' <span class="limit-badge">限</span>';
                     }
                 });
-
                 const activeTab = document.querySelector('.nav-link.active');
-                if (restrictedTabs.includes(activeTab.id)) {
-                    switchTab(document.querySelector('.nav-link'), 'page-settings');
-                }
+                if (restrictedTabs.includes(activeTab.id)) switchTab(document.querySelector('.nav-link'), 'page-settings');
             }
         });
     }
 
-    // ==========================================
-    //  主程式邏輯
-    // ==========================================
     let currentMode = 'create';
     const fontData = [{val: "Bold sans-serif", label: "粗體無襯線"}, {val: "Elegant serif", label: "優雅襯線"}, {val: "Handwritten script", label: "手寫草書"}, {val: "Cyberpunk neon style", label: "賽博龐克霓虹"}, {val: "Vintage retro style", label: "復古風格"}, {val: "Graffiti style", label: "塗鴉風格"}, {val: "Calligraphy brush stroke", label: "書法毛筆"}, {val: "Pixel art style", label: "像素風格"}];
 
@@ -308,7 +457,6 @@
         fontSelect.appendChild(new Option("不指定", ""));
         fontData.forEach(item => fontSelect.appendChild(new Option(item.label, item.val)));
 
-        // 自動填充容器資料
         for (const [tabKey, categories] of Object.entries(categorizedData)) {
             const container = document.getElementById(`container-${tabKey}`);
             if (!container) continue;
@@ -316,8 +464,6 @@
                 const card = document.createElement('div'); card.className = 'category-card';
                 const label = document.createElement('label'); label.className = 'category-title'; label.textContent = catName;
                 card.appendChild(label);
-                
-                // 這裡加入 category-select class，方便之後取值，但「設定頁」的選單沒有這個 class
                 const select = document.createElement('select'); select.className = 'form-select category-select';
                 if (items.length > 0 && items[0].id) select.id = items[0].id;
                 select.appendChild(new Option("不指定", ""));
@@ -364,9 +510,9 @@
             return;
         }
         document.querySelectorAll('.nav-link').forEach(b => {
-            b.classList.remove('active'); b.style.backgroundColor='#f8f9fa'; b.style.color='#6c757d';
+            b.classList.remove('active'); b.style.backgroundColor='rgba(255,255,255,0.05)'; b.style.color='#888';
         });
-        btn.classList.add('active'); btn.style.backgroundColor='#4285f4'; btn.style.color='white';
+        btn.classList.add('active'); btn.style.backgroundColor='#000'; btn.style.color='white';
         document.querySelectorAll('.tab-content-area').forEach(div => div.classList.remove('active'));
         document.getElementById(targetId).classList.add('active');
     }
@@ -385,13 +531,13 @@
         const genBtn = document.getElementById('generateBtn');
         if (isReverse) {
             switchTab(document.querySelector('.nav-link'), 'page-settings');
-            hint.innerHTML = `<div style="background: rgba(255,255,255,0.8); padding: 10px; border-radius: 12px; color: #6a1b9a; border: 1px solid #e1bee7;"><strong>🔮 反推提示詞模式</strong><br>1. 按「上傳圖片」。<br>2. 按產出，複製指令。<br>3. 在 Gemini 貼上文字並<b>上傳圖片</b>。</div>`;
+            hint.innerHTML = `<div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; color: #d1c4e9; border: 1px solid rgba(255,255,255,0.1);"><strong>🔮 反推提示詞模式</strong><br>1. 按「上傳圖片」。<br>2. 按產出，複製指令。<br>3. 在 Gemini 貼上文字並<b>上傳圖片</b>。</div>`;
             genBtn.textContent = "🔍 產出分析指令";
-            genBtn.style.background = "linear-gradient(135deg, #ab47bc 0%, #8e24aa 100%)";
+            genBtn.style.background = "linear-gradient(135deg, #7b1fa2 0%, #4a148c 100%)";
         } else {
             hint.innerHTML = "";
             genBtn.textContent = "✨ 產出繪圖指令";
-            genBtn.style.background = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+            genBtn.style.background = "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)";
         }
     }
 
@@ -416,7 +562,6 @@
         }
         const container = document.getElementById(targetContainer);
         if (!container) return;
-        
         let changedCount = 0;
         container.querySelectorAll('select.category-select').forEach(select => {
             if (select.disabled) return;
@@ -482,6 +627,7 @@
             parts.push("You are an expert Prompt Engineer.");
             parts.push("Please analyze the attached image in extreme detail.");
             parts.push("Provide a comprehensive text prompt that could generate this exact image.");
+            parts.push("Include descriptions of: 1. Subject & Appearance 2. Pose & Expression 3. Scene & Lighting 4. Art Style.");
             parts.push("Output format: A single, high-quality descriptive paragraph in English.");
         } else {
             let mainSubject = document.getElementById('mainSubject').value.trim();
@@ -512,11 +658,9 @@
                  if (txtPosition) parts.push(`Text Position: ${txtPosition}.`);
                  if (txtFont) parts.push(`Font Style: ${txtFont}.`);
             }
-            
-            // 這裡只收集有 category-select class 的項目，自動避開設定頁的選單
             let details = [];
             document.querySelectorAll('.category-select').forEach(select => {
-                if (select.value && !select.disabled) {
+                if (select.value && !select.disabled && select.id !== 'aspectRatio' && select.id !== 'pixelResolution' && select.id !== 'textFont') {
                     details.push(select.value);
                 }
             });
