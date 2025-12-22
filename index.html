@@ -3,157 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第一次AI生圖就上手 - 9527</title>
+    <title>AI 產圖大師 9527</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#6366f1">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .loading-dots:after {
-            content: '.';
-            animation: dots 1.5s steps(5, end) infinite;
-        }
-        @keyframes dots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60% { content: '...'; }
-            80%, 100% { content: ''; }
-        }
+        .loading-dots:after { content: '.'; animation: dots 1.5s steps(5, end) infinite; }
+        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
-
     <div class="max-w-2xl w-full space-y-8 text-center">
-        <div>
-            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                第一次AI生圖就上手
-            </h1>
-            <p class="text-gray-400 mt-2 text-lg">9527</p>
+        <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">AI 產圖大師 9527</h1>
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-2xl">
+            <textarea id="userInput" rows="4" class="w-full bg-gray-900 p-4 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="輸入描述，例如：科幻風格的台北街頭..."></textarea>
+            <button id="generateBtn" class="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 py-3 rounded-lg font-bold hover:scale-105 transition">AI 思考並自動產圖</button>
         </div>
-
-        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl border border-gray-700">
-            <textarea id="userInput" rows="4" 
-                class="w-full bg-gray-900 text-white p-4 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
-                placeholder="輸入想要生成的內容，例如：一隻在草地上睡覺的貓..."></textarea>
-            
-            <button id="generateBtn" 
-                class="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
-                AI 思考並自動產圖
-            </button>
-        </div>
-
-        <div id="statusArea" class="hidden">
-            <p class="text-blue-400 italic loading-dots">Gemini 正在思考並擴充細節</p>
-        </div>
-
+        <div id="statusArea" class="hidden"><p class="text-blue-400 italic loading-dots">Gemini 正在分析需求</p></div>
         <div id="resultArea" class="space-y-4"></div>
-
-        <div class="pt-8 border-t border-gray-800">
-            <button onclick="resetKey()" class="text-xs text-gray-500 hover:text-gray-300 underline">
-                重設 API Key
-            </button>
-        </div>
+        <button onclick="resetKey()" class="text-xs text-gray-500 underline mt-4">更換 API Key</button>
     </div>
 
     <script>
-        // 1. 註冊 Service Worker (PWA)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('SW 註冊成功'))
-                    .catch(err => console.log('SW 註冊失敗', err));
-            });
-        }
-
-        // 2. 安全金鑰管理：使用 localStorage 避免代碼洩露
         let API_KEY = localStorage.getItem('MY_AI_KEY');
 
-        function checkAndGetApiKey() {
-            if (!API_KEY || API_KEY === 'null' || API_KEY.length < 10) {
-                const input = prompt("請輸入您的 Gemini API Key：\n(此金鑰將安全儲存在您的瀏覽器中，不會上傳至 GitHub)");
-                if (input && input.trim().length > 10) {
-                    API_KEY = input.trim();
-                    localStorage.setItem('MY_AI_KEY', API_KEY);
-                    return true;
-                }
-                alert("未偵測到有效的 API Key，請重新輸入。");
-                return false;
+        async function initKey() {
+            if (!API_KEY) {
+                const key = prompt("請輸入 Gemini API Key：");
+                if (key) { localStorage.setItem('MY_AI_KEY', key); API_KEY = key; }
             }
-            return true;
         }
 
-        function resetKey() {
-            localStorage.removeItem('MY_AI_KEY');
-            alert("金鑰已清除，網頁將重新載入。");
-            location.reload();
-        }
+        function resetKey() { localStorage.removeItem('MY_AI_KEY'); location.reload(); }
 
-        const generateBtn = document.getElementById('generateBtn');
-        const userInput = document.getElementById('userInput');
-        const statusArea = document.getElementById('statusArea');
-        const resultArea = document.getElementById('resultArea');
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            const promptContent = document.getElementById('userInput').value.trim();
+            if (!promptContent) return alert('請輸入內容');
+            await initKey();
 
-        generateBtn.addEventListener('click', async () => {
-            const promptText = userInput.value.trim();
-            if (!promptText) return alert('請輸入想要生成的內容');
-            
-            // 檢查金鑰
-            if (!checkAndGetApiKey()) return;
+            const btn = document.getElementById('generateBtn');
+            const status = document.getElementById('statusArea');
+            const result = document.getElementById('resultArea');
 
-            // 初始化介面
-            generateBtn.disabled = true;
-            statusArea.classList.remove('hidden');
-            resultArea.innerHTML = '';
+            btn.disabled = true;
+            status.classList.remove('hidden');
+            result.innerHTML = '';
 
-            // 使用更穩定的 2.0 模型與 v1 介面
-            const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+            // 修正：使用 v1beta 與 2.0-flash 確保最高成功率
+            const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
             try {
-                const response = await fetch(GEMINI_URL, {
+                const resp = await fetch(URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: `你是一個 AI 繪圖專家。請根據使用者的中文描述：「${promptText}」，將其擴充為一段精美且詳細的英文繪圖提示詞 (Prompt)。請只輸出英文提示詞，不要有其他解釋。` }]
-                        }]
-                    })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: `你是一位繪圖專家。將「${promptContent}」擴充為一段詳細的英文繪圖提示詞，只輸出英文。` }] }] })
                 });
 
-                const data = await response.json();
-                
-                if (data.error) {
-                    // 如果金鑰無效，提示使用者重設
-                    if (data.error.message.includes('API key')) {
-                        localStorage.removeItem('MY_AI_KEY');
-                        throw new Error('API Key 無效或已過期，請點擊確定後重新輸入。');
-                    }
-                    throw new Error(data.error.message);
-                }
+                const data = await resp.json();
+                if (data.error) throw new Error(data.error.message);
 
-                const refinedPrompt = data.candidates[0].content.parts[0].text;
-                const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(refinedPrompt)}?width=1024&height=1024&seed=${Math.floor(Math.random() * 1000)}`;
-                
-                resultArea.innerHTML = `
-                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
-                        <p class="text-sm text-gray-400 mb-2 italic text-left">優化後的提示詞：${refinedPrompt}</p>
-                        <img src="${imageUrl}" alt="AI Generated" class="w-full rounded-lg shadow-lg" onload="document.getElementById('statusArea').classList.add('hidden')">
-                    </div>
-                `;
+                const refined = data.candidates[0].content.parts[0].text;
+                const imgUrl = `https://pollinations.ai/p/${encodeURIComponent(refined)}?width=1024&height=1024&seed=${Math.random()}`;
 
-            } catch (error) {
-                console.error(error);
-                alert('生圖失敗：' + error.message);
-                statusArea.classList.add('hidden');
-            } finally {
-                generateBtn.disabled = false;
-            }
+                result.innerHTML = `<div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                    <p class="text-xs text-gray-400 mb-2">優化提示詞：${refined}</p>
+                    <img src="${imgUrl}" class="w-full rounded-lg shadow-lg" onload="document.getElementById('statusArea').classList.add('hidden')">
+                </div>`;
+            } catch (e) {
+                alert("錯誤：" + e.message + "\n\n提示：請確認是否已在 Google Cloud Console 啟用 Generative Language API。");
+                status.classList.add('hidden');
+            } finally { btn.disabled = false; }
         });
-
-        // 頁面載入時檢查金鑰
-        window.onload = () => {
-            if (!API_KEY) {
-                console.log("等待使用者輸入金鑰...");
-            }
-        };
+        initKey();
     </script>
 </body>
 </html>
