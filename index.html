@@ -2,90 +2,88 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI 產圖大師 9527</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一次AI生圖就上手 - 9527</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    <style>
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
 
-        // 【第一部分：Firebase 登入配置】(從截圖 20251222_074845 取得)
-        const firebaseConfig = {
-            apiKey: "AIzaSyA7wvE5K5S6PyAlKOTM-PF7XNtikqEnCTQ",
-            authDomain: "first-ai-50594.firebaseapp.com",
-            projectId: "first-ai-50594",
-            storageBucket: "first-ai-50594.firebasestorage.app",
-            messagingSenderId: "125060763248",
-            appId: "1:125060763248:web:68f308de378e0568052eb5"
-        };
+    <div class="max-w-2xl w-full space-y-8 text-center">
+        <div>
+            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                第一次AI生圖就上手
+            </h1>
+            <p class="text-gray-400 mt-2 text-lg">9527</p>
+        </div>
 
-        // 【第二部分：Gemini AI 思考鑰匙】(你剛剛提供的那一把)
-        const GEMINI_API_KEY = "AIzaSyABQ0n24ogxQqu75eio9fZJmE5qz3sk-HQ";
-
-        // 初始化 Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        // 登入功能邏輯
-        window.login = async () => {
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (error) {
-                console.error("登入詳細錯誤:", error);
-                alert("登入失敗！請嘗試使用 Chrome『無痕模式』開啟網頁。");
-            }
-        };
-        window.logout = () => signOut(auth);
-
-        // 監聽登入狀態切換 UI
-        onAuthStateChanged(auth, (user) => {
-            const loginBtn = document.getElementById('loginBtn');
-            const userInfo = document.getElementById('userInfo');
-            const userImg = document.getElementById('userImg');
-            const generateBtn = document.getElementById('generateBtn');
-            const loginRequiredMsg = document.getElementById('loginRequiredMsg');
-
-            if (user) {
-                loginBtn.classList.add('hidden');
-                userInfo.classList.remove('hidden');
-                userImg.src = user.photoURL;
-                generateBtn.disabled = false;
-                loginRequiredMsg.classList.add('hidden');
-            } else {
-                loginBtn.classList.remove('hidden');
-                userInfo.classList.add('hidden');
-                generateBtn.disabled = true;
-                loginRequiredMsg.classList.remove('hidden');
-            }
-        });
-
-        // --- AI 思考與自動產圖核心 ---
-        window.generateImage = async () => {
-            const content = document.getElementById('userInput').value.trim();
-            if (!content) return alert("請輸入想畫的主題");
+        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl border border-gray-700">
+            <textarea id="userInput" rows="4" 
+                class="w-full bg-gray-900 text-white p-4 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+                placeholder="輸入想要生成的內容，例如：一隻在草地上睡覺的貓..."></textarea>
             
-            const btn = document.getElementById('generateBtn');
-            const loading = document.getElementById('loadingBox');
-            const resultBox = document.getElementById('resultBox');
-            const resultImg = document.getElementById('resultImg');
-            const finalPrompt = document.getElementById('finalPrompt');
+            <button id="generateBtn" 
+                class="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                AI 思考並自動產圖
+            </button>
+        </div>
 
-            btn.disabled = true;
-            loading.classList.remove('hidden');
-            resultBox.classList.add('hidden');
+        <div id="statusArea" class="hidden">
+            <p class="text-blue-400 italic loading-dots">Gemini 正在思考並擴充細節</p>
+        </div>
+
+        <div id="resultArea" class="space-y-4"></div>
+    </div>
+
+    <script>
+        // 註冊 Service Worker (PWA 功能)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW 註冊成功'))
+                    .catch(err => console.log('SW 註冊失敗', err));
+            });
+        }
+
+        // 請在此處填入你的 API Key
+        const API_KEY = 'YOUR_API_KEY_HERE'; 
+        // 修正：將模型更新為 gemini-2.0-flash
+        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+        const generateBtn = document.getElementById('generateBtn');
+        const userInput = document.getElementById('userInput');
+        const statusArea = document.getElementById('statusArea');
+        const resultArea = document.getElementById('resultArea');
+
+        generateBtn.addEventListener('click', async () => {
+            const prompt = userInput.value.trim();
+            if (!prompt) return alert('請輸入內容');
+
+            generateBtn.disabled = true;
+            statusArea.classList.remove('hidden');
+            resultArea.innerHTML = '';
 
             try {
-                // 改用 v1 版本網址，解決 404 (Not Found) 問題
-                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-                
-                const response = await fetch(geminiUrl, {
+                const response = await fetch(GEMINI_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: `你是一位專業的繪圖提示詞工程師。請將以下中文主題擴充成一段細膩、高品質的英文繪圖指令：${content}。只需要輸出英文指令，不要有任何解釋文字。` }] }]
+                        contents: [{
+                            parts: [{ text: `你是一個 AI 繪圖專家。請根據使用者的中文描述：「${prompt}」，將其擴充為一段精美且詳細的英文繪圖提示詞 (Prompt)。請只輸出英文提示詞，不要有其他解釋。` }]
+                        }]
                     })
                 });
 
@@ -95,92 +93,24 @@
                     throw new Error(data.error.message);
                 }
 
-                const optimizedPrompt = data.candidates[0].content.parts[0].text;
-                finalPrompt.innerText = optimizedPrompt;
-
-                // 產圖部分
-                const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(optimizedPrompt)}?width=1024&height=1024&seed=${Math.floor(Math.random()*99999)}&model=flux`;
+                const refinedPrompt = data.candidates[0].content.parts[0].text;
+                const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(refinedPrompt)}?width=1024&height=1024&seed=${Math.floor(Math.random() * 1000)}`;
                 
-                resultImg.src = imageUrl;
-                resultImg.onload = () => {
-                    loading.classList.add('hidden');
-                    resultBox.classList.remove('hidden');
-                    btn.disabled = false;
-                };
+                resultArea.innerHTML = `
+                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                        <p class="text-sm text-gray-400 mb-2 italic text-left">優化後的提示詞：${refinedPrompt}</p>
+                        <img src="${imageUrl}" alt="AI Generated" class="w-full rounded-lg shadow-lg" onload="document.getElementById('statusArea').classList.add('hidden')">
+                    </div>
+                `;
 
             } catch (error) {
-                console.error("AI 處理錯誤:", error);
-                alert("生圖失敗原因：" + error.message);
-                loading.classList.add('hidden');
-                btn.disabled = false;
+                console.error(error);
+                alert('生圖失敗原因：' + error.message);
+                statusArea.classList.add('hidden');
+            } finally {
+                generateBtn.disabled = false;
             }
-        };
+        });
     </script>
-
-    <style>
-        body { background: #0f172a; font-family: 'PingFang TC', sans-serif; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 2rem; }
-        .gradient-btn { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
-        .loading-dot { animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-    </style>
-</head>
-<body class="p-4 flex justify-center items-start min-h-screen pt-10">
-
-    <div class="w-full max-w-md space-y-6">
-        <div class="flex justify-between items-center px-4">
-            <div>
-                <h1 class="text-white text-2xl font-black italic tracking-tighter">AI 產圖大師 <span class="text-indigo-400">9527</span></h1>
-                <p class="text-slate-500 text-[10px] tracking-widest uppercase font-bold">Gemini 2.0 Inside</p>
-            </div>
-            <div id="authSection">
-                <button id="loginBtn" onclick="login()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all border border-white/10">Google 登入</button>
-                <div id="userInfo" class="hidden flex items-center gap-2">
-                    <img id="userImg" class="w-10 h-10 rounded-full border-2 border-indigo-500 shadow-lg">
-                    <button onclick="logout()" class="text-[10px] text-slate-500 hover:text-white">登出</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="glass-card p-8 shadow-2xl space-y-8">
-            <div class="space-y-3">
-                <label class="text-indigo-400 text-[10px] font-black tracking-widest uppercase">Step 01. 你的靈感主題</label>
-                <textarea id="userInput" rows="3" placeholder="例如：穿著太空裝的哈士奇在火星上跳舞..." class="w-full bg-slate-900/50 border border-slate-700 text-white p-4 rounded-2xl outline-none focus:border-indigo-500 transition-all text-sm"></textarea>
-            </div>
-
-            <div class="space-y-4">
-                <button id="generateBtn" disabled onclick="generateImage()" class="w-full gradient-btn text-white font-black py-5 rounded-2xl shadow-xl active:scale-95 transition-all disabled:opacity-30 disabled:grayscale">
-                    AI 思考並自動產圖 <i class="fas fa-sparkles ml-2"></i>
-                </button>
-                <p id="loginRequiredMsg" class="text-center text-xs text-rose-400 font-bold animate-pulse">🔒 請先點擊右上角登入後才可生圖</p>
-            </div>
-
-            <div id="loadingBox" class="hidden py-10 text-center space-y-4">
-                <div class="inline-flex gap-2">
-                    <div class="w-3 h-3 bg-indigo-500 rounded-full loading-dot"></div>
-                    <div class="w-3 h-3 bg-purple-500 rounded-full loading-dot" style="animation-delay: 0.2s"></div>
-                    <div class="w-3 h-3 bg-fuchsia-500 rounded-full loading-dot" style="animation-delay: 0.4s"></div>
-                </div>
-                <p class="text-indigo-300 text-xs font-bold">Gemini 正在思考擴充細節...</p>
-            </div>
-
-            <div id="resultBox" class="hidden space-y-6">
-                <div class="rounded-2xl overflow-hidden border-2 border-indigo-500/30 shadow-2xl shadow-indigo-500/10">
-                    <img id="resultImg" src="" class="w-full h-auto">
-                </div>
-                <div class="bg-black/40 p-5 rounded-2xl border border-white/5">
-                    <label class="text-[10px] text-indigo-400 font-black block mb-2 uppercase tracking-tighter">AI 優化後的專業指令 (Prompt)</label>
-                    <p id="finalPrompt" class="text-xs text-slate-400 font-mono italic leading-relaxed"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
-
-
-
-
-
-
