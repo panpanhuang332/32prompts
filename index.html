@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI 繪圖提示詞工具 (教育版)</title>
+    <title>AI 繪圖提示詞 (即時鏡頭版)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,64 +11,103 @@
         /* --- 核心佈局 --- */
         body { background-color: #f0f2f5; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         .app-header { background: white; padding: 15px 15px 0 15px; box-shadow: 0 1px 5px rgba(0,0,0,0.05); z-index: 10; flex-shrink: 0; }
+        
+        /* 分頁樣式 */
         .nav-tabs { border-bottom: none; flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; gap: 5px; padding-bottom: 5px; }
         .nav-tabs .nav-link { border: none; color: #6c757d; font-size: 0.95rem; padding: 8px 12px; border-radius: 20px; background-color: #f8f9fa; transition: all 0.2s; }
-        .nav-tabs .nav-link.active { color: white; background-color: #4285f4; font-weight: bold; } /* Google Blue */
+        .nav-tabs .nav-link.active { color: white; background-color: #4285f4; font-weight: bold; }
         .nav-tabs .nav-link.disabled-tab { opacity: 0.5; pointer-events: none; background-color: #e9ecef; }
         
+        /* 內容區 */
         .app-content { flex-grow: 1; overflow-y: auto; padding: 15px; background-color: #f0f2f5; scroll-behavior: smooth; }
         .tab-content-area { display: none; animation: fadeIn 0.3s; }
         .tab-content-area.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* 卡片樣式 */
         .category-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: opacity 0.3s; }
         .category-card.disabled-card { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
-
         .category-title { font-size: 0.9rem; font-weight: bold; color: #343a40; margin-bottom: 8px; display: block; border-left: 4px solid #4285f4; padding-left: 8px; }
-        .app-footer { background: white; padding: 10px 15px; border-top: 1px solid #dee2e6; flex-shrink: 0; z-index: 20; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
         
+        /* 底部 */
+        .app-footer { background: white; padding: 10px 15px; border-top: 1px solid #dee2e6; flex-shrink: 0; z-index: 20; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
         .loading-text { font-size: 0.8em; color: #4285f4; margin-top: 5px; display: none; }
         .form-select { background-color: #f8f9fa; border: 1px solid #e9ecef; }
-        .form-select:disabled { background-color: #e9ecef; color: #adb5bd; cursor: not-allowed; }
-        .nav-tabs::-webkit-scrollbar { display: none; }
         .locked-badge { display: none; font-size: 0.7rem; background: #dc3545; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
 
-        .img-preview-container { position: relative; width: 60px; height: 60px; margin-right: 10px; display: none; }
-        .img-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid #4285f4; }
-        .btn-remove-img { position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; line-height: 18px; text-align: center; cursor: pointer; border: none; }
+        /* --- 即時鏡頭與預覽區塊 --- */
+        .camera-preview-box {
+            position: relative;
+            width: 80px; height: 80px;
+            background: #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+            display: none; /* 預設隱藏 */
+            border: 2px solid #4285f4;
+            margin-right: 10px;
+        }
+        .captured-image { width: 100%; height: 100%; object-fit: cover; }
+        .btn-clear-img {
+            position: absolute; top: 0; right: 0;
+            background: rgba(0,0,0,0.5); color: white;
+            border: none; width: 24px; height: 24px;
+            font-size: 14px; line-height: 24px; text-align: center;
+            cursor: pointer;
+        }
+
+        /* 滿版相機 Modal */
+        .camera-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; z-index: 9999;
+            display: none; flex-direction: column;
+        }
+        .camera-view { flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
+        video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); } /* 預設鏡像 */
+        video.rear-cam { transform: scaleX(1); } /* 後鏡頭不鏡像 */
         
-        /* 模型切換按鈕樣式 */
-        .model-switch { display: flex; gap: 5px; margin-bottom: 10px; background: #f0f2f5; padding: 4px; border-radius: 8px; }
-        .model-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 0.9rem; border-radius: 6px; color: #666; font-weight: bold; transition: all 0.2s; }
-        .model-btn.active { background: white; color: #4285f4; box-shadow: 0 2px 4px rgba(0,0,0,0.1); } /* Google Blue */
-        
-        /* Gemini 模式下隱藏上傳狀態，因為不需要圖床 */
-        .gemini-mode .upload-related { display: none !important; } 
+        .camera-controls {
+            height: 120px; background: rgba(0,0,0,0.8);
+            display: flex; justify-content: space-around; align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .cam-btn { width: 50px; height: 50px; border-radius: 50%; border: none; color: white; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+        .btn-shutter { width: 70px; height: 70px; border: 4px solid white; background: transparent; border-radius: 50%; }
+        .btn-shutter:active { background: white; }
+        .btn-close-cam { background: #dc3545; }
+        .btn-switch-cam { background: #4285f4; }
+
     </style>
 </head>
 <body>
 
+    <div id="cameraModal" class="camera-modal">
+        <div class="camera-view">
+            <video id="videoFeed" autoplay playsinline></video>
+        </div>
+        <div class="camera-controls">
+            <button class="cam-btn btn-close-cam" onclick="closeCamera()">✕</button>
+            <button class="btn-shutter" onclick="takePhoto()"></button>
+            <button class="cam-btn btn-switch-cam" onclick="switchCameraMode()">⟳</button>
+        </div>
+        <canvas id="canvas" style="display:none;"></canvas> </div>
+
     <div class="app-header">
-        <h6 class="mb-2 fw-bold text-dark">🎨 AI 繪圖提示詞工具 (EDU)</h6>
-        
-        <div class="model-switch">
-            <button class="model-btn active" onclick="setModel('gemini')" id="btn-gemini">✨ Gemini 模式</button>
-            <button class="model-btn" onclick="setModel('mj')" id="btn-mj">Midjourney 模式</button>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-0 fw-bold text-dark">🎨 AI 繪圖 (Gemini EDU)</h6>
+            <span class="badge bg-primary">思考型 Prompt 模式</span>
         </div>
 
         <div class="mb-2">
             <div class="input-group mb-2">
-                <input type="file" id="cameraInput" accept="image/*" capture="user" style="display: none;" onchange="handleImageSelect(this)">
-                
-                <div id="previewContainer" class="img-preview-container">
-                    <img id="imgPreview" class="img-preview" src="">
-                    <button class="btn-remove-img" onclick="removeImage()">×</button>
+                <div id="previewBox" class="camera-preview-box">
+                    <img id="finalImage" class="captured-image">
+                    <button class="btn-clear-img" onclick="clearPhoto()">×</button>
                 </div>
 
-                <input type="text" class="form-control" id="mainSubject" placeholder="描述畫面主體 (支援中文)...">
+                <input type="text" class="form-control" id="mainSubject" placeholder="描述畫面主體...">
                 
-                <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('cameraInput').click()">
-                    📸
+                <button class="btn btn-outline-danger" type="button" onclick="openCamera()">
+                    📸 照相
                 </button>
                 
                 <button class="btn btn-outline-primary" type="button" id="translateBtn" onclick="translateInput()">
@@ -76,16 +115,12 @@
                 </button>
             </div>
             
-            <div class="d-flex justify-content-between align-items-center">
-                <div id="translationStatus" class="loading-text">正在翻譯中...</div>
-                <div id="uploadStatus" class="upload-status text-end small text-muted upload-related" style="display:none;"></div>
-            </div>
-            <input type="hidden" id="uploadedImageUrl" value="">
+            <div id="translationStatus" class="loading-text">正在翻譯中...</div>
         </div>
 
         <div class="nav nav-tabs" id="myTab" role="tablist">
-            <button class="nav-link active" id="btn-settings" onclick="switchTab(this, 'page-settings')">⚙️ 設定</button>
-            <button class="nav-link" id="btn-photo" onclick="switchTab(this, 'page-photo')">📸 攝影</button>
+            <button class="nav-link active" onclick="switchTab(this, 'page-settings')">⚙️ 設定</button>
+            <button class="nav-link" onclick="switchTab(this, 'page-photo')">📸 攝影</button>
             <button class="nav-link" id="btn-art" onclick="switchTab(this, 'page-art')">🖌️ 藝術 <span class="locked-badge">鎖定</span></button>
             <button class="nav-link" id="btn-anime" onclick="switchTab(this, 'page-anime')">🧸 動漫 <span class="locked-badge">鎖定</span></button>
         </div>
@@ -125,8 +160,9 @@
                 </select>
             </div>
             
-            <div class="text-center text-muted small mt-4 p-3" id="hintText">
-                </div>
+            <div class="text-center text-muted small mt-4 p-3">
+                <p>💡 <b>操作流程：</b><br>1. 按上方 📸 拍照 (可切換前後鏡頭)<br>2. 選擇風格<br>3. 產出提示詞<br>4. 在 Gemini 貼上文字並<b>上傳該照片</b></p>
+            </div>
         </div>
 
         <div id="page-photo" class="tab-content-area"><div id="container-photo"></div></div>
@@ -137,7 +173,7 @@
     <div class="app-footer">
         <div class="d-grid gap-2 mb-2">
             <button class="btn btn-primary fw-bold" onclick="generatePrompt()" style="background-color: #4285f4; border-color: #4285f4;">
-                ✨ 產出提示詞
+                ✨ 產出智慧指令
             </button>
         </div>
         <div class="input-group input-group-sm">
@@ -147,110 +183,105 @@
     </div>
 
 <script>
-    // Imgur Client ID (僅在 MJ 模式下需要)
-    const IMGUR_CLIENT_ID = 'e290885e3477163'; 
-    let currentModel = 'gemini'; // 預設改為 Gemini 模式 (更符合您的需求)
+    // --- 1. 相機功能 (Webcam Logic) ---
+    let videoStream = null;
+    let facingMode = 'user'; // 'user' (前) or 'environment' (後)
+    const videoEl = document.getElementById('videoFeed');
 
-    // --- 1. 模型切換邏輯 ---
-    function setModel(model) {
-        currentModel = model;
+    async function openCamera() {
+        document.getElementById('cameraModal').style.display = 'flex';
+        await startStream();
+    }
+
+    async function startStream() {
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+        }
         
-        // 更新按鈕樣式
-        document.getElementById('btn-mj').classList.toggle('active', model === 'mj');
-        document.getElementById('btn-gemini').classList.toggle('active', model === 'gemini');
-
-        // 更新介面顯示
-        const body = document.body;
-        const hintText = document.getElementById('hintText');
-        const uploadStatus = document.getElementById('uploadStatus');
-
-        if (model === 'gemini') {
-            body.classList.add('gemini-mode');
-            hintText.innerHTML = `
-                <div style="background: #e8f0fe; padding: 10px; border-radius: 8px; color: #1967d2;">
-                    <strong>🎓 Gemini 教育版模式</strong><br>
-                    1. 用上方 📸 拍照 (僅預覽，不上傳)。<br>
-                    2. 按「產出提示詞」並複製。<br>
-                    3. 到 Gemini 貼上文字，並<b>直接上傳照片</b>。
-                </div>`;
-            uploadStatus.style.display = 'none';
-        } else {
-            body.classList.remove('gemini-mode');
-            hintText.innerHTML = `
-                <div style="background: #f1f3f4; padding: 10px; border-radius: 8px; color: #5f6368;">
-                    <strong>Midjourney 模式</strong><br>
-                    拍照後會自動上傳至圖床轉成網址，適合 MJ 或 Discord 使用。
-                </div>`;
-            if(document.getElementById('imgPreview').src) {
-                uploadStatus.style.display = 'block';
-            }
-        }
-    }
-
-    // --- 2. 圖片處理 (整合邏輯) ---
-    async function handleImageSelect(input) {
-        if (!input.files || !input.files[0]) return;
-        const file = input.files[0];
-
-        // 顯示本地預覽 (雙模式都要)
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('imgPreview').src = e.target.result;
-            document.getElementById('previewContainer').style.display = 'block';
-        }
-        reader.readAsDataURL(file);
-
-        // 如果是 MJ 模式，才執行上傳
-        if (currentModel === 'mj') {
-            const statusEl = document.getElementById('uploadStatus');
-            const urlInput = document.getElementById('uploadedImageUrl');
+        try {
+            const constraints = {
+                video: { facingMode: facingMode }
+            };
+            videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+            videoEl.srcObject = videoStream;
             
-            statusEl.style.display = 'block';
-            statusEl.style.color = '#0d6efd';
-            statusEl.innerHTML = '☁️ 轉網址中...';
-            
-            const formData = new FormData();
-            formData.append('image', file);
-
-            try {
-                const response = await fetch('https://api.imgur.com/3/image', {
-                    method: 'POST',
-                    headers: { Authorization: `Client-ID ${IMGUR_CLIENT_ID}` },
-                    body: formData
-                });
-                const data = await response.json();
-                if (data.success) {
-                    urlInput.value = data.data.link;
-                    statusEl.innerHTML = '✅ 網址已就緒';
-                    statusEl.style.color = 'green';
-                } else { throw new Error('Upload failed'); }
-            } catch (error) {
-                console.error(error);
-                statusEl.innerHTML = '❌ 上傳失敗';
-                statusEl.style.color = 'red';
+            // 處理鏡像 (前鏡頭要鏡像，後鏡頭不要)
+            if (facingMode === 'user') {
+                videoEl.classList.remove('rear-cam');
+            } else {
+                videoEl.classList.add('rear-cam');
             }
+        } catch (err) {
+            console.error("相機啟動失敗:", err);
+            alert("無法啟動相機，請檢查權限設定。");
+            closeCamera();
         }
     }
 
-    function removeImage() {
-        document.getElementById('cameraInput').value = "";
-        document.getElementById('uploadedImageUrl').value = "";
-        document.getElementById('previewContainer').style.display = 'none';
-        document.getElementById('uploadStatus').style.display = 'none';
-        document.getElementById('imgPreview').src = "";
+    function switchCameraMode() {
+        facingMode = facingMode === 'user' ? 'environment' : 'user';
+        startStream();
     }
 
-    // --- 3. 產出提示詞 (核心差異) ---
+    function takePhoto() {
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        
+        // 設定 canvas 大小等於影片大小
+        canvas.width = videoEl.videoWidth;
+        canvas.height = videoEl.videoHeight;
+        
+        // 繪製
+        // 如果是前鏡頭，需要水平翻轉
+        if (facingMode === 'user') {
+            context.translate(canvas.width, 0);
+            context.scale(-1, 1);
+        }
+        context.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+        
+        // 轉成圖片網址 (Data URL)
+        const dataUrl = canvas.toDataURL('image/jpeg');
+        
+        // 顯示在主畫面
+        document.getElementById('finalImage').src = dataUrl;
+        document.getElementById('previewBox').style.display = 'block';
+        
+        // 自動填入「分析指令」提示文字 (如果格子是空的)
+        const mainSubject = document.getElementById('mainSubject');
+        if (mainSubject.value.trim() === "") {
+            mainSubject.value = "[請 Gemini 分析這張照片的內容]";
+        }
+
+        closeCamera();
+    }
+
+    function closeCamera() {
+        document.getElementById('cameraModal').style.display = 'none';
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+            videoStream = null;
+        }
+    }
+
+    function clearPhoto() {
+        document.getElementById('finalImage').src = "";
+        document.getElementById('previewBox').style.display = 'none';
+        const input = document.getElementById('mainSubject');
+        if (input.value === "[請 Gemini 分析這張照片的內容]") {
+            input.value = "";
+        }
+    }
+
+    // --- 2. 產出提示詞 (針對 Gemini 思考模型) ---
     async function generatePrompt() {
         let mainSubject = document.getElementById('mainSubject').value.trim();
         const aspectRatio = document.getElementById('aspectRatio').value;
         const pixelRes = document.getElementById('pixelResolution').value;
-        const uploadedImageUrl = document.getElementById('uploadedImageUrl').value;
-        // 檢查是否有選擇圖片 (cameraInput 有檔案 或 預覽圖有 src)
-        const hasLocalImage = document.getElementById('cameraInput').files.length > 0 || document.getElementById('imgPreview').getAttribute('src') !== "";
+        const hasPhoto = document.getElementById('finalImage').getAttribute('src') !== "";
         const btn = document.querySelector('.btn-primary');
 
-        if (/[\u4e00-\u9fa5]/.test(mainSubject)) {
+        // 翻譯邏輯 (如果是中文)
+        if (/[\u4e00-\u9fa5]/.test(mainSubject) && mainSubject !== "[請 Gemini 分析這張照片的內容]") {
             const originalText = btn.textContent;
             btn.textContent = "⏳ 翻譯中...";
             btn.disabled = true;
@@ -261,55 +292,44 @@
 
         let parts = [];
 
-        // === Gemini 模式 (針對思考模型優化) ===
-        if (currentModel === 'gemini') {
-            // 結構化 Prompt，引導思考模型
-            if (hasLocalImage) {
-                // 有圖：要求分析圖片
-                parts.push("Step 1: Analyze the attached reference image for pose, composition, and main features.");
-                parts.push("Step 2: Generate a NEW image maintaining that composition, but applying the following styles:");
+        // *** 核心智慧邏輯 ***
+        if (hasPhoto) {
+            // 有照片：生成「分析+重繪」指令
+            parts.push("INSTRUCTION: Analyze the attached image deeply.");
+            parts.push("1. Identify the pose, composition, and main elements in the photo.");
+            
+            if (mainSubject && mainSubject !== "[請 Gemini 分析這張照片的內容]") {
+                // 如果使用者有另外輸入 (例如把照片裡的人變成貓)
+                parts.push(`2. Modification Request: Transform the subject into: ${mainSubject}.`);
             } else {
-                // 無圖：直接生成
-                parts.push("Generate an image with the following description:");
+                // 如果沒有輸入，就是單純重繪
+                parts.push("2. Recreate this image maintaining the original composition.");
             }
-            
+        } else {
+            // 沒照片：純文字生成
+            parts.push("Generate an image with the following description:");
             if (mainSubject) parts.push(`Subject: ${mainSubject}.`);
-            
-            // 收集風格
-            let styles = [];
-            collectSelects(styles);
-            if (styles.length > 0) {
-                parts.push(`Art Style & Details: ${styles.join(', ')}.`);
-            }
-
-            if (pixelRes) parts.push(`Quality: ${pixelRes}.`);
-            if (aspectRatio) parts.push(`Aspect Ratio: ${aspectRatio}.`);
-            
-            parts.push("Ensure high aesthetic quality and accurate adherence to the style.");
-        } 
-        
-        // === Midjourney 模式 ===
-        else {
-            if (uploadedImageUrl) parts.push(uploadedImageUrl); 
-            if (mainSubject) parts.push(mainSubject);
-            if (pixelRes) parts.push(pixelRes);
-            collectSelects(parts);
-            parts.push("--v 6.0");
-            if (aspectRatio) parts.push(`--ar ${aspectRatio}`);
         }
+
+        // 收集風格
+        let styles = [];
+        document.querySelectorAll('.category-select').forEach(select => {
+            if (select.value && !select.disabled) styles.push(select.value);
+        });
+
+        if (styles.length > 0) {
+            parts.push(`Apply Art Style: ${styles.join(', ')}.`);
+        }
+
+        if (pixelRes) parts.push(`Quality/Resolution: ${pixelRes}.`);
+        if (aspectRatio) parts.push(`Aspect Ratio: ${aspectRatio}.`);
+        
+        parts.push("Ensure the output is highly detailed and aesthetically pleasing.");
 
         document.getElementById('outputPrompt').value = parts.join(' ');
     }
 
-    function collectSelects(array) {
-        document.querySelectorAll('.category-select').forEach(select => {
-            if (select.value && !select.disabled) {
-                array.push(select.value);
-            }
-        });
-    }
-
-    // --- 輔助功能 ---
+    // --- 3. 基礎功能 (分頁/翻譯/複製) ---
     function switchTab(btn, targetId) {
         if (btn.classList.contains('disabled-tab')) return;
         document.querySelectorAll('.nav-link').forEach(b => {
@@ -339,117 +359,26 @@
         navigator.clipboard.writeText(el.value);
     }
 
-    // --- 完整資料庫 (全收錄) ---
+    // --- 資料庫初始化 ---
     const categorizedData = {
         "photo": { 
-            "攝影類型 (Types)": [
-                { id: "photo_type", val: "photo", label: "照片 (photo)"}, 
-                { id: "photo_type", val: "photography", label: "攝影 (photography)"},
-                { id: "photo_type", val: "life photo", label: "生活照 (life photo)"}, 
-                { id: "photo_type", val: "group photo", label: "團體照 (group photo)"},
-                { id: "photo_type", val: "selfie photo", label: "自拍照 (selfie photo)"}, 
-                { id: "photo_type", val: "portrait photography", label: "人像攝影 (portrait)"}, 
-                { id: "photo_type", val: "sports photography", label: "運動攝影 (sports)"},
-                { id: "photo_type", val: "still life photo", label: "靜物攝影 (still life)"}
-            ],
-            "光圈 (Aperture)": [
-                { id: "photo_aperture", val: "f/1.4", label: "f/1.4"}, { id: "photo_aperture", val: "f/2.8", label: "f/2.8"},
-                { id: "photo_aperture", val: "f/8", label: "f/8"}, { id: "photo_aperture", val: "f/16", label: "f/16"}
-            ],
-            "焦距 (Focal Length)": [
-                { id: "photo_focal", val: "24mm", label: "24mm"}, { id: "photo_focal", val: "35mm", label: "35mm"},
-                { id: "photo_focal", val: "85mm", label: "85mm"}, { id: "photo_focal", val: "200mm", label: "200mm"}
-            ],
-            "環境與畫質輔助 (Auxiliary)": [
-                { val: "bright", label: "環境較明亮"}, { val: "dark", label: "環境較暗"},
-                { val: "realistic", label: "逼真"}, { val: "b/w", label: "黑白照片"},
-                { val: "very realistic", label: "非常逼真"}, { val: "very detailed", label: "高細節"},
-                { val: "8K", label: "8K 畫質"}
-            ],
-            "攝影風格 (Styles)": [
-                {val: "DSLR style", label: "數位單眼"}, {val: "Polaroid style", label: "拍立得"},
-                {val: "gopro style", label: "GoPro"}, {val: "Fujifilm superia style", label: "富士底片"},
-                {val: "LOMO style", label: "LOMO"}, {val: "movie style", label: "電影風"},
-                {val: "cinematic photo style", label: "劇照"}, {val: "vintage photo style", label: "復古"},
-                {val: "Holga photography", label: "Holga 相機"}, {val: "Anthotype print", label: "植物感光"}
-            ],
-            "鏡頭與光影 (Lens/Light)": [
-                {val: "macro lens", label: "微距鏡頭"}, {val: "wide angle lens", label: "廣角鏡頭"},
-                {val: "fish eye lens", label: "魚眼鏡頭"}, {val: "bokeh", label: "散景/景深"},
-                {val: "lens flare", label: "鏡頭眩光"}, {val: "golden hour", label: "黃金時刻"},
-                {val: "ambient light", label: "環境光"}, {val: "hard light", label: "硬光"},
-                {val: "soft light", label: "柔光"}, {val: "rim light", label: "輪廓光"},
-                {val: "multiple exposure", label: "重複曝光"}, {val: "HDR", label: "HDR"}
-            ],
-            "畫面角度 (Angles)": [
-                {val: "face close-up", label: "臉部特寫"}, {val: "full body shot", label: "全身照"},
-                {val: "low angle view", label: "低角度"}, {val: "high angle view", label: "高角度"},
-                {val: "bird view", label: "鳥瞰"}, {val: "knolling", label: "開箱照"},
-                {val: "product view", label: "產品特寫"}, {val: "360 degrees photo", label: "360度照片"}
-            ]
+            "攝影類型": [{id:"photo_type", val:"photo", label:"照片"}, {id:"photo_type", val:"portrait", label:"人像"}, {id:"photo_type", val:"selfie", label:"自拍"}],
+            "光圈": [{id:"photo_aperture", val:"f/1.4", label:"f/1.4"}, {id:"photo_aperture", val:"f/2.8", label:"f/2.8"}, {id:"photo_aperture", val:"f/8", label:"f/8"}],
+            "焦距": [{id:"photo_focal", val:"35mm", label:"35mm"}, {id:"photo_focal", val:"85mm", label:"85mm"}, {id:"photo_focal", val:"200mm", label:"200mm"}],
+            "環境": [{val:"cinematic lighting", label:"電影光"}, {val:"natural light", label:"自然光"}, {val:"dark", label:"暗調"}],
+            "風格": [{val:"Fujifilm style", label:"富士底片"}, {val:"Kodak Portra", label:"柯達底片"}, {val:"Cyberpunk", label:"賽博龐克"}]
         },
         "art": { 
-            "繪畫媒材 (Mediums)": [
-                {val: "illustration", label: "插畫"}, {val: "pencil", label: "鉛筆畫"},
-                {val: "charcoal", label: "炭筆畫"}, {val: "color pencil", label: "色鉛筆"},
-                {val: "acrylic painting", label: "壓克力畫"}, {val: "watercolor painting", label: "水彩畫"},
-                {val: "oil painting", label: "油畫"}, {val: "ink drawing", label: "水墨畫"},
-                {val: "Woodcut", label: "木刻版畫"}, {val: "vector art", label: "向量圖"}
-            ],
-            "特殊材質 (Materials)": [
-                {val: "paper art", label: "紙雕"}, {val: "origami art", label: "摺紙"},
-                {val: "stained glass", label: "彩繪玻璃"}, {val: "pixel art", label: "像素畫"},
-                {val: "Low poly", label: "低多邊形"}, {val: "wood carving", label: "木雕"},
-                {val: "lego", label: "樂高"}, {val: "felt doll", label: "羊毛氈"},
-                {val: "neon light", label: "霓虹燈"}, {val: "ASCII art", label: "ASCII 代碼"}
-            ],
-            "藝術流派 (Movements)": [
-                {val: "Impressionnisme", label: "印象派"}, {val: "Surrealism", label: "超現實主義"},
-                {val: "Cubism", label: "立體主義"}, {val: "Pop Art", label: "普普藝術"},
-                {val: "Minimalism", label: "極簡主義"}, {val: "Cyber Art", label: "賽博藝術"},
-                {val: "Steampunk", label: "蒸氣龐克"}, {val: "Ukiyo-e", label: "浮世繪"}
-            ],
-            "藝術家 (Artists)": [
-                {val: "Vincent van Gogh", label: "梵谷"}, {val: "Leonardo da Vinci", label: "達文西"},
-                {val: "Picasso", label: "畢卡索"}, {val: "Dali", label: "達利"},
-                {val: "Monet", label: "莫內"}, {val: "Mucha", label: "慕夏"},
-                {val: "Andy Warhol", label: "安迪沃荷"}, {val: "Hayao Miyazaki", label: "宮崎駿"},
-                {val: "Makoto Shinkai", label: "新海誠"}
-            ]
+            "媒材": [{val:"oil painting", label:"油畫"}, {val:"watercolor", label:"水彩"}, {val:"sketch", label:"素描"}],
+            "流派": [{val:"Impressionism", label:"印象派"}, {val:"Surrealism", label:"超現實"}]
         },
         "anime": { 
-            "動漫類型 (Types)": [
-                {val: "2D cartoon", label: "2D 卡通"}, {val: "3D cartoon", label: "3D 卡通"},
-                {val: "Anime style", label: "日系動畫"}, {val: "American comic book", label: "美式漫畫"}
+            "作品": [
+                {val:"One Piece style", label:"航海王"}, {val:"Studio Ghibli style", label:"吉卜力"},
+                {val:"Naruto style", label:"火影忍者"}, {val:"Slam Dunk style", label:"灌籃高手"},
+                {val:"Detective Conan style", label:"名偵探柯南"}, {val:"JoJo style", label:"JoJo"}
             ],
-            "動畫公司 (Studios)": [
-                {val: "Pixar Animation", label: "皮克斯"}, {val: "DreamWorks Animation", label: "夢工廠"},
-                {val: "Disney Animation", label: "迪士尼"}, {val: "Ghibli Studio", label: "吉卜力"},
-                {val: "Kyoto Animation", label: "京都動畫"}, {val: "Marvel Animation", label: "漫威"}
-            ],
-            "動漫作品 (Series)": [
-                {val: "One Piece", label: "航海王"}, 
-                {val: "Detective Conan", label: "名偵探柯南"},
-                {val: "Naruto", label: "火影忍者"},
-                {val: "Slam Dunk", label: "灌籃高手"},
-                {val: "style of Mitsuru Adachi", label: "安達充風格"},
-                {val: "Fist of the North Star", label: "北斗神拳"},
-                {val: "Saint Seiya", label: "聖鬥士星矢"},
-                {val: "A Certain Scientific Railgun", label: "某科學的超電磁砲"},
-                {val: "SpongeBob", label: "海綿寶寶"}, 
-                {val: "Mickey Mouse", label: "米老鼠"},
-                {val: "The Simpsons", label: "辛普森家族"}, 
-                {val: "Dragon ball", label: "七龍珠"},
-                {val: "Doraemon", label: "哆啦A夢"}, 
-                {val: "Sailor Moon", label: "美少女戰士"},
-                {val: "kimetsu no Yaiba", label: "鬼滅之刃"}, 
-                {val: "JoJo", label: "JoJo"}
-            ],
-            "設計與結構 (Design)": [
-                {val: "mascot logo", label: "吉祥物 Logo"}, {val: "UI design", label: "UI 介面"},
-                {val: "3D Model Exploded View", label: "3D 分解圖"}, {val: "2D floor plan", label: "2D 平面圖"},
-                {val: "character toy", label: "公仔玩具"}
-            ]
+             "類型": [{val:"90s anime style", label:"90年代賽璐璐"}, {val:"Makoto Shinkai style", label:"新海誠風景"}]
         }
     };
 
@@ -470,7 +399,7 @@
             }
         }
         
-        // 綁定排他邏輯
+        // 排他邏輯
         const photoType = document.getElementById('photo_type');
         if (photoType) {
             photoType.addEventListener('change', function() {
@@ -483,11 +412,7 @@
                 toggleLock('container-anime', 'btn-anime', isPhoto);
             });
         }
-        // 初始狀態鎖定
         ['photo_aperture', 'photo_focal'].forEach(id => { const el = document.getElementById(id); if(el) el.disabled = true; });
-        
-        // 初始化預設為 Gemini
-        setModel('gemini');
     }
 
     function toggleLock(cid, bid, lock) {
