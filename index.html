@@ -3,13 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>一指提示 (完美修復版)</title>
+    <title>一指提示 (強制更新版)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#050505">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+    <script>
+        // --- 🚑 緊急修復：清除舊的 PWA 快取 ---
+        // 這段程式碼會強制瀏覽器放棄舊版本，確保您看到的是修正後的 UI
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+            caches.keys().then(names => {
+                for (let name of names) caches.delete(name);
+            });
+        }
+    </script>
 
     <style>
         /* --- Stitch UI: Obsidian Mirror Style --- */
@@ -312,21 +327,28 @@
     };
 
     function init() {
+        // 1. 初始化字體 (無 category-select class)
         const fontSelect = document.getElementById('textFont');
+        fontSelect.innerHTML = ""; // 先清空
         fontSelect.appendChild(new Option("不指定", ""));
         fontData.forEach(item => fontSelect.appendChild(new Option(item.label, item.val)));
 
-        // 初始化：動態產生下拉選單，並賦予 .category-select 類別 (讓 generatePrompt 抓得到)
+        // 2. 初始化動態容器 (Char, Scene, Photo, Art, Anime)
         for (const [tabKey, categories] of Object.entries(categorizedData)) {
             const container = document.getElementById(`container-${tabKey}`);
             if (!container) continue;
+            
+            // ⚠️ 關鍵修正：先清空容器，防止重複堆疊
+            container.innerHTML = "";
+
             for (const [catName, items] of Object.entries(categories)) {
                 const card = document.createElement('div'); card.className = 'category-card';
                 const label = document.createElement('label'); label.className = 'category-title'; label.textContent = catName;
                 card.appendChild(label);
                 
+                // ⚠️ 關鍵修正：只有這些動態產生的才加上 category-select
                 const select = document.createElement('select'); 
-                select.className = 'form-select category-select'; // 關鍵：只有這些動態產生的才有這個 class
+                select.className = 'form-select category-select'; 
                 if (items.length > 0 && items[0].id) select.id = items[0].id;
                 
                 select.appendChild(new Option("不指定", ""));
@@ -337,6 +359,7 @@
             }
         }
         
+        // 3. 綁定排他邏輯
         const photoType = document.getElementById('photo_type');
         if (photoType) {
             photoType.addEventListener('change', function() {
@@ -350,7 +373,10 @@
                 toggleLock('container-anime', 'btn-anime', isPhoto);
             });
         }
-        ['photo_aperture', 'photo_focal'].forEach(id => { const el = document.getElementById(id); if(el) el.disabled = true; });
+        ['photo_aperture', 'photo_focal'].forEach(id => { 
+            const el = document.getElementById(id); 
+            if(el) el.disabled = true; 
+        });
         
         setMode('create');
     }
@@ -419,7 +445,7 @@
 
         let targetContainer = "";
         if (activeTabId === 'page-settings' || activeTabId === 'page-text') {
-            switchTab(document.querySelectorAll('.nav-link')[3], 'page-char'); 
+            switchTab(document.querySelectorAll('.nav-link')[2], 'page-char'); 
             targetContainer = 'container-char';
         } else {
             targetContainer = activeTabId.replace('page-', 'container-');
@@ -523,7 +549,7 @@
                  if (txtFont) parts.push(`Font Style: ${txtFont}.`);
             }
             
-            // 這裡只收集帶有 category-select class 的項目，自動避開設定頁和文字頁的固定選項
+            // 只收集有 category-select class 的項目，這樣就不會抓到設定頁的了
             let details = [];
             document.querySelectorAll('.category-select').forEach(select => {
                 if (select.value && !select.disabled) {
