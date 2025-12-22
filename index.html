@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MJ 提示詞產生器 (Mobile)</title>
+    <title>MJ 提示詞產生器 (Mobile Fix)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* APP 佈局核心樣式 */
+        /* --- 核心佈局樣式 --- */
         body {
             background-color: #f0f2f5;
-            height: 100vh; /* 鎖定全螢幕高度 */
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* 禁止整體網頁捲動 */
+            overflow: hidden; /* 禁止網頁整體捲動 */
         }
 
-        /* 頂部區域 (固定) */
+        /* 1. 頂部區域 */
         .app-header {
             background: white;
             padding: 15px 15px 0 15px;
@@ -26,41 +26,59 @@
             flex-shrink: 0;
         }
 
-        .main-input-group {
-            margin-bottom: 10px;
-        }
-
-        /* 分頁導航條 */
+        /* 2. 分頁標籤樣式 */
         .nav-tabs {
             border-bottom: none;
-            flex-wrap: nowrap; /* 禁止換行，改為水平滑動 */
+            flex-wrap: nowrap;
             overflow-x: auto;
             white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
+            gap: 5px; /* 按鈕間距 */
+            padding-bottom: 5px;
         }
         
         .nav-tabs .nav-link {
             border: none;
             color: #6c757d;
             font-size: 0.95rem;
-            padding: 10px 15px;
+            padding: 8px 12px;
+            border-radius: 20px; /* 圓角按鈕 */
+            background-color: #f8f9fa;
+            transition: all 0.2s;
         }
         
+        /* 選中時的樣式 */
         .nav-tabs .nav-link.active {
-            color: #0d6efd;
-            border-bottom: 3px solid #0d6efd;
-            background: transparent;
+            color: white;
+            background-color: #0d6efd; /* 藍底白字 */
             font-weight: bold;
         }
 
-        /* 中間滾動區域 */
+        /* 3. 中間內容區域 (可捲動) */
         .app-content {
             flex-grow: 1;
-            overflow-y: auto; /* 只有這裡可以滾動 */
+            overflow-y: auto;
             padding: 15px;
-            background-color: #f8f9fa;
+            background-color: #f0f2f5;
+            scroll-behavior: smooth;
         }
 
+        /* 隱藏未選中的頁面 */
+        .tab-content-area {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        
+        /* 顯示選中的頁面 */
+        .tab-content-area.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 卡片樣式 */
         .category-card {
             background: white;
             border-radius: 12px;
@@ -75,36 +93,22 @@
             color: #343a40;
             margin-bottom: 8px;
             display: block;
+            border-left: 4px solid #0d6efd;
+            padding-left: 8px;
         }
 
-        /* 底部區域 (固定) */
+        /* 4. 底部區域 */
         .app-footer {
             background: white;
             padding: 10px 15px;
             border-top: 1px solid #dee2e6;
             flex-shrink: 0;
             z-index: 20;
-            padding-bottom: max(10px, env(safe-area-inset-bottom)); /* 適配 iPhone 底部橫條 */
+            padding-bottom: max(10px, env(safe-area-inset-bottom));
         }
 
-        /* 翻譯狀態 */
         .loading-text { font-size: 0.8em; color: #0d6efd; margin-top: 5px; display: none; }
-        
-        /* 下拉選單優化 */
-        .form-select {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            font-size: 0.95rem;
-        }
-        .form-select:focus {
-            background-color: white;
-            border-color: #86b7fe;
-        }
-        
-        /* 徽章樣式 */
-        .badge-mini { font-size: 0.7em; background: #e7f1ff; color: #0d6efd; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 5px; }
-
-        /* 隱藏卷軸但保留功能 */
+        .form-select { background-color: #f8f9fa; border: 1px solid #e9ecef; }
         .nav-tabs::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -113,7 +117,7 @@
     <div class="app-header">
         <h6 class="mb-2 fw-bold text-dark">🎨 MJ 提示詞產生器</h6>
         
-        <div class="main-input-group">
+        <div class="mb-2">
             <div class="input-group">
                 <input type="text" class="form-control" id="mainSubject" placeholder="描述畫面主體 (支援中文)...">
                 <button class="btn btn-outline-primary" type="button" id="translateBtn" onclick="translateInput()">
@@ -123,76 +127,68 @@
             <div id="translationStatus" class="loading-text">正在翻譯中...</div>
         </div>
 
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="tab-settings-btn" data-bs-toggle="tab" data-bs-target="#tab-settings" type="button" role="tab">⚙️ 設定</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-photo-btn" data-bs-toggle="tab" data-bs-target="#tab-photo" type="button" role="tab">📸 攝影</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-art-btn" data-bs-toggle="tab" data-bs-target="#tab-art" type="button" role="tab">🖌️ 藝術</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-anime-btn" data-bs-toggle="tab" data-bs-target="#tab-anime" type="button" role="tab">🧸 動漫/設計</button>
-            </li>
-        </ul>
+        <div class="nav nav-tabs" id="myTab" role="tablist">
+            <button class="nav-link active" onclick="switchTab(this, 'page-settings')">⚙️ 設定</button>
+            <button class="nav-link" onclick="switchTab(this, 'page-photo')">📸 攝影</button>
+            <button class="nav-link" onclick="switchTab(this, 'page-art')">🖌️ 藝術</button>
+            <button class="nav-link" onclick="switchTab(this, 'page-anime')">🧸 動漫</button>
+        </div>
     </div>
 
     <div class="app-content">
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="tab-settings" role="tabpanel">
-                <div class="category-card">
-                    <label class="category-title">📐 圖片比例 (Aspect Ratio)</label>
-                    <select class="form-select" id="aspectRatio">
-                        <option value="" selected>1:1 (預設正方形)</option>
-                        <optgroup label="橫向">
-                            <option value="--ar 16:9">16:9 (寬螢幕/YT)</option>
-                            <option value="--ar 21:9">21:9 (Notion封面)</option>
-                            <option value="--ar 4:3">4:3 (標準照片)</option>
-                            <option value="--ar 3:2">3:2 (底片)</option>
-                        </optgroup>
-                        <optgroup label="直向">
-                            <option value="--ar 4:5">4:5 (IG 貼文)</option>
-                            <option value="--ar 3:4">3:4 (直式照片)</option>
-                            <option value="--ar 9:16">9:16 (限動/Reels)</option>
-                        </optgroup>
-                    </select>
-                </div>
-
-                <div class="category-card">
-                    <label class="category-title">💎 解析度 (Resolution)</label>
-                    <select class="form-select" id="pixelResolution">
-                        <option value="" selected>預設</option>
-                        <optgroup label="社群/螢幕">
-                            <option value="1080x1080 px, high quality">IG 正方形 (1080p)</option>
-                            <option value="1080x1920 px, full screen">IG 限動 (Full HD)</option>
-                            <option value="3840x2160 px, 4K UHD">4K 超高畫質</option>
-                        </optgroup>
-                        <optgroup label="印刷/攝影">
-                            <option value="2480x3508 px, 300DPI">A4 印刷規格</option>
-                            <option value="6000x4000 px, 24MP">2400 萬像素</option>
-                        </optgroup>
-                    </select>
-                </div>
-                
-                <div class="text-center text-muted small mt-4">
-                    <p>請切換上方分頁標籤來選擇<br>攝影風格、藝術流派或動漫角色。</p>
-                </div>
+        
+        <div id="page-settings" class="tab-content-area active">
+            <div class="category-card">
+                <label class="category-title">📐 圖片比例 (Aspect Ratio)</label>
+                <select class="form-select" id="aspectRatio">
+                    <option value="" selected>1:1 (預設正方形)</option>
+                    <optgroup label="橫向">
+                        <option value="--ar 16:9">16:9 (寬螢幕/YT)</option>
+                        <option value="--ar 21:9">21:9 (Notion封面)</option>
+                        <option value="--ar 4:3">4:3 (標準照片)</option>
+                        <option value="--ar 3:2">3:2 (底片)</option>
+                    </optgroup>
+                    <optgroup label="直向">
+                        <option value="--ar 4:5">4:5 (IG 貼文)</option>
+                        <option value="--ar 3:4">3:4 (直式照片)</option>
+                        <option value="--ar 9:16">9:16 (限動/Reels)</option>
+                    </optgroup>
+                </select>
             </div>
 
-            <div class="tab-pane fade" id="tab-photo" role="tabpanel">
-                <div id="container-photo"></div>
+            <div class="category-card">
+                <label class="category-title">💎 解析度 (Resolution)</label>
+                <select class="form-select" id="pixelResolution">
+                    <option value="" selected>預設</option>
+                    <optgroup label="社群/螢幕">
+                        <option value="1080x1080 px, high quality">IG 正方形 (1080p)</option>
+                        <option value="1080x1920 px, full screen">IG 限動 (Full HD)</option>
+                        <option value="3840x2160 px, 4K UHD">4K 超高畫質</option>
+                    </optgroup>
+                    <optgroup label="印刷/攝影">
+                        <option value="2480x3508 px, 300DPI">A4 印刷規格</option>
+                        <option value="6000x4000 px, 24MP">2400 萬像素</option>
+                    </optgroup>
+                </select>
             </div>
-
-            <div class="tab-pane fade" id="tab-art" role="tabpanel">
-                <div id="container-art"></div>
-            </div>
-
-            <div class="tab-pane fade" id="tab-anime" role="tabpanel">
-                <div id="container-anime"></div>
+            
+            <div class="text-center text-muted small mt-4 p-3">
+                <p>💡 提示：<br>點選上方標籤切換<br>攝影、藝術或動漫風格選單。</p>
             </div>
         </div>
+
+        <div id="page-photo" class="tab-content-area">
+            <div id="container-photo"></div>
+        </div>
+
+        <div id="page-art" class="tab-content-area">
+            <div id="container-art"></div>
+        </div>
+
+        <div id="page-anime" class="tab-content-area">
+            <div id="container-anime"></div>
+        </div>
+
     </div>
 
     <div class="app-footer">
@@ -208,9 +204,33 @@
     </div>
 
 <script>
-    // 資料庫：分為三大類對應 Tabs
+    // --- 1. 分頁切換邏輯 (原生 JS，不依賴 Bootstrap) ---
+    function switchTab(btn, targetId) {
+        // 移除所有按鈕的 active 狀態
+        document.querySelectorAll('.nav-link').forEach(b => {
+            b.classList.remove('active');
+            b.style.backgroundColor = '#f8f9fa'; // 恢復灰底
+            b.style.color = '#6c757d'; // 恢復灰字
+        });
+
+        // 設定當前按鈕為 active
+        btn.classList.add('active');
+        btn.style.backgroundColor = '#0d6efd'; // 藍底
+        btn.style.color = 'white'; // 白字
+
+        // 隱藏所有頁面內容
+        document.querySelectorAll('.tab-content-area').forEach(div => div.classList.remove('active'));
+
+        // 顯示目標頁面
+        const targetDiv = document.getElementById(targetId);
+        if (targetDiv) {
+            targetDiv.classList.add('active');
+        }
+    }
+
+    // --- 2. 資料庫與內容生成 ---
     const categorizedData = {
-        "photo": { // 對應 id="container-photo"
+        "photo": { 
             "類型 (Types)": [
                 {val: "photo", label: "照片"}, {val: "portrait photography", label: "人像攝影"},
                 {val: "life photo", label: "生活照"}, {val: "cinematic photo style", label: "電影劇照"}
@@ -230,7 +250,7 @@
                 {val: "double exposure", label: "重複曝光"}, {val: "motion blur", label: "動態模糊"}
             ]
         },
-        "art": { // 對應 id="container-art"
+        "art": { 
             "繪畫媒材 (Mediums)": [
                 {val: "illustration", label: "插畫"}, {val: "oil painting", label: "油畫"},
                 {val: "watercolor painting", label: "水彩"}, {val: "pencil sketch", label: "素描"},
@@ -252,7 +272,7 @@
                 {val: "Leonardo da Vinci", label: "達文西"}, {val: "Andy Warhol", label: "安迪沃荷"}
             ]
         },
-        "anime": { // 對應 id="container-anime"
+        "anime": { 
             "動漫類型 (Anime Type)": [
                 {val: "2D cartoon", label: "2D 卡通"}, {val: "3D cartoon", label: "3D 卡通"},
                 {val: "Anime style", label: "日系動畫"}, {val: "American comic book", label: "美式漫畫"}
@@ -274,9 +294,9 @@
     };
 
     function init() {
-        // 生成各個 Tab 的內容
         for (const [tabKey, categories] of Object.entries(categorizedData)) {
             const container = document.getElementById(`container-${tabKey}`);
+            if (!container) continue; // 安全檢查
             
             for (const [catName, items] of Object.entries(categories)) {
                 const card = document.createElement('div');
@@ -308,7 +328,7 @@
         }
     }
 
-    // 翻譯功能 (保持不變)
+    // --- 3. 翻譯與產出功能 ---
     async function translateInput() {
         const inputEl = document.getElementById('mainSubject');
         const statusEl = document.getElementById('translationStatus');
@@ -332,3 +352,51 @@
             document.getElementById('translateBtn').disabled = false;
             statusEl.style.display = 'none';
         }
+    }
+
+    async function generatePrompt() {
+        let mainSubject = document.getElementById('mainSubject').value.trim();
+        const aspectRatio = document.getElementById('aspectRatio').value;
+        const pixelRes = document.getElementById('pixelResolution').value;
+        const btn = document.querySelector('.btn-primary');
+
+        if (/[\u4e00-\u9fa5]/.test(mainSubject)) {
+            const originalText = btn.textContent;
+            btn.textContent = "⏳ 翻譯中...";
+            btn.disabled = true;
+            mainSubject = await translateInput() || mainSubject;
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+
+        let parts = [];
+        if (mainSubject) parts.push(mainSubject);
+        if (pixelRes) parts.push(pixelRes);
+
+        document.querySelectorAll('.category-select').forEach(select => {
+            if (select.value) parts.push(select.value);
+        });
+
+        parts.push("--v 6.0");
+        if (aspectRatio) parts.push(aspectRatio);
+
+        document.getElementById('outputPrompt').value = parts.join(', ');
+    }
+
+    function copyToClipboard() {
+        const el = document.getElementById("outputPrompt");
+        el.select();
+        el.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(el.value);
+    }
+
+    // 啟動初始化
+    init();
+
+    // 註冊 Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+    }
+</script>
+</body>
+</html>
