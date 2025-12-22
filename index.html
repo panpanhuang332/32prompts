@@ -1,112 +1,119 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 提示詞大師 - 9527</title>
+    <title>第一次AI生圖就上手</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* 模擬 Screenshot_20251222_224052_LINE.jpg 的質感 */
-        .option-btn { @apply border border-slate-200 rounded-2xl p-4 text-center cursor-pointer transition-all bg-white text-slate-500 shadow-sm; }
-        .option-btn.active { @apply border-purple-600 ring-2 ring-purple-100 text-purple-700 font-bold bg-purple-50; }
-        .step-label { @apply text-purple-800 font-black text-sm mb-4 tracking-widest uppercase; }
+        body {
+            font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+            background-color: #f8faff;
+        }
+        .header-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+        .step-title {
+            color: #8b5cf6;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        .option-btn {
+            border: 1px solid #e5e7eb;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+        .option-btn.active {
+            border: 2px solid #8b5cf6;
+            color: #8b5cf6;
+            background-color: #fff;
+        }
+        .dice-icon {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen pb-20">
+<body class="max-w-md mx-auto min-h-screen shadow-lg">
 
-    <div class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white p-10 rounded-b-[3rem] shadow-xl mb-10 text-center relative overflow-hidden">
-        <div class="relative z-10">
-            <h1 class="text-3xl font-extrabold tracking-tight">第一次AI生圖就上手</h1>
-            <p class="text-indigo-100 mt-2 text-2xl font-light tracking-[0.4em]">9527</p>
+    <header class="header-gradient text-white p-8 relative rounded-b-[2rem]">
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="text-3xl font-black italic tracking-wider mb-2">
+                    第一次AI生圖就上手
+                </h1>
+                <p class="text-4xl font-mono tracking-widest opacity-90">9527</p>
+            </div>
+            <div class="dice-icon p-4 rounded-2xl flex items-center justify-center">
+                <i class="fa-solid fa-dice text-3xl"></i>
+            </div>
         </div>
-        <div class="absolute -right-2 top-1/2 -translate-y-1/2 opacity-20 text-8xl rotate-12">🎲</div>
-    </div>
+    </header>
 
-    <div class="max-w-md mx-auto px-6 space-y-12">
-        
+    <main class="p-6 space-y-8">
+
         <section>
-            <h2 class="step-label">STEP 01. 圖片類型</h2>
-            <div class="grid grid-cols-3 gap-3" id="typeGrid">
-                <div class="option-btn active" data-en="A professional illustration of">通用圖像</div>
-                <div class="option-btn" data-en="A breathtaking epic landscape of">壯闊風景</div> <div class="option-btn" data-en="A high-end portrait photography of">人像攝影</div>
-                <div class="option-btn" data-en="A clean infographic design about">資訊圖表</div> <div class="option-btn" data-en="A functional diagram showing">功能圖解</div>
-                <div class="option-btn" data-en="A professional business flowchart of">流程圖</div>
+            <h2 class="step-title italic">STEP 01. 圖片類型</h2>
+            <div class="grid grid-cols-3 gap-3">
+                <button class="option-btn active py-4 rounded-2xl font-bold">通用圖像</button>
+                <button class="option-btn bg-white py-4 rounded-2xl font-medium">資訊圖表</button>
+                <button class="option-btn bg-white py-4 rounded-2xl font-medium">人像攝影</button>
+                <button class="option-btn bg-white py-4 rounded-2xl font-medium text-sm">壯闊風景</button>
+                <button class="option-btn bg-white py-4 rounded-2xl font-medium text-sm">功能圖解</button>
+                <button class="option-btn bg-white py-4 rounded-2xl font-medium text-sm">流程圖</button>
             </div>
         </section>
 
         <section>
-            <h2 class="step-label">STEP 02. 內容主題</h2>
-            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
-                <textarea id="userInput" rows="4" 
-                    class="w-full p-6 outline-none text-slate-700 resize-none placeholder-slate-300"
-                    placeholder="你想呈現什麼畫面？"></textarea>
+            <h2 class="step-title italic">STEP 02. 內容主題</h2>
+            <div class="relative">
+                <textarea 
+                    class="w-full h-32 p-6 bg-gray-50 border-none rounded-[2rem] text-gray-400 focus:ring-2 focus:ring-purple-400 outline-none resize-none"
+                    placeholder="你想呈現什麼畫面？"
+                ></textarea>
             </div>
         </section>
 
         <section>
-            <h2 class="step-label">STEP 03. 視覺風格與參數</h2>
-            <select id="styleSelect" class="w-full p-5 bg-white border border-slate-200 rounded-[1.5rem] shadow-sm outline-none appearance-none text-slate-500 font-medium">
-                <option value="">1. 選擇風格類別...</option>
-                <option value="in Cyberpunk style with neon lighting">賽博龐克 (Cyberpunk)</option>
-                <option value="in Studio Ghibli hand-drawn anime style">吉卜力動畫風</option>
-                <option value="photorealistic, 8k, hyper-detailed photography">極致寫實攝影</option>
-                <option value="in traditional Japanese Ukiyo-e art style">傳統浮世繪</option>
-                <option value="3D render, Octane render, cute toy style">可愛 3D 渲染</option>
-            </select>
+            <h2 class="step-title italic">STEP 03. 視覺風格與參數</h2>
+            <div class="space-y-4">
+                <div class="relative">
+                    <select class="w-full p-5 bg-gray-50 border-none rounded-2xl appearance-none text-purple-700 font-bold focus:ring-2 focus:ring-purple-400 outline-none">
+                        <option>1. 選擇風格類別...</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-chevron-down text-purple-400"></i>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <select class="w-full p-5 bg-gray-50 border-none rounded-2xl appearance-none text-gray-400 font-medium focus:ring-2 focus:ring-purple-400 outline-none">
+                        <option>2. 再選擇具體規格...</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-chevron-down text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <button id="generateBtn" 
-            class="w-full bg-indigo-600 text-white py-5 rounded-[1.5rem] font-black text-lg shadow-lg shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition-all">
-            立即生成專業提示詞
-        </button>
+    </main>
 
-        <div id="resultArea" class="hidden space-y-4 pb-20">
-            <div class="p-6 bg-white rounded-[2rem] border-2 border-purple-100 shadow-inner">
-                <p class="text-xs text-purple-400 font-bold mb-3 uppercase tracking-widest">優化後的提示詞 (可直接複製)：</p>
-                <p id="promptOutput" class="text-slate-700 text-lg leading-relaxed font-medium mb-6"></p>
-                <button onclick="copyText()" class="w-full py-4 bg-purple-50 text-purple-600 font-bold rounded-2xl border border-purple-200 active:bg-purple-100">
-                    📋 一鍵複製提示詞
-                </button>
-            </div>
-            <p class="text-center text-slate-400 text-xs mt-4">複製後請貼上至生圖軟體即可產出圖片</p>
-        </div>
-    </div>
+    <div class="h-20"></div>
 
     <script>
-        // 按鈕選取邏輯
-        document.querySelectorAll('.option-btn').forEach(btn => {
+        // 簡單的按鈕點擊切換邏輯
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+                buttons.forEach(b => b.classList.remove('active', 'font-bold'));
+                buttons.forEach(b => b.classList.add('bg-white', 'font-medium'));
+                btn.classList.add('active', 'font-bold');
+                btn.classList.remove('bg-white', 'font-medium');
             });
         });
-
-        const genBtn = document.getElementById('generateBtn');
-        const resultArea = document.getElementById('resultArea');
-        const output = document.getElementById('promptOutput');
-
-        genBtn.addEventListener('click', () => {
-            const typePrefix = document.querySelector('.option-btn.active').dataset.en;
-            const subject = document.getElementById('userInput').value.trim();
-            const styleSuffix = document.getElementById('styleSelect').value;
-
-            if (!subject) return alert('請在 Step 02 輸入您的想法內容');
-
-            // 拼接提示詞邏輯：不需要 API Key
-            const finalPrompt = `${typePrefix} ${subject}, ${styleSuffix}, masterpiece, highly detailed, 8k resolution.`;
-            
-            // 呈現結果
-            output.innerText = finalPrompt;
-            resultArea.classList.remove('hidden');
-            resultArea.scrollIntoView({ behavior: 'smooth' });
-        });
-
-        function copyText() {
-            const text = document.getElementById('promptOutput').innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                alert('提示詞已成功複製到剪貼簿！');
-            });
-        }
     </script>
 </body>
 </html>
