@@ -47,13 +47,15 @@
 
         <div id="resultArea" class="space-y-4"></div>
 
-        <button onclick="resetKey()" class="mt-8 text-xs text-gray-500 hover:text-gray-300 underline">
-            重設 API Key
-        </button>
+        <div class="pt-8 border-t border-gray-800">
+            <button onclick="resetKey()" class="text-xs text-gray-500 hover:text-gray-300 underline">
+                重設 API Key
+            </button>
+        </div>
     </div>
 
     <script>
-        // 1. 註冊 Service Worker
+        // 1. 註冊 Service Worker (PWA)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
@@ -62,29 +64,28 @@
             });
         }
 
-        // 2. 金鑰管理邏輯：從瀏覽器讀取，沒有就問
+        // 2. 安全金鑰管理：使用 localStorage 避免代碼洩露
         let API_KEY = localStorage.getItem('MY_AI_KEY');
 
-        function checkKey() {
+        function checkAndGetApiKey() {
             if (!API_KEY || API_KEY === 'null' || API_KEY.length < 10) {
-                API_KEY = prompt("請輸入您的 Gemini API Key：\n(金鑰會安全存在您的瀏覽器中)");
-                if (API_KEY) {
+                const input = prompt("請輸入您的 Gemini API Key：\n(此金鑰將安全儲存在您的瀏覽器中，不會上傳至 GitHub)");
+                if (input && input.trim().length > 10) {
+                    API_KEY = input.trim();
                     localStorage.setItem('MY_AI_KEY', API_KEY);
-                    alert("金鑰已儲存，現在可以開始生圖了！");
-                } else {
-                    alert("未輸入金鑰，程式將無法運作。");
+                    return true;
                 }
+                alert("未偵測到有效的 API Key，請重新輸入。");
+                return false;
             }
+            return true;
         }
 
         function resetKey() {
             localStorage.removeItem('MY_AI_KEY');
-            alert("金鑰已清除，網頁將重新整理。");
+            alert("金鑰已清除，網頁將重新載入。");
             location.reload();
         }
-
-        // 初始化檢查金鑰
-        checkKey();
 
         const generateBtn = document.getElementById('generateBtn');
         const userInput = document.getElementById('userInput');
@@ -92,21 +93,19 @@
         const resultArea = document.getElementById('resultArea');
 
         generateBtn.addEventListener('click', async () => {
-            const promptContent = userInput.value.trim();
-            if (!promptContent) return alert('請輸入內容');
+            const promptText = userInput.value.trim();
+            if (!promptText) return alert('請輸入想要生成的內容');
             
-            // 如果剛才沒輸 Key，按按鈕時再問一次
-            if (!API_KEY) {
-                checkKey();
-                return;
-            }
+            // 檢查金鑰
+            if (!checkAndGetApiKey()) return;
 
+            // 初始化介面
             generateBtn.disabled = true;
             statusArea.classList.remove('hidden');
             resultArea.innerHTML = '';
 
-            // 使用 1.5-flash 確保穩定性
-            const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            // 使用更穩定的 2.0 模型與 v1 介面
+            const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
             try {
                 const response = await fetch(GEMINI_URL, {
@@ -114,7 +113,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         contents: [{
-                            parts: [{ text: `你是一個 AI 繪圖專家。請根據使用者的中文描述：「${promptContent}」，將其擴充為一段精美且詳細的英文繪圖提示詞 (Prompt)。請只輸出英文提示詞，不要有其他解釋。` }]
+                            parts: [{ text: `你是一個 AI 繪圖專家。請根據使用者的中文描述：「${promptText}」，將其擴充為一段精美且詳細的英文繪圖提示詞 (Prompt)。請只輸出英文提示詞，不要有其他解釋。` }]
                         }]
                     })
                 });
@@ -122,9 +121,10 @@
                 const data = await response.json();
                 
                 if (data.error) {
+                    // 如果金鑰無效，提示使用者重設
                     if (data.error.message.includes('API key')) {
-                        resetKey(); // Key 錯了就清掉重來
-                        throw new Error('API Key 無效，請檢查後重新輸入。');
+                        localStorage.removeItem('MY_AI_KEY');
+                        throw new Error('API Key 無效或已過期，請點擊確定後重新輸入。');
                     }
                     throw new Error(data.error.message);
                 }
@@ -141,12 +141,19 @@
 
             } catch (error) {
                 console.error(error);
-                alert('系統提示：' + error.message);
+                alert('生圖失敗：' + error.message);
                 statusArea.classList.add('hidden');
             } finally {
                 generateBtn.disabled = false;
             }
         });
+
+        // 頁面載入時檢查金鑰
+        window.onload = () => {
+            if (!API_KEY) {
+                console.log("等待使用者輸入金鑰...");
+            }
+        };
     </script>
 </body>
 </html>
