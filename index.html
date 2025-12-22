@@ -78,26 +78,21 @@
             resultBox.classList.add('hidden');
 
             try {
-                // 使用更穩定的 1.5-flash 模型進行測試，避免 404 錯誤
+                // 改用 v1 版本網址，解決 404 (Not Found) 問題
                 const geminiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
                 
                 const response = await fetch(geminiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: `你是一位專業的繪圖提示詞工程師。請將以下中文主題擴充成一段高品質英文繪圖指令：${content}。只需要輸出英文指令，不要解釋。` }] }]
+                        contents: [{ parts: [{ text: `你是一位專業的繪圖提示詞工程師。請將以下中文主題擴充成一段細膩、高品質的英文繪圖指令：${content}。只需要輸出英文指令，不要有任何解釋文字。` }] }]
                     })
                 });
 
                 const data = await response.json();
                 
-                // 檢查 Google 是否回傳了具體的錯誤訊息
                 if (data.error) {
-                    throw new Error(`Google API 報錯: ${data.error.message}`);
-                }
-
-                if (!data.candidates || !data.candidates[0]) {
-                    throw new Error("AI 沒有回傳結果，請確認 API Key 權限或服務是否已啟用。");
+                    throw new Error(data.error.message);
                 }
 
                 const optimizedPrompt = data.candidates[0].content.parts[0].text;
@@ -114,7 +109,7 @@
                 };
 
             } catch (error) {
-                console.error("AI 處理詳細錯誤:", error);
+                console.error("AI 處理錯誤:", error);
                 alert("生圖失敗原因：" + error.message);
                 loading.classList.add('hidden');
                 btn.disabled = false;
@@ -183,6 +178,7 @@
 
 </body>
 </html>
+
 
 
 
