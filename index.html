@@ -1,119 +1,133 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第一次AI生圖就上手</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 隨身畫師</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-            background-color: #f8faff;
+        .loading-ring {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #6366f1;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
         }
-        .header-gradient {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-        }
-        .step-title {
-            color: #8b5cf6;
-            font-weight: 800;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-        }
-        .option-btn {
-            border: 1px solid #e5e7eb;
-            color: #4b5563;
-            transition: all 0.2s;
-        }
-        .option-btn.active {
-            border: 2px solid #8b5cf6;
-            color: #8b5cf6;
-            background-color: #fff;
-        }
-        .dice-icon {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(4px);
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body { background-color: #0f172a; -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
-<body class="max-w-md mx-auto min-h-screen shadow-lg">
+<body class="text-slate-100 flex flex-col min-h-screen">
 
-    <header class="header-gradient text-white p-8 relative rounded-b-[2rem]">
-        <div class="flex justify-between items-start">
-            <div>
-                <h1 class="text-3xl font-black italic tracking-wider mb-2">
-                    第一次AI生圖就上手
-                </h1>
-                <p class="text-4xl font-mono tracking-widest opacity-90">9527</p>
-            </div>
-            <div class="dice-icon p-4 rounded-2xl flex items-center justify-center">
-                <i class="fa-solid fa-dice text-3xl"></i>
-            </div>
-        </div>
+    <header class="p-4 text-center border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-10">
+        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            AI 隨身畫師 2025
+        </h1>
     </header>
 
-    <main class="p-6 space-y-8">
+    <main class="flex-1 p-4 max-w-lg mx-auto w-full space-y-6">
+        
+        <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700 shadow-xl">
+            <label class="block text-sm text-slate-400 mb-2 ml-1">你想畫什麼？</label>
+            <textarea id="userInput" rows="3" 
+                class="w-full bg-slate-900 text-white p-4 rounded-xl border border-slate-600 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder:text-slate-600"
+                placeholder="例如：穿著太空衣在月球散步的柴犬..."></textarea>
+            
+            <button id="generateBtn" 
+                class="w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                開始生成圖像
+            </button>
+        </div>
 
-        <section>
-            <h2 class="step-title italic">STEP 01. 圖片類型</h2>
-            <div class="grid grid-cols-3 gap-3">
-                <button class="option-btn active py-4 rounded-2xl font-bold">通用圖像</button>
-                <button class="option-btn bg-white py-4 rounded-2xl font-medium">資訊圖表</button>
-                <button class="option-btn bg-white py-4 rounded-2xl font-medium">人像攝影</button>
-                <button class="option-btn bg-white py-4 rounded-2xl font-medium text-sm">壯闊風景</button>
-                <button class="option-btn bg-white py-4 rounded-2xl font-medium text-sm">功能圖解</button>
-                <button class="option-btn bg-white py-4 rounded-2xl font-medium text-sm">流程圖</button>
+        <div id="statusArea" class="hidden flex flex-col items-center gap-3 py-10">
+            <div class="loading-ring"></div>
+            <p class="text-blue-400 animate-pulse text-sm">Gemini 正在構思細節...</p>
+        </div>
+
+        <div id="resultArea" class="space-y-4 pb-10">
             </div>
-        </section>
-
-        <section>
-            <h2 class="step-title italic">STEP 02. 內容主題</h2>
-            <div class="relative">
-                <textarea 
-                    class="w-full h-32 p-6 bg-gray-50 border-none rounded-[2rem] text-gray-400 focus:ring-2 focus:ring-purple-400 outline-none resize-none"
-                    placeholder="你想呈現什麼畫面？"
-                ></textarea>
-            </div>
-        </section>
-
-        <section>
-            <h2 class="step-title italic">STEP 03. 視覺風格與參數</h2>
-            <div class="space-y-4">
-                <div class="relative">
-                    <select class="w-full p-5 bg-gray-50 border-none rounded-2xl appearance-none text-purple-700 font-bold focus:ring-2 focus:ring-purple-400 outline-none">
-                        <option>1. 選擇風格類別...</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-chevron-down text-purple-400"></i>
-                    </div>
-                </div>
-
-                <div class="relative">
-                    <select class="w-full p-5 bg-gray-50 border-none rounded-2xl appearance-none text-gray-400 font-medium focus:ring-2 focus:ring-purple-400 outline-none">
-                        <option>2. 再選擇具體規格...</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-5 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-chevron-down text-gray-300"></i>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
-    <div class="h-20"></div>
-
     <script>
-        // 簡單的按鈕點擊切換邏輯
-        const buttons = document.querySelectorAll('.option-btn');
-        buttons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                buttons.forEach(b => b.classList.remove('active', 'font-bold'));
-                buttons.forEach(b => b.classList.add('bg-white', 'font-medium'));
-                btn.classList.add('active', 'font-bold');
-                btn.classList.remove('bg-white', 'font-medium');
-            });
+        // 1. 在這裡填入你的 API Key
+        const GEMINI_API_KEY = '你的_API_KEY_貼在這邊'; 
+        
+        const generateBtn = document.getElementById('generateBtn');
+        const userInput = document.getElementById('userInput');
+        const statusArea = document.getElementById('statusArea');
+        const resultArea = document.getElementById('resultArea');
+
+        generateBtn.addEventListener('click', async () => {
+            const prompt = userInput.value.trim();
+            if (!prompt) return alert('請輸入描述內容喔！');
+
+            // UI 狀態切換
+            generateBtn.disabled = true;
+            generateBtn.classList.add('opacity-50');
+            statusArea.classList.remove('hidden');
+            resultArea.innerHTML = '';
+
+            try {
+                // 呼叫 Gemini 進行提示詞擴充
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: `你是一位藝術大師。請根據：「${prompt}」，將其擴充為一段極致細膩的英文繪圖提示詞 (Prompt)。請只輸出英文內容，不需任何解釋與標點。` }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                if (data.error) throw new Error(data.error.message);
+
+                const refinedPrompt = data.candidates[0].content.parts[0].text;
+                
+                // 使用 Pollinations 生成圖片 (使用隨機種子避免緩存)
+                const seed = Math.floor(Math.random() * 99999);
+                const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(refinedPrompt)}?width=1024&height=1024&seed=${seed}&nologo=true`;
+
+                // 渲染結果
+                resultArea.innerHTML = `
+                    <div class="bg-slate-800 rounded-2xl overflow-hidden border border-slate-700 shadow-2xl animate-in fade-in duration-700">
+                        <div class="p-3 bg-slate-900/80">
+                            <p class="text-[10px] text-slate-500 font-mono break-all">${refinedPrompt}</p>
+                        </div>
+                        <img src="${imageUrl}" alt="AI Generated" class="w-full h-auto" 
+                             onload="document.getElementById('statusArea').classList.add('hidden')">
+                        <div class="p-4 flex justify-between items-center">
+                            <span class="text-xs text-slate-400">長按圖片可儲存</span>
+                            <button onclick="window.location.reload()" class="text-blue-400 text-sm italic">重新開始</button>
+                        </div>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error(error);
+                alert('糟糕，出錯了：' + error.message);
+                statusArea.classList.add('hidden');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.classList.remove('opacity-50');
+            }
         });
+
+        // 簡單的 Service Worker 註冊 (PWA 必備)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
     </script>
 </body>
 </html>
