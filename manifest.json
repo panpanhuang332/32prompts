@@ -1,18 +1,19 @@
 {
-  "name": "MJ 提示詞產生器",
-  "short_name": "MJ Prompts",
+  "name": "一指提示 - AI Prompt Tool",
+  "short_name": "一指提示",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#343a40",
+  "theme_color": "#4285f4",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/10432/10432881.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/12308/12308803.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/10432/10432881.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/12308/12308803.png",
       "sizes": "512x512",
       "type": "image/png"
     }
