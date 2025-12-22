@@ -219,4 +219,209 @@
             {val: "Marvel Animation", label: "漫威 (Marvel)"}
         ],
         "12. 卡通動畫名稱 (Animation Names)": [
-            {val: "SpongeBob", label: "海綿寶寶 (Sponge
+            {val: "SpongeBob", label: "海綿寶寶 (SpongeBob)"},
+            {val: "Mickey Mouse", label: "米老鼠 (Mickey Mouse)"},
+            {val: "The Simpsons", label: "辛普森家族 (The Simpsons)"},
+            {val: "Dragon ball", label: "七龍珠 (Dragon ball)"},
+            {val: "Doraemon", label: "哆啦A夢 (Doraemon)"},
+            {val: "Sailor Moon", label: "美少女戰士 (Sailor Moon)"},
+            {val: "Demon Slayer", label: "鬼滅之刃 (Demon Slayer)"},
+            {val: "Cyberpunk", label: "賽博龐克 (Cyberpunk)"},
+            {val: "JoJo's Bizarre Adventure", label: "JoJo (JoJo)"}
+        ],
+        "13. 藝術流派 (Movements)": [
+            {val: "Renaissance", label: "文藝復興 (Renaissance)"},
+            {val: "Impressionism", label: "印象派 (Impressionism)"},
+            {val: "Surrealism", label: "超現實主義 (Surrealism)"},
+            {val: "Cubism", label: "立體主義 (Cubism)"},
+            {val: "Pop Art", label: "普普藝術 (Pop Art)"},
+            {val: "Minimalism", label: "極簡主義 (Minimalism)"},
+            {val: "Cyber Art", label: "賽博藝術 (Cyber Art)"},
+            {val: "Steampunk", label: "蒸氣龐克 (Steampunk)"},
+            {val: "Synthwave", label: "合成波 (Synthwave)"}
+        ],
+        "14. 藝術家 (Artists)": [
+            {val: "Vincent van Gogh", label: "梵谷 (Van Gogh)"},
+            {val: "Leonardo da Vinci", label: "達文西 (Da Vinci)"},
+            {val: "Picasso", label: "畢卡索 (Picasso)"},
+            {val: "Dali", label: "達利 (Dali)"},
+            {val: "Monet", label: "莫內 (Monet)"},
+            {val: "Mucha", label: "慕夏 (Mucha)"},
+            {val: "Andy Warhol", label: "安迪沃荷 (Warhol)"},
+            {val: "Katsushika Hokusai", label: "葛飾北齋 (Hokusai)"},
+            {val: "Yayoi Kusama", label: "草間彌生 (Kusama)"},
+            {val: "Makoto Shinkai", label: "新海誠 (Makoto Shinkai)"}
+        ],
+        "15. 特色風格 (Distinctive Styles)": [
+            {val: "8-bit pixel art", label: "8-bit 像素 (8-bit pixel art)"},
+            {val: "16-bit pixel art", label: "16-bit 像素 (16-bit pixel art)"},
+            {val: "Isometric pixel art", label: "等距像素 (Isometric pixel art)"},
+            {val: "Voxel art", label: "體素藝術 (Voxel art)"}
+        ],
+        "16. 商品結構與介紹 (Product Design)": [
+            {val: "Encyclopedia of", label: "百科全書風格 (Encyclopedia of...)"},
+            {val: "3D Model Exploded View", label: "3D 分解圖 (Exploded View)"},
+            {val: "diagrammatic drawing", label: "示意圖 (diagrammatic drawing)"},
+            {val: "character toy", label: "公仔玩具 (character toy)"}
+        ],
+        "17. 平面設計與室內設計 (Design)": [
+            {val: "mascot logo", label: "吉祥物 Logo (mascot logo)"},
+            {val: "Minimal Line logo", label: "極簡線條 Logo (Minimal Line logo)"},
+            {val: "2D floor plan", label: "2D 平面圖 (2D floor plan)"},
+            {val: "3D floor plan", label: "3D 室內設計 (3D floor plan)"},
+            {val: "UI design", label: "UI 設計 (UI design)"}
+        ]
+    };
+
+    // 初始化頁面
+    function init() {
+        const container = document.getElementById('optionsContainer');
+        
+        for (const [category, items] of Object.entries(data)) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'category-group';
+            
+            const title = document.createElement('h5');
+            title.textContent = category;
+            wrapper.appendChild(title);
+            
+            const select = document.createElement('select');
+            select.className = 'form-select category-select';
+            select.setAttribute('data-category', category);
+            
+            // 預設選項
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "--- 請選擇 (選填) ---";
+            select.appendChild(defaultOption);
+            
+            // 填入選項
+            items.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.val;
+                opt.textContent = item.label;
+                select.appendChild(opt);
+            });
+            
+            wrapper.appendChild(select);
+            container.appendChild(wrapper);
+        }
+    }
+
+    // 判斷是否包含中文字符
+    function hasChinese(text) {
+        return /[\u4e00-\u9fa5]/.test(text);
+    }
+
+    // 執行翻譯 (使用 MyMemory API)
+    async function translateInput() {
+        const inputEl = document.getElementById('mainSubject');
+        const statusEl = document.getElementById('translationStatus');
+        const text = inputEl.value.trim();
+
+        if (!text) return;
+        
+        if (!hasChinese(text)) {
+            return text; 
+        }
+
+        statusEl.style.display = 'block';
+        document.getElementById('translateBtn').disabled = true;
+
+        try {
+            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=zh-TW|en`);
+            const data = await response.json();
+            
+            if (data.responseData && data.responseData.translatedText) {
+                inputEl.value = data.responseData.translatedText;
+                statusEl.style.display = 'none';
+                return data.responseData.translatedText;
+            } else {
+                throw new Error("Translation failed");
+            }
+        } catch (error) {
+            console.error("翻譯失敗:", error);
+            statusEl.textContent = "翻譯服務忙碌中，請稍後再試或直接產出。";
+            setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
+            return text;
+        } finally {
+            document.getElementById('translateBtn').disabled = false;
+        }
+    }
+
+    // 產出提示詞
+    async function generatePrompt() {
+        let mainSubject = document.getElementById('mainSubject').value.trim();
+        const aspectRatio = document.getElementById('aspectRatio').value; // 取得比例
+        const pixelRes = document.getElementById('pixelResolution').value; // 取得像素
+        const generateBtn = document.querySelector('.btn-primary');
+        const originalBtnText = generateBtn.textContent;
+
+        // 如果檢測到中文，先嘗試自動翻譯
+        if (hasChinese(mainSubject)) {
+            generateBtn.textContent = "⏳ 翻譯中...";
+            generateBtn.disabled = true;
+            mainSubject = await translateInput();
+            generateBtn.textContent = originalBtnText;
+            generateBtn.disabled = false;
+        }
+
+        const selects = document.querySelectorAll('.category-select');
+        let promptParts = [];
+
+        // 1. 主體
+        if (mainSubject) {
+            promptParts.push(mainSubject);
+        }
+
+        // 2. 像素/解析度 (作為描述詞放在前面)
+        if (pixelRes) {
+            promptParts.push(pixelRes);
+        }
+
+        // 3. 風格細項
+        selects.forEach(select => {
+            if (select.value) {
+                promptParts.push(select.value);
+            }
+        });
+
+        // 4. 版本參數 (預設)
+        promptParts.push("--v 6.0");
+
+        // 5. 比例參數 (必須放在最後)
+        if (aspectRatio) {
+            promptParts.push(aspectRatio);
+        }
+
+        const finalPrompt = promptParts.join(', ');
+        document.getElementById('outputPrompt').value = finalPrompt;
+    }
+
+    // 複製功能
+    function copyToClipboard() {
+        const copyText = document.getElementById("outputPrompt");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); 
+        navigator.clipboard.writeText(copyText.value);
+        
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = "已複製!";
+        setTimeout(() => btn.textContent = originalText, 2000);
+    }
+
+    // 註冊 Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW registered!', reg))
+                .catch(err => console.log('SW registration failed', err));
+        });
+    }
+
+    init();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
