@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 產圖大師 9527</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://pollinations.ai https://cdn-icons-png.flaticon.com; connect-src 'self' https://generativelanguage.googleapis.com https://cdn-icons-png.flaticon.com;">
+    <title>AI 提示詞大師 9527</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; connect-src 'self' https://generativelanguage.googleapis.com;">
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
@@ -17,15 +17,23 @@
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
 
     <div class="max-w-2xl w-full space-y-8 text-center">
-        <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">AI 產圖大師 9527</h1>
-        
+        <div>
+            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                AI 提示詞大師 9527
+            </h1>
+            <p class="text-gray-400 mt-2 text-lg">專為生圖設計的擴充助手</p>
+        </div>
+
         <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-2xl">
-            <textarea id="userInput" rows="4" class="w-full bg-gray-900 p-4 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="描述你想要的畫面，例如：在校園奔跑的機器人..."></textarea>
-            <button id="generateBtn" class="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 py-3 rounded-lg font-bold hover:scale-105 transition duration-300">AI 思考並自動產圖</button>
+            <textarea id="userInput" rows="4" class="w-full bg-gray-900 p-4 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none resize-none" placeholder="輸入中文想法（例如：一隻在森林裡喝茶的兔子）..."></textarea>
+            
+            <button id="generateBtn" class="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 py-3 rounded-lg font-bold hover:scale-105 transition duration-300">
+                AI 立即擴充為專業提示詞
+            </button>
         </div>
 
         <div id="statusArea" class="hidden">
-            <p class="text-blue-400 italic loading-dots">Gemini 正在分析需求並擴充細節</p>
+            <p class="text-blue-400 italic loading-dots">Gemini 正在分析並擴充細節</p>
         </div>
 
         <div id="resultArea" class="space-y-4"></div>
@@ -40,7 +48,7 @@
 
         async function ensureKey() {
             if (!API_KEY || API_KEY.length < 10) {
-                const key = prompt("為了安全，請輸入您的 Gemini API Key：\n(此金鑰將僅存在您的瀏覽器記憶體中)");
+                const key = prompt("請輸入您的 Gemini API Key：\n(此 Key 將安全儲存在您的瀏覽器中)");
                 if (key && key.trim().length > 10) {
                     API_KEY = key.trim();
                     localStorage.setItem('MY_AI_KEY', API_KEY);
@@ -60,7 +68,7 @@
 
         btn.addEventListener('click', async () => {
             const userText = input.value.trim();
-            if (!userText) return alert('請輸入內容');
+            if (!userText) return alert('請先輸入想法');
             
             await ensureKey();
             if (!API_KEY) return;
@@ -77,37 +85,37 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: `你是一位藝術提示詞專家。請將「${userText}」擴充為一段詳細的英文繪圖提示詞，只輸出英文。` }] }]
+                        contents: [{ parts: [{ text: `你是一位繪圖提示詞專家。請根據這段中文描述： 「${userText}」，擴充成一段描述光影、材質、構圖的精美英文提示詞 (Prompt)。請只輸出英文，不要解釋。` }] }]
                     })
                 });
 
                 const data = await response.json();
-                
-                if (data.error) {
-                    // 針對配額為 0 或金鑰無效的處理
-                    if (data.error.message.includes('API key')) {
-                        localStorage.removeItem('MY_AI_KEY');
-                        throw new Error('金鑰已被偵測為外洩或無效，請更換新金鑰。');
-                    }
-                    throw new Error(data.error.message);
-                }
+                if (data.error) throw new Error(data.error.message);
 
                 const refinedPrompt = data.candidates[0].content.parts[0].text;
-                const imgUrl = `https://pollinations.ai/p/${encodeURIComponent(refinedPrompt)}?width=1024&height=1024&seed=${Math.floor(Math.random() * 1000)}`;
+                status.classList.add('hidden');
 
                 result.innerHTML = `
-                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
-                        <p class="text-xs text-gray-400 mb-2 italic">優化提示詞：${refinedPrompt}</p>
-                        <img src="${imgUrl}" alt="AI Image" class="w-full rounded-lg shadow-lg" onload="document.getElementById('statusArea').classList.add('hidden')">
+                    <div class="bg-gray-800 p-6 rounded-lg border border-blue-500/50 shadow-inner text-left">
+                        <p class="text-blue-400 text-sm mb-2 font-bold uppercase tracking-widest">優化後的英文提示詞：</p>
+                        <p id="promptText" class="text-lg text-gray-100 leading-relaxed mb-4">${refinedPrompt}</p>
+                        <button onclick="copyText()" class="bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 px-4 py-2 rounded border border-blue-600/50 text-sm transition">
+                            一鍵複製提示詞
+                        </button>
                     </div>
                 `;
             } catch (e) {
-                alert("生圖失敗：" + e.message + "\n\n提示：請確保已在專案 905215586222 啟用 API。");
+                alert("獲取失敗：" + e.message + "\n\n請檢查專案 905215586222 是否已啟用 API。");
                 status.classList.add('hidden');
             } finally {
                 btn.disabled = false;
             }
         });
+
+        function copyText() {
+            const text = document.getElementById('promptText').innerText;
+            navigator.clipboard.writeText(text).then(() => alert('已複製到剪貼簿！可直接貼到生圖工具。'));
+        }
 
         window.onload = ensureKey;
     </script>
