@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>一指提示 (AI 學習版)</title>
+    <title>一指提示 (教育學習 Pro版)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#050505">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
@@ -40,53 +40,72 @@
             background: linear-gradient(90deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
+        /* 登入資訊 */
+        .user-info { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #bbb; cursor: pointer; }
+        .user-avatar { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); }
+        .btn-google-login { font-size: 0.8rem; padding: 6px 14px; border-radius: 50px; background: #1a1a1a; border: 1px solid var(--glass-border); color: #ccc; }
+
+        /* 模式切換 */
         .mode-switch-container { display: flex; gap: 8px; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
         .mode-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 0.85rem; border-radius: 8px; color: #666; font-weight: 500; transition: all 0.3s; }
         .mode-btn.active { background: linear-gradient(145deg, #222, #111); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
         .mode-btn.mode-study.active { border-color: var(--study-purple); color: #e1bee7; }
 
+        /* 主內容區 */
         .app-content { flex-grow: 1; overflow-y: auto; padding: 15px; }
-        .category-card { background: linear-gradient(145deg, #111, #080808); border-radius: 16px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.15); }
-        
-        .tab-content-area { display: none; }
+        .tab-content-area { display: none; animation: fadeIn 0.3s ease; }
         .tab-content-area.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .app-footer { background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px); padding: 15px 20px 25px 20px; border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
-        
-        /* 輸出框樣式 */
-        .output-box { background-color: #000; border: 1px solid #333; border-radius: 10px; padding: 10px; margin-bottom: 10px; }
-        .prompt-label { font-size: 0.7rem; color: #888; margin-bottom: 5px; display: block; }
-        #outputPrompt { color: #00ff9d; font-family: monospace; font-size: 0.9rem; width: 100%; background: transparent; border: none; outline: none; resize: none; }
-        #translationPrompt { color: #3b82f6; font-size: 0.85rem; width: 100%; background: transparent; border: none; outline: none; resize: none; }
-        
-        .btn-speak { background: #222; color: #fff; border: 1px solid #444; border-radius: 50px; padding: 4px 12px; font-size: 0.75rem; margin-top: 5px; }
+        .category-card { background: linear-gradient(145deg, #111, #080808); border-radius: 16px; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.15); }
+        .category-title { font-size: 0.9rem; color: #fff; margin-bottom: 10px; border-left: 3px solid var(--accent-glow); padding-left: 10px; display: block; }
 
-        /* 相機預覽 */
-        .camera-preview-box { width: 60px; height: 60px; border-radius: 10px; border: 1px solid #555; overflow: hidden; display: none; margin-right: 10px; position: relative; }
+        /* 分頁標籤 */
         .nav-tabs { border: none; gap: 8px; padding-bottom: 10px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .nav-link { border: 1px solid transparent; border-radius: 20px; background: rgba(255,255,255,0.05); color: #888; font-size: 0.85rem; padding: 6px 14px; white-space: nowrap; }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+        .nav-link { border: 1px solid transparent; border-radius: 20px; background: rgba(255,255,255,0.05); color: #888; font-size: 0.85rem; padding: 6px 14px; white-space: nowrap; transition: all 0.2s; }
         .nav-link.active { background: #fff; color: #000; font-weight: 700; }
-        .disabled-tab { opacity: 0.3; }
+        .nav-link.disabled-tab { opacity: 0.3; cursor: not-allowed; }
+
+        /* 底部區域 */
+        .app-footer { background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px); padding: 15px 20px 25px 20px; border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+        .output-box { background-color: #000; border: 1px solid #333; border-radius: 12px; padding: 10px; margin-bottom: 8px; position: relative; }
+        .prompt-label { font-size: 0.65rem; color: #888; margin-bottom: 4px; display: block; font-weight: 700; letter-spacing: 1px; }
+        
+        textarea { width: 100%; background: transparent; border: none; outline: none; resize: none; font-family: monospace; font-size: 0.85rem; line-height: 1.4; }
+        #outputPrompt { color: #00ff9d; }
+        #translationPrompt { color: #3b82f6; }
+
+        .btn-speak { position: absolute; right: 10px; top: 10px; background: #222; color: #fff; border: 1px solid #444; border-radius: 50px; font-size: 0.65rem; padding: 2px 8px; }
+
+        /* 相片預覽 */
+        .camera-preview-box { width: 50px; height: 50px; border-radius: 8px; border: 1px solid #444; overflow: hidden; display: none; margin-right: 10px; position: relative; }
+        
+        .locked-badge { display: none; font-size: 0.7rem; color: #ff5252; margin-left: 5px; }
     </style>
 </head>
 <body>
 
     <div class="app-header">
         <div class="top-bar">
-            <h6 class="app-title">✨ Prompts Language <span style="font-size:0.7em; opacity:0.7;">EDU</span></h6>
-            <div id="userInfo" class="user-info"></div>
+            <h6 class="app-title">✨ Prompts Language <span style="font-size:0.7em; opacity:0.7;">PRO</span></h6>
+            <button id="loginBtn" class="btn-google-login" onclick="googleLogin()">登入</button>
+            <div id="userInfo" class="user-info" style="display: none;" onclick="googleLogout()">
+                <img id="userPhoto" src="" class="user-avatar">
+                <span id="userName">User</span>
+            </div>
         </div>
         
         <div class="mode-switch-container">
             <button class="mode-btn active" onclick="setMode('create')" id="mode-create">🎨 繪圖指令</button>
-            <button class="mode-btn mode-study" onclick="setMode('study')" id="mode-study">🔮 學習模式 (Coming Soon)</button>
+            <button class="mode-btn mode-study" onclick="setMode('study')" id="mode-study">🔮 學習模式 (開發中)</button>
         </div>
 
         <div class="d-flex align-items-center mb-2">
             <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" onchange="handleImageSelect(this)">
             <div id="previewBox" class="camera-preview-box">
                 <img id="finalImage" style="width:100%;height:100%;object-fit:cover;">
-                <button onclick="clearPhoto()" style="position:absolute; top:0; right:0; background:rgba(0,0,0,0.5); color:white; border:none; font-size:10px;">✕</button>
+                <button onclick="clearPhoto()" style="position:absolute; top:0; right:0; background:rgba(0,0,0,0.7); color:white; border:none; width:100%; font-size:9px;">✕</button>
             </div>
             <div class="input-group" id="mainInputGroup">
                 <input type="text" class="form-control" id="mainSubject" placeholder="輸入內容 (如: 貓)...">
@@ -100,125 +119,183 @@
             <button class="nav-link" onclick="switchTab(this, 'page-char')">👤 人物</button>
             <button class="nav-link" onclick="switchTab(this, 'page-scene')">🏞️ 場景</button>
             <button class="nav-link disabled-tab" id="btn-photo" onclick="switchTab(this, 'page-photo')">📸 攝影</button>
+            <button class="nav-link disabled-tab" id="btn-art" onclick="switchTab(this, 'page-art')">🖌️ 藝術 <span class="locked-badge">🔒</span></button>
+            <button class="nav-link disabled-tab" id="btn-anime" onclick="switchTab(this, 'page-anime')">🧸 動漫 <span class="locked-badge">🔒</span></button>
         </div>
     </div>
 
     <div class="app-content">
-        <div id="study-hint" style="display:none;">
-            <div class="category-card" style="border: 1px dashed #9c27b0;">
-                <h5 style="color:#ce93d8;">🔮 英語學習專案 (開發中)</h5>
-                <p class="small text-secondary">本功能未來將連結 AI 分享圖片中的視覺語言。拍下照片後，系統將自動生成地道的 Prompts 描述，讓您學習如何精確描述場景。</p>
-                <ul class="small text-info">
-                    <li>✓ 視覺單字學習</li>
-                    <li>✓ 描述句型分析</li>
-                    <li>✓ AI 語音朗讀</li>
-                </ul>
-            </div>
+        <div id="study-hint" style="display:none;" class="category-card">
+            <p class="small text-info mb-0">未來將透過 Vision AI 解析相片：<br>1. 點擊「拍照學習」 2. 下方將出現視覺單字與翻譯 3. 按下語音圖示學習發音。</p>
         </div>
 
         <div id="page-settings" class="tab-content-area active">
-             <div class="category-card">
-                <label class="category-title">📐 圖片比例</label>
-                <select class="form-select" id="aspectRatio"><option value="">1:1</option><option value="--ar 16:9">16:9</option></select>
-             </div>
+            <div class="category-card">
+                <label class="category-title">📐 圖片比例 (Aspect Ratio)</label>
+                <select class="form-select" id="aspectRatio">
+                    <option value="">1:1 (預設)</option>
+                    <option value="--ar 16:9">16:9 (寬螢幕)</option>
+                    <option value="--ar 9:16">9:16 (手機直式)</option>
+                    <option value="--ar 4:3">4:3 (標準照片)</option>
+                </select>
+            </div>
+            <div class="category-card">
+                <label class="category-title">✨ 輔助修飾詞 (Auxiliary)</label>
+                <select class="form-select" id="auxiliaryWords">
+                    <option value="">不指定</option>
+                    <option value="bright">bright (環境較明亮)</option>
+                    <option value="dark">dark (環境較暗)</option>
+                    <option value="realistic">realistic (逼真的)</option>
+                    <option value="very realistic, detailed texture">very realistic (強調紋理)</option>
+                    <option value="very detailed, intricate">very detailed (細部物件)</option>
+                    <option value="high resolution">high resolution (高分辨率)</option>
+                    <option value="8K, masterpiece">8K (畫質強化)</option>
+                    <option value="b/w photo">b/w (黑白照片)</option>
+                </select>
+            </div>
         </div>
+
         <div id="page-char" class="tab-content-area"><div id="container-char"></div></div>
         <div id="page-scene" class="tab-content-area"><div id="container-scene"></div></div>
         <div id="page-photo" class="tab-content-area"><div id="container-photo"></div></div>
+        <div id="page-art" class="tab-content-area"><div id="container-art"></div></div>
+        <div id="page-anime" class="tab-content-area"><div id="container-anime"></div></div>
     </div>
 
     <div class="app-footer">
         <div class="output-box">
-            <span class="prompt-label">ENGLISH PROMPTS (語言學習)</span>
-            <textarea id="outputPrompt" rows="2" readonly placeholder="拍下照片或組合選單..."></textarea>
-            <button class="btn-speak" id="speakBtn" onclick="speakText()">🔊 語音朗讀</button>
+            <span class="prompt-label">ENGLISH PROMPTS / LEARNING</span>
+            <button class="btn-speak" onclick="speakText()">🔊 唸給我聽</button>
+            <textarea id="outputPrompt" rows="2" readonly placeholder="選取上方選項或拍照..."></textarea>
         </div>
         
         <div class="output-box" id="translationBox" style="display:none; border-color: #1e3a8a;">
-            <span class="prompt-label">中文意思對照</span>
-            <textarea id="translationPrompt" rows="2" readonly placeholder="翻譯將顯示於此..."></textarea>
+            <span class="prompt-label">中文對照翻譯</span>
+            <textarea id="translationPrompt" rows="1" readonly placeholder="翻譯將顯示於此..."></textarea>
         </div>
 
-        <button class="btn btn-primary w-100 fw-bold py-3" style="border-radius:15px;" id="actionBtn" onclick="processAction()">✨ 產出指令</button>
+        <button class="btn btn-primary w-100 fw-bold py-2" style="border-radius:12px;" id="actionBtn" onclick="generatePrompt()">✨ 產出繪圖指令</button>
     </div>
 
 <script>
-    let currentMode = 'create';
+    // --- 資料結構完全回歸 ---
+    const categorizedData = {
+        "char": { 
+            "服裝穿搭": [{val: "T-shirt and jeans", label: "T恤牛仔褲"}, {val: "Suit and tie", label: "西裝"}, {val: "Evening gown", label: "晚禮服"}, {val: "Cyberpunk techwear", label: "機能風"}, {val: "Kimono", label: "和服"}, {val: "Maid outfit", label: "女僕裝"}],
+            "髮型髮色": [{val: "Long straight black hair", label: "黑長直"}, {val: "Short bob cut", label: "鮑伯頭"}, {val: "Blonde ponytail", label: "金髮馬尾"}, {val: "Silver twin tails", label: "銀髮雙馬尾"}],
+            "表情": [{val: "Smile", label: "微笑"}, {val: "Laughing", label: "大笑"}, {val: "Crying", label: "哭泣"}, {val: "Angry", label: "生氣"}],
+            "肢體動作": [{val: "Standing", label: "站立"}, {val: "Sitting", label: "坐著"}, {val: "Running", label: "奔跑"}, {val: "Peace sign", label: "比YA"}]
+        },
+        "scene": { 
+            "環境設定": [{val: "Indoor", label: "室內"}, {val: "Outdoor", label: "室外"}, {val: "Primitive Forest", label: "原始森林"}, {val: "Underwater", label: "海底"}, {val: "Outer Space", label: "太空"}],
+            "特定地點": [{val: "News Anchor Desk", label: "主播台"}, {val: "Church", label: "教堂"}, {val: "Cyberpunk Street", label: "賽博街道"}, {val: "Ancient Temple", label: "古廟"}]
+        },
+        "photo": { 
+            "攝影類型": [{id: "photo_type", val: "photo", label: "照片"}, {id: "photo_type", val: "portrait photography", label: "人像"}, {id: "photo_type", val: "life photo", label: "生活照"}, {id: "photo_type", val: "sports photography", label: "運動"}],
+            "光圈": [
+                {id:"photo_aperture", val:"f/1", label:"f/1"}, {id:"photo_aperture", val:"f/1.4", label:"f/1.4"}, 
+                {id:"photo_aperture", val:"f/2.8", label:"f/2.8"}, {id:"photo_aperture", val:"f/8", label:"f/8"}, 
+                {id:"photo_aperture", val:"f/16", label:"f/16"}, {id:"photo_aperture", val:"f/32", label:"f/32"}
+            ],
+            "焦距": [
+                {id:"photo_focal", val:"20mm", label:"20mm"}, {id:"photo_focal", val:"35mm", label:"35mm"}, 
+                {id:"photo_focal", val:"85mm", label:"85mm"}, {id:"photo_focal", val:"200mm", label:"200mm"}, 
+                {id:"photo_focal", val:"600mm", label:"600mm"}
+            ],
+            "風格效果": [{val:"bokeh", label:"散景"}, {val:"magic hour", label:"魔幻時刻"}, {val:"double exposure", label:"重複曝光"}]
+        },
+        "art": { 
+            "繪畫媒材": [{val:"illustration", label:"插畫"}, {val:"watercolor painting", label:"水彩"}, {val:"oil painting", label:"油畫"}, {val:"pencil sketch", label:"鉛筆素描"}],
+            "流派": [{val:"Impressionnisme", label:"印象派"}, {val:"Surrealism", label:"超現實"}, {val:"Pop Art", label:"普普"}]
+        },
+        "anime": { 
+            "風格作品": [{val: "Studio Ghibli style", label: "吉卜力"}, {val: "One Piece style", label: "航海王"}, {val: "Naruto style", label: "火影忍者"}, {val: "Sailor Moon style", label: "美少女戰士"}]
+        }
+    };
+
+    function init() {
+        for (const [tabKey, categories] of Object.entries(categorizedData)) {
+            const container = document.getElementById(`container-${tabKey}`);
+            if (!container) continue;
+            for (const [catName, items] of Object.entries(categories)) {
+                const card = document.createElement('div'); card.className = 'category-card';
+                card.innerHTML = `<label class="category-title">${catName}</label>`;
+                const select = document.createElement('select'); select.className = 'form-select';
+                if (items.length > 0 && items[0].id) select.id = items[0].id;
+                select.appendChild(new Option("不指定", ""));
+                items.forEach(item => select.appendChild(new Option(item.label, item.val)));
+                card.appendChild(select); container.appendChild(card);
+            }
+        }
+        document.getElementById('photo_type')?.addEventListener('change', checkLocks);
+    }
+
+    function checkLocks() {
+        const photoType = document.getElementById('photo_type');
+        const isPhoto = photoType && photoType.value !== "";
+        // 鎖定光圈/焦距
+        ['photo_aperture', 'photo_focal'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) { el.disabled = !isPhoto; if(!isPhoto) el.value=""; }
+        });
+        // 凍結藝術/動漫
+        toggleLock('container-art', 'btn-art', isPhoto);
+        toggleLock('container-anime', 'btn-anime', isPhoto);
+    }
+
+    function toggleLock(cid, bid, lock) {
+        const c = document.getElementById(cid); const b = document.getElementById(bid);
+        if(c) c.querySelectorAll('select').forEach(s => { s.disabled = lock; if(lock) s.value=""; });
+        if(b) {
+            b.classList.toggle('disabled-tab', lock);
+            b.querySelector('.locked-badge').style.display = lock ? 'inline' : 'none';
+        }
+    }
 
     function setMode(mode) {
-        currentMode = mode;
         const isStudy = mode === 'study';
-        
-        // 切換按鈕狀態
         document.getElementById('mode-create').classList.toggle('active', !isStudy);
         document.getElementById('mode-study').classList.toggle('active', isStudy);
-        
-        // 切換介面元素
         document.getElementById('mainInputGroup').style.display = isStudy ? 'none' : 'flex';
         document.getElementById('cameraBtn').style.display = isStudy ? 'block' : 'none';
         document.getElementById('myTab').style.display = isStudy ? 'none' : 'flex';
         document.getElementById('study-hint').style.display = isStudy ? 'block' : 'none';
         document.getElementById('translationBox').style.display = isStudy ? 'block' : 'none';
-        document.querySelectorAll('.tab-content-area').forEach(el => el.style.display = isStudy ? 'none' : '');
+        document.querySelectorAll('.tab-content-area').forEach(el => el.classList.remove('active'));
         if(!isStudy) document.getElementById('page-settings').classList.add('active');
-
-        // 修改底部按鈕文字
-        const actionBtn = document.getElementById('actionBtn');
-        actionBtn.textContent = isStudy ? "🔍 啟動 AI 學習分析" : "✨ 產出繪圖指令";
-        actionBtn.style.background = isStudy ? "linear-gradient(135deg, #6a1b9a, #4a148c)" : "";
+        document.getElementById('actionBtn').textContent = isStudy ? "🔍 啟動學習分析 (Demo)" : "✨ 產出繪圖指令";
     }
 
-    function triggerCamera() { document.getElementById('cameraInput').click(); }
-
-    function handleImageSelect(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('finalImage').src = e.target.result;
-                document.getElementById('previewBox').style.display = 'block';
-                
-                if (currentMode === 'study') {
-                    // 模擬未來的 AI 解析流程
-                    document.getElementById('outputPrompt').value = "A high-tech digital camera capturing a moment, cinematic lighting, sharp focus on lens.";
-                    document.getElementById('translationPrompt').value = "一台捕捉瞬間的高科技數位相機，電影感光影，焦距精準對焦於鏡頭。";
-                }
-            };
-            reader.readAsDataURL(input.files[0]);
+    async function generatePrompt() {
+        const isStudy = document.getElementById('mode-study').classList.contains('active');
+        if (isStudy) {
+            if (!document.getElementById('finalImage').src.includes('data:image')) return alert("請先拍照！");
+            document.getElementById('outputPrompt').value = "A realistic scene captured by smartphone camera, focus on details.";
+            document.getElementById('translationPrompt').value = "一張由手機鏡頭拍攝的寫實場景，專注於細節。";
+            return;
         }
+
+        const parts = [];
+        let sub = document.getElementById('mainSubject').value.trim();
+        if(sub) parts.push(`Subject: ${sub},`);
+        
+        document.querySelectorAll('select').forEach(s => {
+            if(s.value && !s.disabled && s.id !== 'aspectRatio') parts.push(s.value);
+        });
+        
+        const ar = document.getElementById('aspectRatio').value;
+        if(ar) parts.push(ar);
+        
+        document.getElementById('outputPrompt').value = parts.join(", ");
     }
 
-    function processAction() {
-        if (currentMode === 'study') {
-            if (!document.getElementById('finalImage').src.includes('data:image')) {
-                alert("請先拍攝或上傳照片以進行學習分析！");
-                return;
-            }
-            alert("AI 分析連接中...\n目前為展示模式，未來將串接 Vision AI 進行即時解析。");
-        } else {
-            // 原本的生成指令邏輯...
-            document.getElementById('outputPrompt').value = "Generated drawing prompt...";
-        }
-    }
-
-    // Web Speech API: 語音朗讀功能
     function speakText() {
         const text = document.getElementById('outputPrompt').value;
-        if (!text) return alert("沒有可讀取的英文內容！");
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-US';
-        utterance.rate = 0.9; // 稍微放慢一點點，方便學習
-        window.speechSynthesis.speak(utterance);
+        if (!text) return;
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US'; u.rate = 0.8; window.speechSynthesis.speak(u);
     }
 
-    function clearPhoto() {
-        document.getElementById('finalImage').src = "";
-        document.getElementById('previewBox').style.display = 'none';
-        document.getElementById('outputPrompt').value = "";
-        document.getElementById('translationPrompt').value = "";
-    }
-
-    // 其餘原本的切換邏輯保持不變...
     function switchTab(btn, id) {
         if(btn.classList.contains('disabled-tab')) return;
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -226,6 +303,24 @@
         document.querySelectorAll('.tab-content-area').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
     }
+
+    function triggerCamera() { document.getElementById('cameraInput').click(); }
+    function handleImageSelect(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('finalImage').src = e.target.result;
+                document.getElementById('previewBox').style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function clearPhoto() {
+        document.getElementById('finalImage').src = "";
+        document.getElementById('previewBox').style.display = 'none';
+    }
+
+    init();
 </script>
 </body>
 </html>
