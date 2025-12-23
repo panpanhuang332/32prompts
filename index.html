@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>一指提示 (教育學習 Pro版)</title>
+    <title>一指提示 (學習與創作 Pro版)</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#050505">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
@@ -20,85 +20,62 @@
             --study-purple: #9c27b0;
         }
         body {
-            background-color: var(--bg-deep); 
-            color: var(--text-main); 
-            font-family: 'Noto Sans TC', sans-serif;
-            height: 100vh; height: 100dvh;
-            display: flex; flex-direction: column;
-            overflow: hidden;
+            background-color: var(--bg-deep); color: var(--text-main); font-family: 'Noto Sans TC', sans-serif;
+            height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
             background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 60%);
         }
 
         .app-header {
-            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(12px);
-            padding: 15px 15px 5px 15px; border-bottom: 1px solid rgba(255,255,255,0.08); 
-            flex-shrink: 0; z-index: 100;
+            background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 15px 15px 5px 15px; border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; z-index: 100;
         }
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .app-title { 
-            margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.1rem; letter-spacing: 1px;
-            background: linear-gradient(90deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-
-        /* 登入資訊 */
-        .user-info { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #bbb; cursor: pointer; }
-        .user-avatar { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); }
-        .btn-google-login { font-size: 0.8rem; padding: 6px 14px; border-radius: 50px; background: #1a1a1a; border: 1px solid var(--glass-border); color: #ccc; }
-
-        /* 模式切換 */
-        .mode-switch-container { display: flex; gap: 8px; margin-bottom: 15px; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
-        .mode-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 0.85rem; border-radius: 8px; color: #666; font-weight: 500; transition: all 0.3s; }
-        .mode-btn.active { background: linear-gradient(145deg, #222, #111); color: #fff; border: 1px solid rgba(255,255,255,0.1); }
-        .mode-btn.mode-study.active { border-color: var(--study-purple); color: #e1bee7; }
-
-        /* 主內容區 */
-        .app-content { flex-grow: 1; overflow-y: auto; padding: 15px; }
-        .tab-content-area { display: none; animation: fadeIn 0.3s ease; }
-        .tab-content-area.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        .category-card { background: linear-gradient(145deg, #111, #080808); border-radius: 16px; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.15); }
-        .category-title { font-size: 0.9rem; color: #fff; margin-bottom: 10px; border-left: 3px solid var(--accent-glow); padding-left: 10px; display: block; }
-
-        /* 分頁標籤 */
-        .nav-tabs { border: none; gap: 8px; padding-bottom: 10px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .nav-tabs::-webkit-scrollbar { display: none; }
-        .nav-link { border: 1px solid transparent; border-radius: 20px; background: rgba(255,255,255,0.05); color: #888; font-size: 0.85rem; padding: 6px 14px; white-space: nowrap; transition: all 0.2s; }
-        .nav-link.active { background: #fff; color: #000; font-weight: 700; }
-        .nav-link.disabled-tab { opacity: 0.3; cursor: not-allowed; }
-
-        /* 底部區域 */
-        .app-footer { background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px); padding: 15px 20px 25px 20px; border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
-        .output-box { background-color: #000; border: 1px solid #333; border-radius: 12px; padding: 10px; margin-bottom: 8px; position: relative; }
-        .prompt-label { font-size: 0.65rem; color: #888; margin-bottom: 4px; display: block; font-weight: 700; letter-spacing: 1px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .app-title { margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.1rem; letter-spacing: 1px; color: #fff; }
         
-        textarea { width: 100%; background: transparent; border: none; outline: none; resize: none; font-family: monospace; font-size: 0.85rem; line-height: 1.4; }
+        .mode-switch-container { display: flex; gap: 8px; margin-bottom: 12px; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 12px; }
+        .mode-btn { flex: 1; border: none; background: transparent; padding: 8px; font-size: 0.85rem; border-radius: 8px; color: #666; transition: all 0.3s; }
+        .mode-btn.active { background: #222; color: #fff; }
+        .mode-btn.mode-study.active { border: 1px solid var(--study-purple); color: #e1bee7; }
+
+        .app-content { flex-grow: 1; overflow-y: auto; padding: 15px; }
+        .category-card { background: rgba(20,20,20,0.6); border-radius: 16px; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .category-title { font-size: 0.85rem; color: #aaa; margin-bottom: 8px; display: block; border-left: 3px solid var(--accent-glow); padding-left: 8px; }
+
+        .nav-tabs { border: none; gap: 8px; padding-bottom: 10px; flex-wrap: nowrap; overflow-x: auto; }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+        .nav-link { border: 1px solid transparent; border-radius: 20px; background: rgba(255,255,255,0.05); color: #888; font-size: 0.8rem; padding: 6px 12px; white-space: nowrap; }
+        .nav-link.active { background: #fff; color: #000; font-weight: 700; }
+        .nav-link.disabled-tab { opacity: 0.25; cursor: not-allowed; }
+
+        .app-footer { background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px); padding: 15px 20px 25px 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .output-box { background-color: #000; border: 1px solid #333; border-radius: 12px; padding: 10px; margin-bottom: 8px; position: relative; }
+        .prompt-label { font-size: 0.6rem; color: #888; margin-bottom: 4px; display: block; font-weight: 700; }
+        
+        textarea { width: 100%; background: transparent; border: none; outline: none; resize: none; font-family: monospace; font-size: 0.8rem; line-height: 1.4; }
         #outputPrompt { color: #00ff9d; }
         #translationPrompt { color: #3b82f6; }
 
-        .btn-speak { position: absolute; right: 10px; top: 10px; background: #222; color: #fff; border: 1px solid #444; border-radius: 50px; font-size: 0.65rem; padding: 2px 8px; }
+        .btn-speak { position: absolute; right: 10px; top: 10px; background: #222; color: #fff; border: 1px solid #444; border-radius: 50px; font-size: 0.6rem; padding: 2px 8px; }
 
-        /* 相片預覽 */
         .camera-preview-box { width: 50px; height: 50px; border-radius: 8px; border: 1px solid #444; overflow: hidden; display: none; margin-right: 10px; position: relative; }
-        
-        .locked-badge { display: none; font-size: 0.7rem; color: #ff5252; margin-left: 5px; }
+        .locked-badge { display: none; font-size: 0.7rem; color: #ff5252; margin-left: 4px; }
     </style>
 </head>
 <body>
 
     <div class="app-header">
         <div class="top-bar">
-            <h6 class="app-title">✨ Prompts Language <span style="font-size:0.7em; opacity:0.7;">PRO</span></h6>
-            <button id="loginBtn" class="btn-google-login" onclick="googleLogin()">登入</button>
-            <div id="userInfo" class="user-info" style="display: none;" onclick="googleLogout()">
-                <img id="userPhoto" src="" class="user-avatar">
-                <span id="userName">User</span>
+            <h6 class="app-title">✨ Prompts Language Pro</h6>
+            <button id="loginBtn" class="btn btn-sm btn-outline-light rounded-pill" onclick="googleLogin()">登入</button>
+            <div id="userInfo" style="display:none; align-items:center; gap:8px;">
+                <img id="userPhoto" src="" style="width:28px; border-radius:50%;">
+                <span id="userName" style="font-size:0.8rem;"></span>
             </div>
         </div>
         
         <div class="mode-switch-container">
-            <button class="mode-btn active" onclick="setMode('create')" id="mode-create">🎨 繪圖指令</button>
-            <button class="mode-btn mode-study" onclick="setMode('study')" id="mode-study">🔮 學習模式 (開發中)</button>
+            <button class="mode-btn active" onclick="setMode('create')" id="mode-create">🎨 創作指令</button>
+            <button class="mode-btn mode-study" onclick="setMode('study')" id="mode-study">🔮 學習模式 (Reverse)</button>
         </div>
 
         <div class="d-flex align-items-center mb-2">
@@ -108,10 +85,10 @@
                 <button onclick="clearPhoto()" style="position:absolute; top:0; right:0; background:rgba(0,0,0,0.7); color:white; border:none; width:100%; font-size:9px;">✕</button>
             </div>
             <div class="input-group" id="mainInputGroup">
-                <input type="text" class="form-control" id="mainSubject" placeholder="輸入內容 (如: 貓)...">
-                <button class="btn btn-dark" type="button" onclick="translateInput()">中轉英</button>
+                <input type="text" class="form-control form-control-sm" id="mainSubject" placeholder="輸入主題...">
+                <button class="btn btn-sm btn-dark" onclick="translateInput()">中轉英</button>
             </div>
-            <button class="btn btn-danger ms-2" id="cameraBtn" style="display:none; border-radius:12px; white-space:nowrap;" onclick="triggerCamera()">📸 拍照學習</button>
+            <button class="btn btn-sm btn-danger ms-2" id="cameraBtn" style="display:none; border-radius:10px;" onclick="triggerCamera()">📸 拍照學習</button>
         </div>
 
         <div class="nav nav-tabs" id="myTab">
@@ -125,36 +102,28 @@
     </div>
 
     <div class="app-content">
-        <div id="study-hint" style="display:none;" class="category-card">
-            <p class="small text-info mb-0">未來將透過 Vision AI 解析相片：<br>1. 點擊「拍照學習」 2. 下方將出現視覺單字與翻譯 3. 按下語音圖示學習發音。</p>
-        </div>
-
         <div id="page-settings" class="tab-content-area active">
             <div class="category-card">
-                <label class="category-title">📐 圖片比例 (Aspect Ratio)</label>
-                <select class="form-select" id="aspectRatio">
-                    <option value="">1:1 (預設)</option>
-                    <option value="--ar 16:9">16:9 (寬螢幕)</option>
-                    <option value="--ar 9:16">9:16 (手機直式)</option>
-                    <option value="--ar 4:3">4:3 (標準照片)</option>
+                <label class="category-title">📐 圖片比例</label>
+                <select class="form-select form-select-sm" id="aspectRatio">
+                    <option value="">1:1</option>
+                    <option value="--ar 16:9">16:9</option>
+                    <option value="--ar 9:16">9:16</option>
                 </select>
             </div>
             <div class="category-card">
-                <label class="category-title">✨ 輔助修飾詞 (Auxiliary)</label>
-                <select class="form-select" id="auxiliaryWords">
+                <label class="category-title">💎 環境與質感 (輔助詞)</label>
+                <select class="form-select form-select-sm" id="auxWords">
                     <option value="">不指定</option>
-                    <option value="bright">bright (環境較明亮)</option>
-                    <option value="dark">dark (環境較暗)</option>
-                    <option value="realistic">realistic (逼真的)</option>
-                    <option value="very realistic, detailed texture">very realistic (強調紋理)</option>
-                    <option value="very detailed, intricate">very detailed (細部物件)</option>
-                    <option value="high resolution">high resolution (高分辨率)</option>
-                    <option value="8K, masterpiece">8K (畫質強化)</option>
-                    <option value="b/w photo">b/w (黑白照片)</option>
+                    <option value="bright">bright (較明亮)</option>
+                    <option value="dark">dark (較暗)</option>
+                    <option value="realistic">realistic (逼真)</option>
+                    <option value="very realistic, detailed">very realistic (強調紋理)</option>
+                    <option value="8K resolution">8K (高畫質)</option>
+                    <option value="b/w">b/w (黑白)</option>
                 </select>
             </div>
         </div>
-
         <div id="page-char" class="tab-content-area"><div id="container-char"></div></div>
         <div id="page-scene" class="tab-content-area"><div id="container-scene"></div></div>
         <div id="page-photo" class="tab-content-area"><div id="container-photo"></div></div>
@@ -164,52 +133,47 @@
 
     <div class="app-footer">
         <div class="output-box">
-            <span class="prompt-label">ENGLISH PROMPTS / LEARNING</span>
-            <button class="btn-speak" onclick="speakText()">🔊 唸給我聽</button>
-            <textarea id="outputPrompt" rows="2" readonly placeholder="選取上方選項或拍照..."></textarea>
+            <span class="prompt-label">ENGLISH PROMPTS</span>
+            <button class="btn-speak" onclick="speakText()">🔊 語音朗讀</button>
+            <textarea id="outputPrompt" rows="2" readonly></textarea>
         </div>
-        
         <div class="output-box" id="translationBox" style="display:none; border-color: #1e3a8a;">
-            <span class="prompt-label">中文對照翻譯</span>
-            <textarea id="translationPrompt" rows="1" readonly placeholder="翻譯將顯示於此..."></textarea>
+            <span class="prompt-label">中文意思對照</span>
+            <textarea id="translationPrompt" rows="1" readonly></textarea>
         </div>
-
-        <button class="btn btn-primary w-100 fw-bold py-2" style="border-radius:12px;" id="actionBtn" onclick="generatePrompt()">✨ 產出繪圖指令</button>
+        <button class="btn btn-primary w-100 fw-bold" id="actionBtn" onclick="generatePrompt()">✨ 產出指令</button>
     </div>
 
 <script>
-    // --- 資料結構完全回歸 ---
+    // --- 恢復所有遺失的 Prompts 資料庫 ---
     const categorizedData = {
-        "char": { 
-            "服裝穿搭": [{val: "T-shirt and jeans", label: "T恤牛仔褲"}, {val: "Suit and tie", label: "西裝"}, {val: "Evening gown", label: "晚禮服"}, {val: "Cyberpunk techwear", label: "機能風"}, {val: "Kimono", label: "和服"}, {val: "Maid outfit", label: "女僕裝"}],
+        "char": {
+            "服裝穿搭": [{val: "T-shirt and jeans", label: "T恤牛仔褲"}, {val: "Suit and tie", label: "西裝"}, {val: "Evening gown", label: "晚禮服"}, {val: "Cyberpunk techwear", label: "機能風"}, {val: "Armor", label: "盔甲"}, {val: "Maid outfit", label: "女僕裝"}, {val: "Kimono", label: "和服"}],
             "髮型髮色": [{val: "Long straight black hair", label: "黑長直"}, {val: "Short bob cut", label: "鮑伯頭"}, {val: "Blonde ponytail", label: "金髮馬尾"}, {val: "Silver twin tails", label: "銀髮雙馬尾"}],
-            "表情": [{val: "Smile", label: "微笑"}, {val: "Laughing", label: "大笑"}, {val: "Crying", label: "哭泣"}, {val: "Angry", label: "生氣"}],
-            "肢體動作": [{val: "Standing", label: "站立"}, {val: "Sitting", label: "坐著"}, {val: "Running", label: "奔跑"}, {val: "Peace sign", label: "比YA"}]
+            "五官特點": [{val: "Blue eyes", label: "藍眼"}, {val: "Heterochromia", label: "異色瞳"}, {val: "Cat eyes", label: "貓眼"}, {val: "Red eyes", label: "紅眼"}],
+            "表情肢體": [{val: "Smile", label: "微笑"}, {val: "Angry", label: "生氣"}, {val: "Peace sign", label: "比YA"}, {val: "Running", label: "奔跑"}]
         },
-        "scene": { 
-            "環境設定": [{val: "Indoor", label: "室內"}, {val: "Outdoor", label: "室外"}, {val: "Primitive Forest", label: "原始森林"}, {val: "Underwater", label: "海底"}, {val: "Outer Space", label: "太空"}],
-            "特定地點": [{val: "News Anchor Desk", label: "主播台"}, {val: "Church", label: "教堂"}, {val: "Cyberpunk Street", label: "賽博街道"}, {val: "Ancient Temple", label: "古廟"}]
+        "scene": {
+            "環境設定": [{val: "Indoor", label: "室內"}, {val: "Outdoor", label: "室外"}, {val: "Primitive Forest", label: "原始森林"}, {val: "Outer Space", label: "太空"}, {val: "Future City", label: "未來城市"}],
+            "特定建築": [{val: "Church", label: "教堂"}, {val: "Classroom", label: "教室"}, {val: "Cyberpunk Street", label: "賽博街道"}, {val: "Ancient Temple", label: "古廟"}]
         },
-        "photo": { 
-            "攝影類型": [{id: "photo_type", val: "photo", label: "照片"}, {id: "photo_type", val: "portrait photography", label: "人像"}, {id: "photo_type", val: "life photo", label: "生活照"}, {id: "photo_type", val: "sports photography", label: "運動"}],
+        "photo": {
+            "攝影類型": [{id: "photo_type", val: "photo", label: "照片"}, {id: "photo_type", val: "portrait photography", label: "人像"}, {id: "photo_type", val: "life photo", label: "生活照"}, {id: "photo_type", val: "macro photography", label: "微距"}],
             "光圈": [
-                {id:"photo_aperture", val:"f/1", label:"f/1"}, {id:"photo_aperture", val:"f/1.4", label:"f/1.4"}, 
-                {id:"photo_aperture", val:"f/2.8", label:"f/2.8"}, {id:"photo_aperture", val:"f/8", label:"f/8"}, 
-                {id:"photo_aperture", val:"f/16", label:"f/16"}, {id:"photo_aperture", val:"f/32", label:"f/32"}
+                {id:"ap", val:"f/1", label:"f/1"}, {id:"ap", val:"f/1.4", label:"f/1.4"}, {id:"ap", val:"f/2.8", label:"f/2.8"}, 
+                {id:"ap", val:"f/8", label:"f/8"}, {id:"ap", val:"f/16", label:"f/16"}, {id:"ap", val:"f/32", label:"f/32"}
             ],
             "焦距": [
-                {id:"photo_focal", val:"20mm", label:"20mm"}, {id:"photo_focal", val:"35mm", label:"35mm"}, 
-                {id:"photo_focal", val:"85mm", label:"85mm"}, {id:"photo_focal", val:"200mm", label:"200mm"}, 
-                {id:"photo_focal", val:"600mm", label:"600mm"}
-            ],
-            "風格效果": [{val:"bokeh", label:"散景"}, {val:"magic hour", label:"魔幻時刻"}, {val:"double exposure", label:"重複曝光"}]
+                {id:"focal", val:"20mm", label:"20mm"}, {id:"focal", val:"35mm", label:"35mm"}, {id:"focal", val:"85mm", label:"85mm"}, 
+                {id:"focal", val:"200mm", label:"200mm"}, {id:"focal", val:"600mm", label:"600mm"}
+            ]
         },
-        "art": { 
-            "繪畫媒材": [{val:"illustration", label:"插畫"}, {val:"watercolor painting", label:"水彩"}, {val:"oil painting", label:"油畫"}, {val:"pencil sketch", label:"鉛筆素描"}],
-            "流派": [{val:"Impressionnisme", label:"印象派"}, {val:"Surrealism", label:"超現實"}, {val:"Pop Art", label:"普普"}]
+        "art": {
+            "繪畫媒介": [{val: "Oil painting", label: "油畫"}, {val: "Watercolor painting", label: "水彩"}, {val: "Woodcut", label: "版畫"}, {val: "Vector art", label: "向量圖"}],
+            "藝術家": [{val: "Vincent van Gogh", label: "梵谷"}, {val: "Picasso", label: "畢卡索"}, {val: "Claude Monet", label: "莫內"}, {val: "Hayao Miyazaki", label: "宮崎駿"}, {val: "Makoto Shinkai", label: "新海誠"}]
         },
-        "anime": { 
-            "風格作品": [{val: "Studio Ghibli style", label: "吉卜力"}, {val: "One Piece style", label: "航海王"}, {val: "Naruto style", label: "火影忍者"}, {val: "Sailor Moon style", label: "美少女戰士"}]
+        "anime": {
+            "風格作品": [{val: "One Piece style", label: "航海王"}, {val: "Detective Conan style", label: "名偵探柯南"}, {val: "Naruto style", label: "火影忍者"}, {val: "Sailor Moon style", label: "美少女戰士"}, {val: "Studio Ghibli style", label: "吉卜力"}]
         }
     };
 
@@ -220,25 +184,22 @@
             for (const [catName, items] of Object.entries(categories)) {
                 const card = document.createElement('div'); card.className = 'category-card';
                 card.innerHTML = `<label class="category-title">${catName}</label>`;
-                const select = document.createElement('select'); select.className = 'form-select';
-                if (items.length > 0 && items[0].id) select.id = items[0].id;
+                const select = document.createElement('select'); select.className = 'form-select form-select-sm';
+                if (items[0].id) select.id = items[0].id;
                 select.appendChild(new Option("不指定", ""));
                 items.forEach(item => select.appendChild(new Option(item.label, item.val)));
                 card.appendChild(select); container.appendChild(card);
             }
         }
-        document.getElementById('photo_type')?.addEventListener('change', checkLocks);
+        document.getElementById('photo_type').addEventListener('change', checkLocks);
     }
 
     function checkLocks() {
-        const photoType = document.getElementById('photo_type');
-        const isPhoto = photoType && photoType.value !== "";
-        // 鎖定光圈/焦距
-        ['photo_aperture', 'photo_focal'].forEach(id => {
+        const isPhoto = document.getElementById('photo_type').value !== "";
+        ['ap', 'focal'].forEach(id => {
             const el = document.getElementById(id);
             if(el) { el.disabled = !isPhoto; if(!isPhoto) el.value=""; }
         });
-        // 凍結藝術/動漫
         toggleLock('container-art', 'btn-art', isPhoto);
         toggleLock('container-anime', 'btn-anime', isPhoto);
     }
@@ -246,10 +207,7 @@
     function toggleLock(cid, bid, lock) {
         const c = document.getElementById(cid); const b = document.getElementById(bid);
         if(c) c.querySelectorAll('select').forEach(s => { s.disabled = lock; if(lock) s.value=""; });
-        if(b) {
-            b.classList.toggle('disabled-tab', lock);
-            b.querySelector('.locked-badge').style.display = lock ? 'inline' : 'none';
-        }
+        if(b) { b.classList.toggle('disabled-tab', lock); b.querySelector('.locked-badge').style.display = lock ? 'inline' : 'none'; }
     }
 
     function setMode(mode) {
@@ -259,41 +217,36 @@
         document.getElementById('mainInputGroup').style.display = isStudy ? 'none' : 'flex';
         document.getElementById('cameraBtn').style.display = isStudy ? 'block' : 'none';
         document.getElementById('myTab').style.display = isStudy ? 'none' : 'flex';
-        document.getElementById('study-hint').style.display = isStudy ? 'block' : 'none';
         document.getElementById('translationBox').style.display = isStudy ? 'block' : 'none';
         document.querySelectorAll('.tab-content-area').forEach(el => el.classList.remove('active'));
         if(!isStudy) document.getElementById('page-settings').classList.add('active');
-        document.getElementById('actionBtn').textContent = isStudy ? "🔍 啟動學習分析 (Demo)" : "✨ 產出繪圖指令";
+        document.getElementById('actionBtn').textContent = isStudy ? "🔍 啟動學習分析" : "✨ 產出指令";
     }
 
-    async function generatePrompt() {
-        const isStudy = document.getElementById('mode-study').classList.contains('active');
-        if (isStudy) {
+    function generatePrompt() {
+        if (document.getElementById('mode-study').classList.contains('active')) {
             if (!document.getElementById('finalImage').src.includes('data:image')) return alert("請先拍照！");
-            document.getElementById('outputPrompt').value = "A realistic scene captured by smartphone camera, focus on details.";
-            document.getElementById('translationPrompt').value = "一張由手機鏡頭拍攝的寫實場景，專注於細節。";
-            return;
+            document.getElementById('outputPrompt').value = "A high-quality realistic portrait with cinematic lighting.";
+            document.getElementById('translationPrompt').value = "一張具有電影光影的高畫質寫實人像。";
+        } else {
+            const parts = [];
+            const sub = document.getElementById('mainSubject').value;
+            if(sub) parts.push(sub);
+            document.querySelectorAll('.app-content select').forEach(s => {
+                if(s.value && !s.disabled && s.id !== 'aspectRatio' && s.id !== 'auxWords') parts.push(s.value);
+            });
+            const aux = document.getElementById('auxWords').value;
+            if(aux) parts.push(aux);
+            const ar = document.getElementById('aspectRatio').value;
+            if(ar) parts.push(ar);
+            document.getElementById('outputPrompt').value = parts.join(", ");
         }
-
-        const parts = [];
-        let sub = document.getElementById('mainSubject').value.trim();
-        if(sub) parts.push(`Subject: ${sub},`);
-        
-        document.querySelectorAll('select').forEach(s => {
-            if(s.value && !s.disabled && s.id !== 'aspectRatio') parts.push(s.value);
-        });
-        
-        const ar = document.getElementById('aspectRatio').value;
-        if(ar) parts.push(ar);
-        
-        document.getElementById('outputPrompt').value = parts.join(", ");
     }
 
     function speakText() {
         const text = document.getElementById('outputPrompt').value;
         if (!text) return;
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'en-US'; u.rate = 0.8; window.speechSynthesis.speak(u);
+        const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; window.speechSynthesis.speak(u);
     }
 
     function switchTab(btn, id) {
@@ -305,20 +258,15 @@
     }
 
     function triggerCamera() { document.getElementById('cameraInput').click(); }
-    function handleImageSelect(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('finalImage').src = e.target.result;
-                document.getElementById('previewBox').style.display = 'block';
-            };
-            reader.readAsDataURL(input.files[0]);
+    function handleImageSelect(i) {
+        if (i.files[0]) {
+            const r = new FileReader();
+            r.onload = (e) => { document.getElementById('finalImage').src = e.target.result; document.getElementById('previewBox').style.display = 'block'; };
+            r.readAsDataURL(i.files[0]);
         }
     }
-    function clearPhoto() {
-        document.getElementById('finalImage').src = "";
-        document.getElementById('previewBox').style.display = 'none';
-    }
+    function clearPhoto() { document.getElementById('finalImage').src = ""; document.getElementById('previewBox').style.display = 'none'; }
+    function googleLogin() { document.getElementById('loginBtn').style.display='none'; document.getElementById('userInfo').style.display='flex'; document.getElementById('userName').textContent='Demo User'; document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('disabled-tab')); }
 
     init();
 </script>
